@@ -1,0 +1,42 @@
+I need to pause development and continue on another computer.
+
+Do not start any new tasks.
+
+1. Inspect the current task and Git working tree.
+2. Record completed tasks, current in-progress task, remaining steps, blockers and verification results in docs/progress.md.
+3. Create docs/HANDOFF.md with:
+   - Current task ID and status
+   - Files changed and why
+   - What has been implemented
+   - What remains unfinished
+   - Tests already run and their results
+   - Exact commands to resume verification
+   - Next recommended action
+4. Preserve all partial work, including unfinished changes.
+5. Do not mark incomplete tasks DONE.
+6. Run safe, relevant checks if possible.
+7. Prepare a local Git checkpoint of the current state, clearly marked as WIP if unfinished.
+8. Do not push, deploy, discard changes or start another task.
+9. Report the checkpoint commit and Git status in Vietnamese.
+
+=================================================================
+
+Read AGENTS.md, GAME_SPEC.md,
+docs/tasks.md, docs/progress.md
+and docs/HANDOFF.md if available.
+
+Resume the unfinished task from the
+latest checkpoint.
+
+Continue autonomous development:
+- Implement
+- Generate assets when required
+- Verify
+- Fix errors
+- Update progress
+- Create Git checkpoint
+- Continue to next eligible task
+
+Maximum 3 tasks in this session.
+Do not push or deploy.
+Report in Vietnamese.
