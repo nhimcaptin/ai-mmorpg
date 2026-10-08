@@ -68,7 +68,7 @@ D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa t
 | T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | Có trạng thái chờ/lỗi/phiên hết hạn; refresh giữ hoặc kết thúc phiên đúng chính sách; route gameplay chặn người chưa xác thực; browser test luồng đăng nhập qua. |
 | T12 | Frontend tạo/chọn nhân vật hiện có | T10–T11, D12 | A02 | Hiển thị ba class và appearance được duyệt; tạo một lần, lần sau vào nhân vật cũ; lỗi tên/phiên hiển thị rõ; không có điều khiển đổi class. |
 
-| T60 | Collision footprint và multiplayer occlusion chung | T05, T59; CHỐT mới GAME_SPEC 2.5 | Art hiện hữu | DONE phạm vi kỹ thuật: polygon/multiple AABB, metadata/editor/debug, fade 0.4/180ms từ tất cả authorized actors; 25 unit/integration +31 mock, DB, lint/typecheck/build và E2E5/5 PASS. Footprint đường trắng cần duyệt hình ảnh; không claim pixel-perfect. |
+| T60 | Collision footprint và multiplayer occlusion chung | T05, T59; CHỐT mới GAME_SPEC 2.5 | Art hiện hữu | DONE phạm vi kỹ thuật: polygon/multiple AABB, metadata/editor/debug, fade 0.4/180ms từ tất cả authorized actors; 25 unit/integration +31 mock, DB, lint/typecheck/build và E2E5/5 PASS. Đã áp dụng mẫu house-0/tree-5 do người dùng chỉnh cho cả6 props, kiểm lại gates/E2E5/5 PASS; không claim đối chiếu pixel-perfect với ảnh ngoài export. |
 
 ## 2. Pipeline tài nguyên đồ họa
 

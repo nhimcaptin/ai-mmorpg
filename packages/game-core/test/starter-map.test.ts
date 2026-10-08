@@ -7,7 +7,7 @@ it('spawn and paths are walkable; buildings and tree roots block the same AABB u
   for (const input of [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }]) expect(move(world.spawn, input, 0.2, world)).not.toEqual(world.spawn);
   expect(canOccupy({ x: 260, y: 200 }, world)).toBe(true); // Roof visual is walkable ground behind the house.
   expect(canOccupy({ x: 260, y: 375 }, world)).toBe(false);
-  expect(canOccupy({ x: 300, y: 750 }, world)).toBe(false);
+  expect(canOccupy({ x: 300, y: 729 }, world)).toBe(false); // Inside the user-reviewed tree root footprint.
   expect(canOccupy({ x: 300, y: 624 }, world)).toBe(true);
   expect(move({ x: 624, y: 375 }, { x: -1, y: 0 }, 5, world).x).toBeGreaterThan(360);
   expect(move({ x: 624, y: 200 }, { x: -1, y: 0 }, 2, world).x).toBeLessThan(392);

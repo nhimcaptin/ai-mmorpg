@@ -6,7 +6,7 @@ CHỐT ngày 08/10/2026 tại GAME_SPEC 2.5, áp dụng toàn game. Phạm vi tr
 
 Nguồn geometry runtime: assets/maps/starter_village/object-metadata.json. Mỗi object có objectId, visualBounds, collisionFootprint (nhiều AABB/polygon đơn, kể cả lõm), occlusionRegion, sortingAnchor, fadeOpacity=0.4, fadeDurationMs=180 và boundaryInset=2 (tolerance kỹ thuật có thể chỉnh bằng metadata). Chân Character vẫn AABB (10,6), unit32, movement substep/server tick và camera giữ nguyên. Sorting anchor hiện hữu giữ nguyên; visual/image không đổi. Footprint nhà được chuyển khỏi toàn bounding box xuống phần chân đế. Tree footprint là vùng gốc/rễ. Mái/tán không chặn movement.
 
-Không có ảnh đường trắng/đỏ chính xác trong inventory workspace đã kiểm tra. Đã mở prop.png và prop-2.png, dựng footprint/contour ban đầu dựa trên asset thật. Đây là bản authored cần duyệt hình ảnh, không claim khớp hoàn toàn đường trắng. OcclusionRegion là contour dành cho vị trí chân của actor bị che, kết hợp actor.y < sortingAnchor.y; không dùng visual bounding box đơn giản làm trigger. Contour góc trong suốt/nearby/front không fade, nhưng đây không phải pixel alpha mask tự động: đường contour vẫn cần artist review khi hình ảnh/reference thay đổi.
+Ở checkpoint ban đầu ab03b57 chưa có ảnh đường trắng/đỏ chính xác trong inventory workspace đã kiểm tra. Đã mở prop.png và prop-2.png, dựng footprint/contour ban đầu dựa trên asset thật. Đây là bản authored cần duyệt hình ảnh, không claim khớp hoàn toàn đường trắng. OcclusionRegion là contour dành cho vị trí chân của actor bị che, kết hợp actor.y < sortingAnchor.y; không dùng visual bounding box đơn giản làm trigger. Contour góc trong suốt/nearby/front không fade, nhưng đây không phải pixel alpha mask tự động: đường contour vẫn cần artist review khi hình ảnh/reference thay đổi.
 
 Loader shared strict kiểm shape đơn, self-intersection/degenerate polygon, object ID, bounds, anchor, spawn và geometry đồng nhất. Server collision dùng cùng polygons/AABB parsed. Không gửi opacity hoặc thay đổi quyền nhận vị trí; manager chỉ nhận actors từ state.players của room/Area hiện có, không có kênh dò entity ở ngoài visibility. Khi thêm AOI tương lai phải tiếp tục cung cấp snapshot actors được phép quan sát, không lấy dữ liệu toàn server.
 
@@ -49,3 +49,7 @@ Lỗi E2E đầu được giữ trong logs/home-setup/collision-e2e.log: selecto
 ## Kiểm tra hình ảnh
 
 Đã xem ảnh props gốc và screenshot multiplayer-house-occlusion.png với nhà mờ/footprint riêng; người dùng cần duyệt chính xác footprint/occlusion contour với đường trắng tham chiếu hoặc chỉnh bằng editor. Chưa nghiệm thu AOI nhiều khu, nhiều object stress test, mobile/touch, art animation hoặc map/content mới. Không mark A02/A03/T17/T09 hoặc business decisions DONE vì T60.
+
+## Mẫu đã chỉnh bởi người dùng — 08/10/2026
+
+Đã nhận export editor và áp dụng nguyên mẫu house-0/tree-5 cho các props cùng loại bằng translation theo visualBounds, không scale. Bản gốc: reviewed-object-metadata.json; provenance và SHA256: reviewed-geometry-provenance.json trong thư mục map. house-1/house-2 dùng house-0; tree-3/tree-4 dùng tree-5. Runtime source, shared embedded và Tiled đã đồng bộ. Gates và E2E5/5 hai client PASS sau áp dụng. Việc này xác nhận dùng đúng tọa độ người dùng cung cấp, không tuyên bố độ khớp pixel với ảnh tham chiếu khác.

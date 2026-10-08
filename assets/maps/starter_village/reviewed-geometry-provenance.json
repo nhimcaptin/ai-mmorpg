@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-08",
+  "source": "reviewed-object-metadata.json",
+  "sha256": "9ebae895bffabd98699257da1e566591e43de6e078b18745274815f8111c6104",
+  "review": "User edited house-0 and tree-5 in the collision editor and supplied this export; only these two templates are propagated.",
+  "method": "world-space translation relative to visualBounds; identical dimensions checked; no scaling",
+  "copies": [
+    {
+      "template": "house-0",
+      "target": "house-1",
+      "dx": 730,
+      "dy": 0
+    },
+    {
+      "template": "house-0",
+      "target": "house-2",
+      "dx": 0,
+      "dy": 670
+    },
+    {
+      "template": "tree-5",
+      "target": "tree-4",
+      "dx": -710,
+      "dy": 50
+    },
+    {
+      "template": "tree-5",
+      "target": "tree-3",
+      "dx": -20,
+      "dy": 340
+    }
+  ],
+  "fields": [
+    "collisionFootprint",
+    "occlusionRegion",
+    "sortingAnchor",
+    "fadeOpacity",
+    "fadeDurationMs",
+    "boundaryInset"
+  ],
+  "artChanged": false
+}

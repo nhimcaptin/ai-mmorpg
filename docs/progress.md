@@ -1,5 +1,11 @@
 # Tiến độ dự án 2D MMORPG
 
+## T60 — Áp dụng footprint người dùng đã chỉnh, 08/10/2026
+
+Người dùng gửi object-metadata.json từ editor, xác nhận đã chỉnh house-0 và tree-5 và yêu cầu các object cùng loại dùng hai mẫu này. Đã giữ nguyên hai mẫu, sao chép collisionFootprint/occlusionRegion/sortingAnchor và tham số fade bằng translation theo visualBounds: house-1 (+730,0), house-2 (0,+670), tree-4 (-710,+50), tree-3 (-20,+340). Kiểm cùng kích thước, không scale/đổi PNG. Các chỉnh khác trong file gốc được bảo toàn để truy vết nhưng bốn bản runtime nhận đúng hai mẫu theo yêu cầu. Bản gốc reviewed-object-metadata.json và SHA256/mapping trong reviewed-geometry-provenance.json. Loader strict, mẫu nguồn bằng đúng export và runtime/Tiled consistency PASS. Không sửa GAME_SPEC hoặc engine.
+
+Lint/typecheck/build PASS; pnpm test PASS25 unit/integration +31 mock; E2E5/5 PASS (~1.1 phút), có hai browser kiểm local/remote fade, một rời/một còn, disconnect/rejoin, cây/root/nhà/camera/editor. Test cũ dùng điểm (300,750) nay ngoài polygon gốc đã chỉnh; đổi sang (300,729) nằm trong footprint mới, giữ assertion blocked; không sửa shape để chiều test. Log logs/reviewed-footprints giữ lượt đầu FAIL và lượt cuối PASS. Preview được restart sau test để FE/BE cùng nhận geometry mới. T09 tiếp tục PAUSE, không push/deploy/reset hoặc auto-dev/codex exec.
+
 ## T60 Collision footprint & multiplayer occlusion — 08/10/2026
 
 Chủ sản phẩm CHỐT mới áp dụng toàn game, cho phép cập nhật GAME_SPEC; đã thay rule nhà toàn bounding box/tree-only/local alpha0.5 bằng mục2.5 footprint polygon/multiple AABB và fade mọi authorized actor0.4/150–200ms. Không đổi art painted, source PNG, camera, world unit, tick, movement normalization/substeps hoặc session/network visibility. T60 DONE **phạm vi cơ chế/metadata/editor đã kiểm chứng**; không claim khớp đường trắng chưa có tham chiếu. Footprint và occlusion contour được dựng từ asset thật đã xem, cần chủ sản phẩm duyệt hình ảnh/editor cho độ chính xác mỹ thuật.
