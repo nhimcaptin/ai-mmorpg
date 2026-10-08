@@ -1,5 +1,13 @@
 # Tiến độ dự án 2D MMORPG
 
+## T60 — House v2, phía trước nhà và trượt collision, 08/10/2026
+
+Áp dụng house-0 từ export object-metadata (1).json cho house-1/house-2 bằng translation, giữ các cây đã duyệt. Source reviewed-house-metadata-v2.json và reviewed-house-v2-provenance.json giữ SHA256. Không sửa art. Shared/Tiled/runtime consistency PASS.
+
+Sửa điều kiện fade và depth theo đường biên phía sau footprint tại X nhân vật thay anchor Y phẳng: nhân vật phía trước góc nhà được vẽ trên nhà, nhà không mờ vì nhân vật đó. Remote đứng sau vẫn trigger fade cho mọi observer. Server movement thử trượt dọc cạnh khi input bị chặn, từng substep vẫn canOccupy, tốc độ không tăng và buông input dừng. GAME_SPEC ghi yêu cầu mới của chủ sản phẩm; T09 giữ PAUSE.
+
+Lint/typecheck/build PASS; 28 unit/integration +31 mock PASS; browser E2E6/6 PASS với hai context thật, gồm phía trước nhà/depth, held-input slide và đồng bộ observer, multiplayer fade/disconnect/rejoin, camera/resize/zoom/editor/auth. Đã xem screenshot house-front-visible.png trong runtime-qa; nghiệm thu contour mỹ thuật cuối vẫn do người dùng kiểm bằng editor. Logs/slide-front giữ bằng chứng. E2E cũ yêu cầu đứng yên ở wall và tiếp cận y385 ngoài footprint house v2: đổi sang kiểm canOccupy từng sample và tiếp cận đúng wall y340, không bỏ test. Typecheck chạy trùng E2E gặp Windows Prisma DLL lock; retry sau E2E PASS, không đổi Prisma/schema. Không push/deploy/reset DB hoặc gọi auto-dev/codex exec.
+
 ## T60 — Áp dụng footprint người dùng đã chỉnh, 08/10/2026
 
 Người dùng gửi object-metadata.json từ editor, xác nhận đã chỉnh house-0 và tree-5 và yêu cầu các object cùng loại dùng hai mẫu này. Đã giữ nguyên hai mẫu, sao chép collisionFootprint/occlusionRegion/sortingAnchor và tham số fade bằng translation theo visualBounds: house-1 (+730,0), house-2 (0,+670), tree-4 (-710,+50), tree-3 (-20,+340). Kiểm cùng kích thước, không scale/đổi PNG. Các chỉnh khác trong file gốc được bảo toàn để truy vết nhưng bốn bản runtime nhận đúng hai mẫu theo yêu cầu. Bản gốc reviewed-object-metadata.json và SHA256/mapping trong reviewed-geometry-provenance.json. Loader strict, mẫu nguồn bằng đúng export và runtime/Tiled consistency PASS. Không sửa GAME_SPEC hoặc engine.

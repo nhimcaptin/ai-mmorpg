@@ -70,3 +70,22 @@ export const mapObjectSchema = z.object({
   fadeOpacity:z.literal(0.4), fadeDurationMs:z.number().min(150).max(200), boundaryInset:finite.nonnegative()
 }).strict();
 export type MapObject = z.infer<typeof mapObjectSchema>;
+/** Rear/top envelope of the ground footprint at an actor's X, including side corners. */
+export function rearBoundaryY(object: MapObject, x: number): number {
+  let nearest=Infinity, result=object.sortingAnchor.y;
+  for(const shape of object.collisionFootprint) {
+    const bounds=shapeBounds(shape),sample=Math.max(bounds.x,Math.min(bounds.x+bounds.width,x));
+    const distance=Math.abs(sample-x),points=vertices(shape),ys:number[]=[];
+    for(let i=0;i<points.length;i++) {
+      const a=points[i]!,b=points[(i+1)%points.length]!;
+      if(sample<Math.min(a.x,b.x) || sample>Math.max(a.x,b.x)) continue;
+      if(a.x===b.x) ys.push(a.y,b.y);
+      else ys.push(a.y+(b.y-a.y)*(sample-a.x)/(b.x-a.x));
+    }
+    if(ys.length && distance<=nearest) {
+      const y=Math.min(...ys,object.sortingAnchor.y);
+      result=distance<nearest?y:Math.min(result,y);nearest=distance;
+    }
+  }
+  return result;
+}

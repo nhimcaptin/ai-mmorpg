@@ -51,3 +51,28 @@ test('editor exposes independent geometry, draggable vertices, overlays and JSON
   await page.getByRole('button',{name:'Bật/tắt overlays'}).click();await expect(page.locator('svg polygon')).toHaveCount(0);
   await page.getByLabel('Metadata JSON').fill('[]');await page.getByRole('button',{name:'Nhập JSON vào preview'}).click();await expect(page.getByRole('status')).toContainText('không hợp lệ');
 });
+test('front-side actor is visible without fading the house; held input slides and replicates to observer',async({browser,baseURL})=>{
+  test.setTimeout(45000);
+  const a=await browser.newContext({baseURL}),b=await browser.newContext({baseURL});
+  const first=await a.newPage(),observer=await b.newPage();
+  await first.goto('/starter');await observer.goto('/starter');
+  for(const p of [first,observer]) await expect(p.getByTestId('world')).toHaveAttribute('data-status','connected');
+  await walk(first,'a','x',110);await walk(first,'w','y',330);
+  await fade([first,observer],'house-0',1);
+  const actor=await local(first);
+  for(const p of [first,observer]) await expect.poll(async()=>{
+    const visuals=JSON.parse(await p.getByTestId('world').getAttribute('data-rendering')??'[]') as {id:string;depth:number;alpha:number}[];
+    return visuals.find(v=>v.id===actor.id)?.depth??0;
+  }).toBeGreaterThan(400);
+  await first.screenshot({path:'test-results/house-front-visible.png'});
+  await first.goto('/');await observer.goto('/');
+  await expect.poll(async()=>(await actors(first)).length).toBe(2);
+  await first.bringToFront();await first.keyboard.down('d');
+  await expect.poll(async()=>(await local(first)).x,{timeout:6000,intervals:[20]}).toBeGreaterThan(368);
+  const blocked=await local(first);
+  await expect.poll(async()=>Math.abs((await local(first)).y-blocked.y),{intervals:[20]}).toBeGreaterThan(16);
+  await first.keyboard.up('d');
+  await expect.poll(async()=>Math.abs((await actors(observer)).find(p=>p.id===blocked.id)!.y-blocked.y)).toBeGreaterThan(16);
+  expect((await local(first)).x).toBeLessThanOrEqual(374);
+  await a.close();await b.close();
+});

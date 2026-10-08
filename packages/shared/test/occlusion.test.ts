@@ -1,7 +1,15 @@
 import { expect, it } from 'vitest';
-import { OcclusionManager, STARTER_MAP, STARTER_OBJECT_METADATA, mapObjectSchema, polygonSchema, footprintOverlapsRect } from '../src/index.js';
+import { OcclusionManager, STARTER_MAP, STARTER_OBJECT_METADATA, mapObjectSchema, polygonSchema, footprintOverlapsRect, rearBoundaryY } from '../src/index.js';
 const house=STARTER_MAP.props.find(p=>p.id==='house-0')!;
 const behind={id:'local',x:260,y:280};
+it('front of an angled base remains opaque and actor renders in front, even above the global anchor',()=>{
+  const manager=new OcclusionManager([house]);
+  const front={id:'local',x:150,y:325};
+  expect(front.y).toBeLessThan(house.sortingAnchor.y);expect(front.y).toBeGreaterThan(rearBoundaryY(house,front.x));
+  manager.update([front]);expect(manager.target(house.id)).toBe(1);expect(manager.actorDepth(front)).toBeGreaterThan(house.sortingAnchor.y);
+  expect(manager.actorDepth({x:110,y:330},{x:70,y:240,width:100,height:115})).toBeGreaterThan(house.sortingAnchor.y);
+  manager.update([front,behind]);expect(manager.target(house.id)).toBe(0.4); // Remote actor behind still counts.
+});
 it('all authorized local/remote actors contribute, removal of one cannot reveal another',()=>{
   const a=new OcclusionManager(STARTER_MAP.props),b=new OcclusionManager(STARTER_MAP.props);
   for(const actors of [[behind],[behind,{...behind,id:'remote'}],[{...behind,id:'remote'}],[]]) {

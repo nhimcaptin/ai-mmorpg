@@ -104,8 +104,10 @@ export default function World({ starter = false }: { starter?: boolean }) {
                   visual = { image: this.add.image(player.x, player.y, 'test-character').setOrigin(57.7539 / 128, 114 / 128).setScale(world.renderScale), shadow: this.add.ellipse(player.x, player.y, 27, 9, 0x000000, 0.25) };
                   this.sprites.set(id, visual);
                 }
-                visual.image.setPosition(player.x, player.y).setDepth(player.y + 0.1);
-                visual.shadow.setPosition(player.x, player.y).setDepth(player.y);
+                visual.image.setPosition(player.x,player.y);
+                const depth=this.occlusion.actorDepth(player,visual.image.getBounds());
+                visual.image.setPosition(player.x, player.y).setDepth(depth);
+                visual.shadow.setPosition(player.x, player.y).setDepth(depth-0.1);
                 if (id === room.sessionId) this.cameras.main.startFollow(visual.image, true);
               });
               for (const [id, visual] of this.sprites) if (!present.has(id)) { visual.image.destroy(); visual.shadow.destroy(); this.sprites.delete(id); }
@@ -124,6 +126,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
               element.dataset.camera = JSON.stringify({ zoom: this.cameras.main.zoom, x: this.cameras.main.scrollX, y: this.cameras.main.scrollY });
               // Network positions stay in Phaser; DOM diagnostic avoids React movement state.
               element.dataset.players = JSON.stringify(players);
+              element.dataset.rendering=JSON.stringify([...this.sprites].map(([id,v])=>({id,depth:v.image.depth,alpha:v.image.alpha})));
               element.dataset.localId = room.sessionId;
               element.dataset.status = 'connected';
               const count = document.getElementById('player-count');

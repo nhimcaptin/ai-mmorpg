@@ -41,6 +41,8 @@ Nguyên tắc:
 - Map có thể khác kích thước nhưng phải tuân theo cùng world coordinate system.
 - Movement gameplay vẫn cho phép đi chéo; chỉ **animation hướng** giới hạn ở 4 hướng chính. Mapping hướng chéo sang N/E/S/W phải nhất quán, không làm thay đổi tốc độ di chuyển hay server-authoritative movement.
 
+- Bổ sung theo yêu cầu chủ sản phẩm 08/10/2026: giữ input khi gặp collision thì server cho nhân vật men theo cạnh footprint nếu có lối hợp lệ, không xuyên vật cản hoặc tăng tốc; khi buông phím thì dừng. Đây là movement authoritative, không do client tự sửa vị trí.
+
 ### 2.2 Art direction nhân vật — CHỐT
 - Tham khảo **phong cách hình ảnh gameplay của Thiên Kiếp Lục (tklgame.com)**, đặc biệt tỷ lệ nhân vật và cách shading; KHÔNG sao chép nguyên mẫu nhân vật, logo hay sprite có bản quyền.
 - Chibi anime fantasy MMORPG, tiên hiệp / tu luyện, góc nhìn top-down 3/4.

@@ -1,4 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
+import { canOccupy } from '@mmorpg/game-core';
+import { FOUNDATION_WORLD } from '@mmorpg/shared';
 
 async function players(page: Page): Promise<{ id: string; x: number; y: number }[]> {
   return JSON.parse(await page.getByTestId('world').getAttribute('data-players') ?? '[]');
@@ -26,9 +28,12 @@ test('two browsers share authoritative movement, collision, resize and disconnec
   await expect.poll(async () => (await players(second)).find(p => p.id === id)!.x).toBeGreaterThan(start.x + 16);
   await first.keyboard.down('d');
   await expect.poll(async () => (await local(first)).x, { timeout: 5000 }).toBeGreaterThan(360);
-  await first.waitForTimeout(250);
+  for (let sample = 0; sample < 12; sample++) {
+    expect(canOccupy(await local(first), FOUNDATION_WORLD)).toBe(true);
+    await first.waitForTimeout(20);
+  }
   await first.keyboard.up('d');
-  expect((await local(first)).x).toBeLessThanOrEqual(374);
+  expect(canOccupy(await local(first), FOUNDATION_WORLD)).toBe(true);
   await first.setViewportSize({ width: 640, height: 700 });
   await expect(first.locator('canvas')).toHaveCount(1);
   const box = await first.locator('canvas').boundingBox();

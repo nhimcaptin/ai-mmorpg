@@ -39,8 +39,10 @@ test('official starter map loads; walk under canopy, restore alpha, collide with
   await page.keyboard.down('d'); await expect.poll(async () => (await local(page)).x).toBeGreaterThan(440); await page.keyboard.up('d');
   await expect.poll(async () => (await props()).find(p => p.id === 'tree-4')?.alpha).toBe(1);
   await page.reload(); await expect(host).toHaveAttribute('data-status', 'connected');
-  await page.keyboard.down('w'); await expect.poll(async () => (await local(page)).y).toBeLessThan(385); await page.keyboard.up('w');
-  await page.keyboard.down('a'); await expect.poll(async () => !canOccupy({x:(await local(page)).x-8,y:(await local(page)).y},STARTER_MAP.world)).toBe(true);
+  // Revised house footprint's right wall ends at y350; approach that wall rather than the open ground below it.
+  await page.keyboard.down('w'); await expect.poll(async () => (await local(page)).y, { intervals: [20] }).toBeLessThan(340); await page.keyboard.up('w');
+  await page.waitForTimeout(200);
+  await page.keyboard.down('a'); await expect.poll(async () => !canOccupy({x:(await local(page)).x-8,y:(await local(page)).y},STARTER_MAP.world), { intervals: [20] }).toBe(true);
   await page.waitForTimeout(300); await page.keyboard.up('a');
   expect(canOccupy(await local(page),STARTER_MAP.world)).toBe(true);
   await page.setViewportSize({ width: 640, height: 700 });

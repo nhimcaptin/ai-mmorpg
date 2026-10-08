@@ -1,0 +1,7 @@
+{
+  "date": "2026-10-08",
+  "source": "reviewed-house-metadata-v2.json",
+  "sha256": "34f63da7ee00aa9197b89c496581c1ac3d1c1627e96a7002af26ade9c7a3062f",
+  "method": "Translate revised house-0 geometry to identical-size house-1 (+730,0) and house-2 (0,+670). Preserve previously reviewed trees.",
+  "artChanged": false
+}

@@ -1,5 +1,5 @@
 import type { Direction, Position, WorldConfig } from '@mmorpg/shared';
-import { footprintOverlapsRect } from '@mmorpg/shared';
+import { footprintOverlapsRect, vertices } from '@mmorpg/shared';
 export type { Runtime } from './runtime.js';
 export * from './numeric.js';
 
@@ -25,10 +25,34 @@ export function move(position: Position, input: Position, seconds: number, world
   const dx = input.x / length * distance / steps, dy = input.y / length * distance / steps;
   const result = { ...position };
   for (let i = 0; i < steps; i++) {
+    const direct={x:result.x+dx,y:result.y+dy};
+    if(canOccupy(direct,world)) {Object.assign(result,direct);continue;}
+    const start={...result};
     const nextX = { x: result.x + dx, y: result.y };
     if (canOccupy(nextX, world)) result.x = nextX.x;
     const nextY = { x: result.x, y: result.y + dy };
     if (canOccupy(nextY, world)) result.y = nextY.y;
+    if(Math.hypot(result.x-start.x,result.y-start.y)>1e-8) continue;
+    const candidates:{x:number;y:number;score:number;distance:number}[]=[];
+    const blocked={x:direct.x-world.footprint.halfWidth,y:direct.y-world.footprint.halfHeight,width:2*world.footprint.halfWidth,height:2*world.footprint.halfHeight};
+    const stride=Math.hypot(dx,dy);
+    for(const shape of [...world.obstacles,...world.collisionPolygons??[]]) {
+      if(!footprintOverlapsRect(shape,blocked)) continue;
+      const points=vertices(shape);
+      for(let j=0;j<points.length;j++) {
+        const a=points[j]!,b=points[(j+1)%points.length]!,ex=b.x-a.x,ey=b.y-a.y,len=Math.hypot(ex,ey);
+        const tx=ex/len,ty=ey/len,projection=dx*tx+dy*ty;
+        const t=Math.max(0,Math.min(1,((start.x-a.x)*ex+(start.y-a.y)*ey)/(len*len)));
+        const distance=Math.hypot(start.x-a.x-t*ex,start.y-a.y-t*ey);
+        const sign=Math.abs(projection)>1e-8?Math.sign(projection):(Math.hypot(start.x-a.x,start.y-a.y)<=Math.hypot(start.x-b.x,start.y-b.y)?-1:1);
+        for(const direction of Math.abs(projection)>1e-8?[sign]:[sign,-sign]) {
+          const x=tx*stride*direction,y=ty*stride*direction;
+          if(canOccupy({x:start.x+x,y:start.y+y},world)) candidates.push({x,y,score:(x*dx+y*dy)/(stride*stride),distance});
+        }
+      }
+    }
+    candidates.sort((a,b)=>a.distance-b.distance || b.score-a.score);
+    const slide=candidates[0];if(slide) {result.x+=slide.x;result.y+=slide.y;}
   }
   return result;
 }
