@@ -1,12 +1,14 @@
 import { z } from 'zod';
 import { loadStarterMap } from './map.js';
-import { STARTER_TILED_DATA, STARTER_REGISTRY } from './starter-data.js';
-export { loadStarterMap, STARTER_TILED_DATA, STARTER_REGISTRY };
+import { STARTER_TILED_DATA, STARTER_REGISTRY, STARTER_OBJECT_METADATA } from './starter-data.js';
+export { loadStarterMap, STARTER_TILED_DATA, STARTER_REGISTRY, STARTER_OBJECT_METADATA };
 export const STARTER_MAP = loadStarterMap(STARTER_TILED_DATA, STARTER_REGISTRY);
 export function isPkAllowed(area: { zone: string }): boolean { if (area.zone !== 'SAFE') throw new Error('Unknown starter zone'); return false; }
 export const STARTER_ROOM = 'starter-village-preview';
 export * from './numeric.js';
 export * from './auth.js';
+export * from './geometry.js';
+export * from './occlusion.js';
 import { worldConfigSchema } from './config.js';
 export { WORLD_UNIT, worldConfigSchema, gameplayConfigSchema, loadGameplayConfig } from './config.js';
 
@@ -36,6 +38,7 @@ export interface WorldConfig {
   spawn: Position; footprint: { halfWidth: number; halfHeight: number };
   moveSpeed: number; tickMs: number; inputTimeoutMs: number;
   renderScale: number; zoomMin: number; zoomMax: number; obstacles: Rect[];
+  collisionPolygons?: import('./geometry.js').Polygon[];
 }
 // Dữ liệu kỹ thuật cho phòng thử local, không phải map/balance phát hành.
 export const FOUNDATION_WORLD: WorldConfig = worldConfigSchema.parse({

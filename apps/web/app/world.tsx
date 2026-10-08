@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FOUNDATION_WORLD, FOUNDATION_ROOM, STARTER_MAP, STARTER_ROOM, PROTOCOL_VERSION, type WorldRoomState } from '@mmorpg/shared';
 import { MOVEMENT_MESSAGE, PROTOCOL_ERROR_MESSAGE, protocolErrorSchema } from '@mmorpg/shared';
+import { OcclusionManager, vertices } from '@mmorpg/shared';
 
 export default function World({ starter = false }: { starter?: boolean }) {
   const host = useRef<HTMLDivElement>(null);
@@ -24,6 +25,11 @@ export default function World({ starter = false }: { starter?: boolean }) {
         private nextSend = 0;
         private disposed = false;
         private props: { data: typeof STARTER_MAP.props[number]; image: import('phaser').GameObjects.Image }[] = [];
+        private occlusion = new OcclusionManager(starter ? STARTER_MAP.props : []);
+        private targets = new Map<string, number>();
+        private propDiagnostics = new Map<string, {id:string;depth:number;alpha:number;target:number}>();
+        private overlay?: import('phaser').GameObjects.Graphics;
+        private actorOverlay?: import('phaser').GameObjects.Graphics;
         preload() {
           this.load.image('test-character', '/assets/test/cultivation-idle-south.png');
           if (starter) { this.load.image('terrain', STARTER_MAP.ground); for (const prop of STARTER_MAP.props) this.load.image(prop.id, prop.image); }
@@ -32,7 +38,10 @@ export default function World({ starter = false }: { starter?: boolean }) {
           this.cameras.main.setBounds(0, 0, world.width, world.height);
           if (starter) {
             this.add.image(0, 0, 'terrain').setOrigin(0).setDepth(-1);
-            for (const data of STARTER_MAP.props) this.props.push({ data, image: this.add.image(data.x, data.y, data.id).setOrigin(0).setDisplaySize(data.width, data.height).setDepth(data.depth) });
+            for (const data of STARTER_MAP.props) {
+              this.props.push({ data, image: this.add.image(data.x, data.y, data.id).setOrigin(0).setDisplaySize(data.width, data.height).setDepth(data.depth) });
+              this.propDiagnostics.set(data.id,{id:data.id,depth:data.depth,alpha:1,target:1});
+            }
             element.dataset.mapId = world.id; element.dataset.areaId = STARTER_MAP.area.id; element.dataset.respawnId = STARTER_MAP.respawn.id;
             element.dataset.pkAllowed = String(STARTER_MAP.area.pkAllowed);
           } else {
@@ -42,6 +51,16 @@ export default function World({ starter = false }: { starter?: boolean }) {
           for (const r of world.obstacles) this.add.rectangle(r.x, r.y, r.width, r.height, 0x9b7650).setOrigin(0);
           }
           this.keys = this.input.keyboard?.addKeys('W,A,S,D') as Record<string, import('phaser').Input.Keyboard.Key> | undefined;
+          this.overlay=this.add.graphics().setDepth(Number.MAX_SAFE_INTEGER).setVisible(false);
+          this.actorOverlay=this.add.graphics().setDepth(Number.MAX_SAFE_INTEGER);
+          const debug=()=> { this.overlay!.setVisible(!this.overlay!.visible); element.dataset.debug=String(this.overlay!.visible); };
+          element.addEventListener('toggle-debug',debug);
+          for(const object of starter?STARTER_MAP.props:[]) {
+            for(const [shapes,color] of [[object.collisionFootprint,0xffffff], [object.occlusionRegion?[object.occlusionRegion]:[],0x00ffff]] as const) {
+              for(const shape of shapes) {const points=vertices(shape);this.overlay.lineStyle(2,color,1).strokePoints(points,true,true);}
+            }
+            this.overlay.lineStyle(2,0xffcc00).lineBetween(object.sortingAnchor.x-8,object.sortingAnchor.y,object.sortingAnchor.x+8,object.sortingAnchor.y).lineBetween(object.sortingAnchor.x,object.sortingAnchor.y-8,object.sortingAnchor.x,object.sortingAnchor.y+8);
+          }
           const resize = () => this.setZoom(Math.min(this.scale.width / world.width, this.scale.height / world.height));
           resize(); this.scale.on('resize', resize);
           const stop = () => this.send(0, 0);
@@ -49,6 +68,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
           this.events.once('shutdown', () => {
             this.disposed = true; this.scale.off('resize', resize);
             this.game.events.off(Phaser.Core.Events.BLUR, stop);
+            element.removeEventListener('toggle-debug',debug); this.occlusion.clear();
             if (this.room?.connection.isOpen) void this.room.leave();
           });
           close = () => { if (this.room?.connection.isOpen) void this.room.leave(); };
@@ -89,11 +109,16 @@ export default function World({ starter = false }: { starter?: boolean }) {
                 if (id === room.sessionId) this.cameras.main.startFollow(visual.image, true);
               });
               for (const [id, visual] of this.sprites) if (!present.has(id)) { visual.image.destroy(); visual.shadow.destroy(); this.sprites.delete(id); }
-              const local = players.find(player => player.id === room.sessionId);
+              this.occlusion.update(players);
               for (const prop of this.props) {
                 const { data } = prop;
-                const covered = local && data.kind === 'tree' && local.y < data.depth - 20 && local.y >= data.y && local.x >= data.x && local.x <= data.x + data.width;
-                prop.image.setAlpha(covered ? 0.5 : 1);
+                const target=this.occlusion.target(data.objectId);
+                if(this.targets.get(data.objectId)!==target) {
+                  this.targets.set(data.objectId,target);
+                  this.tweens.killTweensOf(prop.image);
+                  const publish=()=>{this.propDiagnostics.set(data.id,{id:data.id,depth:prop.image.depth,alpha:prop.image.alpha,target});element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);};
+                  this.tweens.add({targets:prop.image,alpha:target,duration:data.fadeDurationMs,ease:'Linear',onUpdate:publish,onComplete:publish});
+                }
               }
               element.dataset.props = JSON.stringify(this.props.map(({ data, image }) => ({ id: data.id, depth: image.depth, alpha: image.alpha })));
               element.dataset.camera = JSON.stringify({ zoom: this.cameras.main.zoom, x: this.cameras.main.scrollX, y: this.cameras.main.scrollY });
@@ -106,6 +131,10 @@ export default function World({ starter = false }: { starter?: boolean }) {
               setStatus('Đã kết nối');
             });
             room.onLeave(() => {
+              this.occlusion.clear(); this.targets.clear();
+              for(const prop of this.props) { this.tweens.killTweensOf(prop.image); const publish=()=>{this.propDiagnostics.set(prop.data.id,{id:prop.data.id,depth:prop.image.depth,alpha:prop.image.alpha,target:1});element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);};this.tweens.add({targets:prop.image,alpha:1,duration:prop.data.fadeDurationMs,onUpdate:publish,onComplete:publish}); }
+              for(const visual of this.sprites.values()) {visual.image.destroy();visual.shadow.destroy();} this.sprites.clear();
+              element.dataset.players='[]';
               element.dataset.status = 'disconnected';
               if (!cancelled) setStatus('Đã ngắt kết nối');
             });
@@ -122,6 +151,12 @@ export default function World({ starter = false }: { starter?: boolean }) {
           if (this.room?.connection.isOpen) this.room.send(MOVEMENT_MESSAGE, { version: PROTOCOL_VERSION, sequence: this.sequence++, x, y });
         }
         update(time: number) {
+          if(this.overlay?.visible) {
+            this.actorOverlay!.clear();
+            for(const [id,v] of this.sprites) this.actorOverlay!.lineStyle(2,id===this.room?.sessionId?0x00ff00:0xff00ff).strokeRect(v.image.x-world.footprint.halfWidth,v.image.y-world.footprint.halfHeight,world.footprint.halfWidth*2,world.footprint.halfHeight*2);
+            // Render authorized local/remote feet; no new visibility or networking channel.
+            element.dataset.debugActors=JSON.stringify([...this.sprites].map(([id,v])=>({id,x:v.image.x,y:v.image.y,local:id===this.room?.sessionId})));
+          } else this.actorOverlay?.clear();
           if (time < this.nextSend || !this.keys) return;
           this.nextSend = time + world.tickMs;
           const active = document.hasFocus();
@@ -135,7 +170,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
     return () => { cancelled = true; close?.(); disconnect.current = null; game?.destroy(true); };
   }, [starter]);
   return <section aria-label="Cảnh multiplayer thử nghiệm">
-    <div className="toolbar"><span role="status">{status}</span><span>Người trong phòng: <b id="player-count">0</b></span><button onClick={() => disconnect.current?.()}>Ngắt kết nối</button></div>
+    <div className="toolbar"><span role="status">{status}</span><span>Người trong phòng: <b id="player-count">0</b></span><button onClick={() => disconnect.current?.()}>Ngắt kết nối</button>{starter && <><button onClick={()=>host.current?.dispatchEvent(new Event('toggle-debug'))}>Collision debug</button><a href="/tools/collision">Chỉnh footprint</a></>}</div>
     <div ref={host} data-testid="world" className="world" />
   </section>;
 }

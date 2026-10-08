@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { polygonSchema, footprintOverlapsRect } from './geometry.js';
 
 // GAME_SPEC 2.1: immutable world unit; remaining numeric fields are config.
 export const WORLD_UNIT = 32;
@@ -10,6 +11,7 @@ export const worldConfigSchema = z.object({
   spawn: position, footprint: z.object({ halfWidth: positive, halfHeight: positive }).strict(),
   moveSpeed: positive, tickMs: positive, inputTimeoutMs: positive,
   renderScale: positive, zoomMin: positive, zoomMax: positive,
+  collisionPolygons: z.array(polygonSchema).default([]),
   obstacles: z.array(z.object({ x: z.number().finite().nonnegative(), y: z.number().finite().nonnegative(), width: positive, height: positive }).strict())
 }).strict().superRefine((world, ctx) => {
   const issue = (message: string) => ctx.addIssue({ code: z.ZodIssueCode.custom, message });
@@ -20,6 +22,10 @@ export const worldConfigSchema = z.object({
   for (const r of world.obstacles) {
     if (r.x + r.width > world.width || r.y + r.height > world.height) issue('obstacle outside world');
     if (p.x + w > r.x && p.x - w < r.x + r.width && p.y + h > r.y && p.y - h < r.y + r.height) issue('spawn overlaps collision');
+  }
+  for (const shape of world.collisionPolygons) {
+    if (shape.points.some(p=>p.x<0 || p.y<0 || p.x>world.width || p.y>world.height)) issue('polygon outside world');
+    if (footprintOverlapsRect(shape,{x:p.x-w,y:p.y-h,width:2*w,height:2*h})) issue('spawn overlaps collision');
   }
 });
 export const gameplayConfigSchema = z.object({

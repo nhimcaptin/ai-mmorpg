@@ -1,5 +1,21 @@
 # Tiến độ dự án 2D MMORPG
 
+## T60 Collision footprint & multiplayer occlusion — 08/10/2026
+
+Chủ sản phẩm CHỐT mới áp dụng toàn game, cho phép cập nhật GAME_SPEC; đã thay rule nhà toàn bounding box/tree-only/local alpha0.5 bằng mục2.5 footprint polygon/multiple AABB và fade mọi authorized actor0.4/150–200ms. Không đổi art painted, source PNG, camera, world unit, tick, movement normalization/substeps hoặc session/network visibility. T60 DONE **phạm vi cơ chế/metadata/editor đã kiểm chứng**; không claim khớp đường trắng chưa có tham chiếu. Footprint và occlusion contour được dựng từ asset thật đã xem, cần chủ sản phẩm duyệt hình ảnh/editor cho độ chính xác mỹ thuật.
+
+Shared geometry strict hỗ trợ polygon lõm/simple (reject self intersection/degenerate), rect và validation bounds/spawn; game-core collision và server dùng cùng parsed geometry. Metadata6 props production Starter Village tách visualBounds/collisionFootprint/occlusionRegion/sortingAnchor. Tiled layers và generated shared data đồng bộ, check PASS. Map/Forge QA cũ giữ lịch sử, không lấy report cũ làm chứng minh geometry mới.
+
+OcclusionManager static spatial grid tra actors từ snapshot area được phép, aggregate per-actor coverage, giữ mờ khi một người rời còn người khác. Entry inset2/exit region gốc chống jitter; tween180ms chỉ trên object khi target đổi. Disconnect/rejoin snapshot clear stale coverage. Không gửi opacity, không mở data visibility mới, không làm mờ actor/map hoặc sửa collision. Chưa stress/AOI nhiều khu.
+
+Editor /tools/collision có drag vertex, polygon/multiple AABB, anchor, overlays, local/remote preview, JSON import/export và offline strict importer. /starter có Collision debug; debug actors chân local/remote. Đã browser QA xuất JSON6 objects rồi loadStarterMap validate PASS, pageerror rỗng; ảnh editor đã xem. Không có runtime endpoint cho client sửa collision server.
+
+Gate cuối logs/collision-occlusion: lint/typecheck/build PASS (4 packages), pnpm test PASS25 unit/integration +31/31 mock (RemoteSigned process-only theo setup, không thay policy máy), pnpm test:e2e PASS5/5 (~1.1 phút): auth, foundation hai client, multiplayer house local/remote aggregate+disconnect/reload, editor, starter tree/root/house/resize/zoom. Có sample opacity trung gian chứng minh fade mượt. DB thật PASS5 suite, gồm authenticated reconnect30s/replacement/expiry/logout và starter invalid-footprint rollback; DB test local, không reset hoặc migrate dev. Malformed client position/stale sequence regression vẫn PASS.
+
+Lượt E2E đầu3/5: sửa exact selector Geometry trùng SVG label; sửa assertion tree restoration cũ bằng bước đi ra ngoài tán vì north root edge vẫn thực sự che. Không tắt test hoặc nới assertion collision. Hai lượt E2E sau5/5 PASS, cuối sau cập nhật diagnostics tránh quét props mỗi frame. Typecheck đầu sửa literal0.4 của metadata bằng parse schema (1 lượt). Ảnh multiplayer-house-occlusion và collision-editor giữ ở assets/maps/starter_village/runtime-qa; đã xem cả hai. Tất cả thay đổi trong ngân sách3 lượt sửa/issue.
+
+T09 tiếp tục DOING/PAUSE, recovery503 chưa triển khai; T10/T11/T13 và A02/A03/T17 đầy đủ không tự DONE, D02–D15 chưa được tự mở. Không auto-dev.ps1/codex exec/push/deploy/reset/secrets. Dừng sau checkpoint local theo yêu cầu. Hướng dẫn nguồn/metadata/cách duyệt và verification chi tiết ở COLLISION_OCCLUSION.md.
+
 ## PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
 
 Đã dừng phát triển ngay theo yêu cầu chuyển máy; không bắt đầu task mới. Kiểm tra thực tế sau interruption: commit triển khai **21613ffcd7560e79b76a31b26d92bbb50e273127** đã hoàn tất, branch main, index sạch. Git còn duy nhất GAME_SPEC.md modified (30 dòng D01/starter từ lượt trước), giữ nguyên SHA256 `2c0b1f5b60547a92cb22b2e8f566549e9afebb622af92b4712a8a4d8bfddb9f0` và không stage file đó.
@@ -220,3 +236,7 @@ FAILED: Codex exit 1; không có checkpoint.. Không checkpoint; log logs/auto-d
 ### Auto-dev 2026-10-08T08:30:46.348Z — T03: BLOCKED
 
 Sandbox chỉ cho phép đọc, không có quyền ghi file để triển khai T03.; Lệnh đọc AGENTS.md, GAME_SPEC.md, docs/tasks.md và docs/progress.md bị chính sách thực thi từ chối (blocked by policy); chưa thể kiểm tra tài liệu và code bắt buộc trước khi sửa.
+
+## Kiểm tra máy nhà — 08/10/2026
+
+Chỉ setup/bàn giao, không resume phát triển. HEAD bcf04e8 đã commit 30 dòng D01/starter, không apply patch lại. Runtime FE/BE preview và DB/auth gates PASS; lint/typecheck/build, 19 unit/integration + 31 mock PASS (mock cần RemoteSigned process-only). E2E hai lượt đều 2/3 PASS: starter.spec.ts:27 expected x<328 nhưng nhận 336/328; chưa sửa code/assertion, chưa claim full browser PASS. Forge đủ 5 skills; Python bundled/numpy/Pillow/FFmpeg chạy được, PATH Python còn Store alias, chưa có video generation route. PostgreSQL volume mới local; chỉ migrate/test mmorpg_test, dev chưa migrate, không reset. T59 giữ DONE theo checkpoint; T09 DOING/PAUSE và recovery 503 giữ nguyên. Báo cáo, cấu hình thủ công và bằng chứng: HOME_SETUP.md, logs/home-setup. Không sửa GAME_SPEC, push/deploy hoặc chạy auto-dev/codex exec.

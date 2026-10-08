@@ -5,8 +5,16 @@ it('spawn and paths are walkable; buildings and tree roots block the same AABB u
   const world = STARTER_MAP.world;
   expect(canOccupy(world.spawn, world)).toBe(true);
   for (const input of [{ x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 }, { x: 0, y: -1 }]) expect(move(world.spawn, input, 0.2, world)).not.toEqual(world.spawn);
-  expect(canOccupy({ x: 260, y: 200 }, world)).toBe(false);
+  expect(canOccupy({ x: 260, y: 200 }, world)).toBe(true); // Roof visual is walkable ground behind the house.
+  expect(canOccupy({ x: 260, y: 375 }, world)).toBe(false);
   expect(canOccupy({ x: 300, y: 750 }, world)).toBe(false);
   expect(canOccupy({ x: 300, y: 624 }, world)).toBe(true);
-  expect(move({ x: 624, y: 200 }, { x: -1, y: 0 }, 5, world).x).toBeGreaterThanOrEqual(402);
+  expect(move({ x: 624, y: 375 }, { x: -1, y: 0 }, 5, world).x).toBeGreaterThan(360);
+  expect(move({ x: 624, y: 200 }, { x: -1, y: 0 }, 2, world).x).toBeLessThan(392);
+});
+it('multiple footprint AABBs preserve walkable gaps and delayed ticks cannot tunnel through polygons',()=>{
+  const world={...STARTER_MAP.world,collisionPolygons:[],obstacles:[{x:100,y:100,width:30,height:30},{x:180,y:100,width:30,height:30}]};
+  expect(canOccupy({x:155,y:115},world)).toBe(true);
+  expect(canOccupy({x:115,y:115},world)).toBe(false);
+  expect(move({x:260,y:300},{x:0,y:1},10,STARTER_MAP.world).y).toBeLessThan(375);
 });

@@ -67,8 +67,18 @@ Nguyên tắc:
 - Asset mới phải tuân theo mục 2.2–2.3; không tự ý chuyển lại 8 hướng hay 192x192.
 - Validate transparency, frame dimensions/count, alignment, origin, baseline, visual consistency và animation preview trước khi integrate.
 - Map phải hỗ trợ props, collision, depth/Y-sort và world coordinates thống nhất FE/BE.
-- Building/structure chặn vùng gameplay không cho đi phía sau; tree collision chỉ chặn trunk/root, cho phép đi dưới tán. Tree có vùng occlusion riêng để fade khoảng 0.5 khi che local player; khi rời vùng trả alpha về 1. Water dùng polygon collision theo bờ thực tế.
+- Collision nhà/cây/công trình bám chân đế thực tế, dùng polygon hoặc nhiều AABB; không dùng toàn bộ sprite/image bounding box. Cho phép đi sau mái/tán ở vùng ngoài footprint. Water dùng polygon theo bờ thực tế.
+- Occlusion áp dụng cho mọi object theo mục 2.5, thay thế quy tắc tree-only/local-only/alpha 0.5 trước đây theo CHỐT mới của chủ sản phẩm.
 - Collision authoritative ở server; tree fade là hiệu ứng visual client-side. Không thay đổi movement/camera/networking ổn định chỉ vì thay art.
+
+### 2.5 Collision và multiplayer occlusion — CHỐT (08/10/2026)
+
+- Áp dụng toàn game, không chỉ Starter Village. Collision footprint, visual bounds, occlusion region và sorting anchor là các dữ liệu tách biệt; FE/BE dùng cùng collision. Vùng đỏ tham chiếu cũ là tool tạo sai, đường trắng là mục tiêu; thiếu ảnh/tọa độ chính xác phải xem asset và cung cấp editor trực quan, không claim đã khớp đường trắng.
+- Server authoritative vị trí/collision; không phá movement, camera, Y-sort. Không đổi collision khi object mờ; không đổi painted/cartoon soft shading.
+- Khi bất kỳ local hoặc remote Character được phép quan sát trong cùng Area thực sự bị object phía trước che, object fade về opacity 0.4 trong 150–200ms trên tất cả client quan sát object. Không fade Character/map hoặc chỉ vì đứng gần. Nhiều Character cùng che vẫn mờ, chỉ về 1 khi không còn ai bị che. Có cơ chế ổn định ranh giới chống flicker.
+- Client tính từ toàn bộ vị trí Character liên quan nhận qua đồng bộ hiện có và metadata chung; không gửi opacity liên tục qua WebSocket, không nhận/lộ vị trí ngoài visibility được phép. Cơ chế chung cho mọi object, ưu tiên spatial index hoặc viewport/nearby filter thay vì duyệt toàn map mỗi frame.
+- Metadata object hỗ trợ objectId, visualBounds, collisionFootprint (polygon/multiple AABB), occlusionRegion, sortingAnchor, fadeOpacity. Debug/editor có thể hiển thị footprint, occlusion, anchor, local/remote và bật/tắt overlays. Disconnect/reconnect phải cập nhật occupancy đúng, không lưu coverage của entity đã rời snapshot.
+- Mọi thay đổi geometry cần kiểm định loader, server collision, unit và browser hai client; việc duyệt đường trắng bằng hình ảnh là riêng khi chưa có tham chiếu chính xác.
 
 ## 3. Account và Character — CHỐT
 

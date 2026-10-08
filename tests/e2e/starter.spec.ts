@@ -1,4 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
+import { canOccupy } from '../../packages/game-core/src/index.js';
+import { STARTER_MAP } from '../../packages/shared/src/index.js';
 async function local(page: Page) {
   const host = page.getByTestId('world');
   const id = await host.getAttribute('data-local-id');
@@ -20,25 +22,27 @@ test('official starter map loads; walk under canopy, restore alpha, collide with
   expect(await local(page)).toMatchObject({ x: 624, y: 624 });
   await page.keyboard.down('a');
   // Stop ahead of the target to account for the existing 50ms input/patch cadence.
-  await expect.poll(async () => (await local(page)).x, { intervals: [20] }).toBeLessThan(342);
+  await expect.poll(async () => (await local(page)).x, { intervals: [20] }).toBeLessThan(315);
   await page.keyboard.up('a');
   await page.waitForTimeout(200);
   expect((await local(page)).x).toBeGreaterThan(272);
   expect((await local(page)).x).toBeLessThan(328);
   const props = async () => JSON.parse(await host.getAttribute('data-props') ?? '[]') as { id: string; alpha: number; depth: number }[];
-  await expect.poll(async () => (await props()).find(p => p.id === 'tree-4')?.alpha).toBe(0.5);
+  await expect.poll(async () => (await props()).find(p => p.id === 'tree-4')?.alpha).toBeCloseTo(0.4,3);
   expect((await props()).find(p => p.id === 'tree-4')!.depth).toBeGreaterThan((await local(page)).y);
   await page.screenshot({ path: 'test-results/starter-canopy.png' });
   await page.keyboard.down('s');
-  await expect.poll(async () => (await local(page)).y).toBeGreaterThanOrEqual(732);
+  await expect.poll(async () => !canOccupy({x:(await local(page)).x,y:(await local(page)).y+8},STARTER_MAP.world)).toBe(true);
   await page.waitForTimeout(300); await page.keyboard.up('s');
-  expect((await local(page)).y).toBeLessThanOrEqual(732);
+  expect(canOccupy(await local(page),STARTER_MAP.world)).toBe(true);
+  // At the trunk's north edge the character is still behind the tree; leave the canopy before expecting full opacity.
+  await page.keyboard.down('d'); await expect.poll(async () => (await local(page)).x).toBeGreaterThan(440); await page.keyboard.up('d');
   await expect.poll(async () => (await props()).find(p => p.id === 'tree-4')?.alpha).toBe(1);
   await page.reload(); await expect(host).toHaveAttribute('data-status', 'connected');
-  await page.keyboard.down('w'); await expect.poll(async () => (await local(page)).y).toBeLessThan(205); await page.keyboard.up('w');
-  await page.keyboard.down('a'); await expect.poll(async () => (await local(page)).x).toBeLessThan(420);
+  await page.keyboard.down('w'); await expect.poll(async () => (await local(page)).y).toBeLessThan(385); await page.keyboard.up('w');
+  await page.keyboard.down('a'); await expect.poll(async () => !canOccupy({x:(await local(page)).x-8,y:(await local(page)).y},STARTER_MAP.world)).toBe(true);
   await page.waitForTimeout(300); await page.keyboard.up('a');
-  expect((await local(page)).x).toBeGreaterThanOrEqual(402);
+  expect(canOccupy(await local(page),STARTER_MAP.world)).toBe(true);
   await page.setViewportSize({ width: 640, height: 700 });
   expect((await page.locator('canvas').boundingBox())!.width).toBeLessThanOrEqual(640);
   const before = JSON.parse(await host.getAttribute('data-camera') ?? '{}').zoom as number;

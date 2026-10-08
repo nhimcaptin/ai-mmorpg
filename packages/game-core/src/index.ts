@@ -1,4 +1,5 @@
 import type { Direction, Position, WorldConfig } from '@mmorpg/shared';
+import { footprintOverlapsRect } from '@mmorpg/shared';
 export type { Runtime } from './runtime.js';
 export * from './numeric.js';
 
@@ -10,7 +11,9 @@ export function directionFor(x: number, y: number, previous: Direction): Directi
 export function canOccupy(position: Position, world: WorldConfig): boolean {
   const { halfWidth: w, halfHeight: h } = world.footprint;
   if (position.x - w < 0 || position.y - h < 0 || position.x + w > world.width || position.y + h > world.height) return false;
-  return !world.obstacles.some(r => position.x + w > r.x && position.x - w < r.x + r.width && position.y + h > r.y && position.y - h < r.y + r.height);
+  if (!Number.isFinite(position.x) || !Number.isFinite(position.y)) return false;
+  const rect={x:position.x-w,y:position.y-h,width:2*w,height:2*h};
+  return ![...world.obstacles,...world.collisionPolygons??[]].some(shape=>footprintOverlapsRect(shape,rect));
 }
 export function move(position: Position, input: Position, seconds: number, world: WorldConfig): Position {
   if (!Number.isFinite(seconds) || seconds < 0 || !Number.isFinite(input.x) || !Number.isFinite(input.y)) throw new Error('Invalid movement');

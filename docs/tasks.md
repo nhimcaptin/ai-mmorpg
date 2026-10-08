@@ -62,11 +62,13 @@ D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa t
 | T06 | Thiết lập PostgreSQL và Prisma nền tảng | T01, T03 | Không | Migration tạo DB trống chạy thành công; kết nối/shutdown đúng; hướng dẫn môi trường local không chứa secrets; test không ghi vào DB thật. |
 | T07 | Xây primitive giao dịch và idempotency | T04, T06 | Không | Test concurrent request/retry/crash tại ranh giới commit không double-credit/debit; rollback không ghi nửa giao dịch; cùng khóa khác payload bị từ chối. |
 | T08 | Lập schema persistence Account/Character | T05–T07; numeric đã duyệt mục 4.1 | Không | Unique account-character bảo đảm tối đa một nhân vật; enum class đúng ba loại; lưu Realm/Star/HP/KI/Gold/map/respawn/PK với validation; migration và đọc/ghi round-trip qua. |
-| T59 | Starter Village và loader production | T05, T08; style/ID theo xác nhận người dùng | Terrain/house/tree host_image trong assets/maps/starter_village | DONE: Tiled/registry dùng chung FE–BE; SAFE/PK OFF; respawn (624,624) hợp bounds/AABB; nhà chặn toàn vùng, cây chặn root và fade 0.5→1, Y-sort/camera; Forge validate/nav/route PASS, unit/DB/browser gate PASS. A02/A03 đầy đủ không tự DONE. |
+| T59 | Starter Village và loader production | T05, T08; style/ID theo xác nhận người dùng | Terrain/house/tree host_image trong assets/maps/starter_village | DONE: Tiled/registry dùng chung FE–BE; SAFE/PK OFF; respawn (624,624) hợp bounds/AABB; footprint nhà/cây hiện theo T60, Y-sort/camera; Forge validate/nav/route và gate PASS ở checkpoint T59. Geometry/occlusion mới thay bằng T60 đã verify; A02/A03 đầy đủ không tự DONE. |
 | T09 | Backend xác thực và quản lý phiên | T04, T08, D01, T59 (vị trí starter đã kiểm định) | Không | Đăng nhập/đăng xuất và khôi phục theo quyết định; phiên sai/hết hạn bị từ chối; kiểm thử phiên đồng thời và reconnect; credential không lộ trong response/log. |
 | T10 | Backend tạo và tải nhân vật | T05, T07–T09, D01 | Không | Tạo ba class theo dữ liệu duyệt; hai request tạo đồng thời vẫn chỉ một Character; không đổi class qua API; tải đúng dữ liệu đã lưu. |
 | T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | Có trạng thái chờ/lỗi/phiên hết hạn; refresh giữ hoặc kết thúc phiên đúng chính sách; route gameplay chặn người chưa xác thực; browser test luồng đăng nhập qua. |
 | T12 | Frontend tạo/chọn nhân vật hiện có | T10–T11, D12 | A02 | Hiển thị ba class và appearance được duyệt; tạo một lần, lần sau vào nhân vật cũ; lỗi tên/phiên hiển thị rõ; không có điều khiển đổi class. |
+
+| T60 | Collision footprint và multiplayer occlusion chung | T05, T59; CHỐT mới GAME_SPEC 2.5 | Art hiện hữu | DONE phạm vi kỹ thuật: polygon/multiple AABB, metadata/editor/debug, fade 0.4/180ms từ tất cả authorized actors; 25 unit/integration +31 mock, DB, lint/typecheck/build và E2E5/5 PASS. Footprint đường trắng cần duyệt hình ảnh; không claim pixel-perfect. |
 
 ## 2. Pipeline tài nguyên đồ họa
 
@@ -91,7 +93,7 @@ Gói nội dung lớn A04–A06 được tách theo NPC/monster/Visual Set/map t
 | T14 | Loader Map/Area và collision thuần domain | T05, T13 | Không | Map khác Area; validate IDs, bounds, polygon và spawn; fixture cùng tọa độ FE/BE; test building/tree/water và footprint chân, không dùng sprite bbox. |
 | T15 | Movement authoritative và input sequence | T04, T13–T14 | Không | Server nhận intent WASD, tính vị trí/tốc độ/collision; đi chéo không tăng tốc; reject teleport/payload sai/input cũ; test boundary và packet trùng. |
 | T16 | Phaser lifecycle, input và bridge HUD | T11, T13, T15 | Không | Mount/unmount/reconnect không nhân listener/canvas; React chỉ nhận dữ liệu HUD, không chứa state movement từng tick; input bỏ qua khi focus text/panel theo thiết kế UI. |
-| T17 | Render map, depth và tree occlusion | T14, T16 | A03 | Map Tiled tải đúng; Y-sort theo chân; đi dưới tán nhưng không xuyên trunk/building/water; tree che local player fade khoảng 0.5 rồi về 1; hiệu ứng không đổi collision server. |
+| T17 | Render map, depth và tree occlusion | T14, T16 | A03 | Map Tiled tải đúng; Y-sort theo chân; đi dưới tán nhưng không xuyên trunk/building/water; occlusion chung theo GAME_SPEC 2.5/T60: mọi authorized local/remote actor, fade0.4/150–200ms, không đổi collision server. |
 | T18 | Player animation, scale và camera responsive | T15–T17 | A02 | N/E/S/W, IDLE 4/RUN 8×128; mapping hướng chéo nhất quán; origin/baseline/shadow ổn định; scale map/camera cấu hình, preview 70–100 world px; viewport 1920×1080 và resize/zoom clamp qua browser. |
 | T19 | Đặt entities và spawn theo dữ liệu map | T05, T14, T17, D05 | A03–A04 (phần map đầu) | NPC/monster/spawn/respawn ID đúng catalog; vị trí không mắc collision; render cùng vị trí server; spawn sai bị validator từ chối. |
 | T20 | Đồng bộ, reconciliation và reconnect | T09, T13, T15, T18, D01 | A02–A03 | Hai browser thấy nhau di chuyển; mô phỏng latency/mất gói không tạo teleport hay duplicate player; reconnect áp dụng chính sách phiên và snapshot server, không ghi đè bằng vị trí client. |
@@ -191,6 +193,17 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
 {
   "version": 1,
   "tasks": [
+    {
+      "id": "T60",
+      "kind": "task",
+      "status": "DONE",
+      "dependencies": [
+        "T05",
+        "T59"
+      ],
+      "assets": [],
+      "e2e": true
+    },
     {
       "id": "D15",
       "kind": "decision",
@@ -1328,3 +1341,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
 }
 ```
 <!-- AUTO_DEV_TASKS_END -->
+
+## Kiểm tra bàn giao máy nhà — 08/10/2026
+
+Không thay registry hoặc mở task phát triển. T59 giữ DONE; T09 DOING/PAUSE, recovery chưa thực hiện và trả 503. Setup/runtime/core gates đã kiểm, E2E Starter Village FAIL hai lượt tại assertion điểm dừng x<328; cần xử lý trước khi xác nhận browser acceptance toàn bộ máy nhà. Xem HOME_SETUP.md và progress.md. Chưa resume T09 hoặc task phụ thuộc.

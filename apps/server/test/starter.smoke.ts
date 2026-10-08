@@ -34,7 +34,7 @@ export async function testStarter(database: PrismaClient) {
     }
   }
   const accountId = randomUUID();
-  const map = structuredClone(STARTER_MAP); map.world.spawn = { x: 260, y: 200 }; map.respawn.x = 260; map.respawn.y = 200;
+  const map = structuredClone(STARTER_MAP); map.world.spawn = { x: 260, y: 375 }; map.respawn.x = 260; map.respawn.y = 375;
   await assert.rejects(database.$transaction(async tx => { await tx.account.create({ data: { id: accountId } }); await initializeCharacter(tx, { id: randomUUID(), accountId, class: 'TANK' }, map); }));
   assert.equal(await database.account.findUnique({ where: { id: accountId } }), null);
   const rollbackId = randomUUID();

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { worldConfigSchema } from './config.js';
+import { mapObjectSchema } from './geometry.js';
+import { STARTER_OBJECT_METADATA } from './starter-data.js';
 const number = z.number().finite();
 const properties = z.array(z.object({ name: z.string(), value: z.union([number, z.string(), z.boolean()]) }).passthrough()).default([]);
 const object = z.object({ name: z.string(), type: z.string(), x: number, y: number, width: number.default(0), height: number.default(0), gid: z.number().int().optional(), properties }).passthrough();
@@ -12,7 +14,9 @@ const property = (values: Properties, name: string) => values.find(value => valu
 const imagePath = (value: string) => { if (!/^images\/[\w.-]+\.png$/.test(value)) throw new Error('Unsafe map asset path'); return `/assets/maps/starter_village/${value}`; };
 
 /** Loads the official embedded Tiled export; geometry is shared by FE and BE. */
-export function loadStarterMap(value: unknown, registryValue: unknown) {
+export function loadStarterMap(value: unknown, registryValue: unknown, metadataValue: unknown = STARTER_OBJECT_METADATA) {
+  const metadata=z.array(mapObjectSchema).parse(metadataValue);
+  if(new Set(metadata.map(o=>o.objectId)).size!==metadata.length) throw new Error('Duplicate object ID');
   const registry = z.object({ areas: z.array(z.object({ id: z.literal('area_01'), mapId: z.literal('starter_village'), zone: z.literal('SAFE'), bounds: z.tuple([number, number, number, number]) }).strict()).length(1),
     runtime: worldConfigSchema.innerType().pick({ moveSpeed: true, tickMs: true, inputTimeoutMs: true, footprint: true, renderScale: true, zoomMin: true, zoomMax: true }).strict()
   }).strict().parse(registryValue);
@@ -21,9 +25,11 @@ export function loadStarterMap(value: unknown, registryValue: unknown) {
   const respawn = map.layers.flatMap(layer => layer.objects).find(item => item.name === 'starter_respawn_01' && item.type === 'spawn');
   const ground = map.layers.find(layer => layer.name === 'terrain' && layer.type === 'imagelayer')?.image;
   if (!respawn || !ground) throw new Error('Missing terrain/respawn');
-  const obstacles = map.layers.filter(layer => layer.name === 'collision').flatMap(layer => layer.objects).map(item => ({ x: item.x, y: item.y, width: item.width, height: item.height }));
+  const shapes=metadata.flatMap(o=>o.collisionFootprint);
+  const obstacles=shapes.filter(shape=>!('points' in shape));
+  const collisionPolygons=shapes.filter(shape=>'points' in shape);
   const world = worldConfigSchema.parse({ id: 'starter_village', areaId: 'area_01', width: property(map.properties, 'worldWidth'), height: property(map.properties, 'worldHeight'), unit: 32,
-    spawn: { x: respawn.x, y: respawn.y }, obstacles,
+    spawn: { x: respawn.x, y: respawn.y }, obstacles, collisionPolygons,
     ...registry.runtime });
   if (registry.areas[0]!.bounds.join(',') !== [0, 0, world.width, world.height].join(',')) throw new Error('Starter area bounds mismatch');
   const props = map.layers.filter(layer => layer.name === 'props').flatMap(layer => layer.objects).map(item => {
@@ -31,9 +37,16 @@ export function loadStarterMap(value: unknown, registryValue: unknown) {
     const tile = tileset?.tiles.find(tile => tileset.firstgid + tile.id === item.gid);
     if (!tile || item.width <= 0 || item.height <= 0) throw new Error('Missing prop art/size');
     const kind = z.enum(['house', 'tree']).parse(property(tile.properties, 'prop'));
-    return { id: item.name, kind, image: imagePath(tile.image), x: item.x, y: item.y - item.height,
-      width: item.width, height: item.height, depth: Number(property(item.properties, 'sortY')) };
+    const authored=metadata.find(o=>o.objectId===item.name);
+    if(!authored || authored.visualBounds.x!==item.x || authored.visualBounds.y!==item.y-item.height || authored.visualBounds.width!==item.width || authored.visualBounds.height!==item.height) throw new Error('Missing/mismatched object metadata');
+    if(authored.sortingAnchor.x<item.x || authored.sortingAnchor.x>item.x+item.width || authored.sortingAnchor.y<item.y-item.height || authored.sortingAnchor.y>item.y) throw new Error('Sorting anchor outside object');
+    const points=authored.collisionFootprint.flatMap(shape=>'points' in shape?shape.points:[{x:shape.x,y:shape.y},{x:shape.x+shape.width,y:shape.y+shape.height}]);
+    if(authored.occlusionRegion) points.push(...('points' in authored.occlusionRegion?authored.occlusionRegion.points:[{x:authored.occlusionRegion.x,y:authored.occlusionRegion.y},{x:authored.occlusionRegion.x+authored.occlusionRegion.width,y:authored.occlusionRegion.y+authored.occlusionRegion.height}]));
+    if(points.some(p=>p.x<item.x || p.x>item.x+item.width || p.y<item.y-item.height || p.y>item.y)) throw new Error('Object geometry outside visual bounds');
+    return { ...authored, id: item.name, kind, image: imagePath(tile.image), x: item.x, y: item.y - item.height,
+      width: item.width, height: item.height, depth: authored.sortingAnchor.y };
   });
+  if(props.length!==metadata.length) throw new Error('Unknown object metadata');
   if (props.some(prop => !Number.isFinite(prop.depth) || prop.x < 0 || prop.y < 0 || prop.x + prop.width > world.width || prop.y + prop.height > world.height)) throw new Error('Prop outside world');
   return { world, ground: imagePath(ground), props,
     area: { id: 'area_01', mapId: world.id, zone: 'SAFE' as const, pkAllowed: false as const },
