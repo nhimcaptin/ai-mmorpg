@@ -7,3 +7,11 @@ h1 { font-size: clamp(24px, 4vw, 36px); }
 button { background: #294751; color: inherit; border: 1px solid #60828d; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
 .world { height: min(65vh, 640px); width: 100%; overflow: hidden; border: 1px solid #42636c; }
 .world canvas { display: block; }
+.auth-panel { max-width: 480px; }
+.auth-panel form { display: grid; gap: 16px; padding: 16px 0; }
+.auth-panel label { display: grid; gap: 6px; }
+.auth-panel input { font: inherit; padding: 10px; border: 1px solid #60828d; border-radius: 6px; background: #162a30; color: inherit; min-width: 0; }
+.auth-panel details, details.auth-panel { margin-top: 24px; }
+summary { cursor: pointer; }
+button:disabled { opacity: 0.6; cursor: wait; }
+a { color: #a6cce5; }

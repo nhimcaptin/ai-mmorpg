@@ -23,7 +23,7 @@ Token ngẫu nhiên 32 bytes, DB chỉ giữ SHA256, ràng buộc account/purpos
 
 Mock side channel: --test-email yêu cầu NODE_ENV=test, URL loopback /mmorpg_test, EMAIL_MOCK_FILE, AUTH_EMAIL_TOKEN_TTL_MS và AUTH_EMAIL_COOLDOWN_MS. Mailbox JSONL chứa token **chỉ test**, nằm trong logs ignored; không có API đọc mailbox. Test dùng địa chỉ example.invalid, không gửi email thật. E2E tự cấu hình TTL120000/cooldown1000 test-only; chưa chọn TTL hoặc nhà cung cấp email production. Không in/copy mailbox vào commit hoặc báo cáo.
 
-Các endpoint chỉ được bật bằng `--auth-local`, không bật production. Chưa nghiệm thu vận hành nhiều process, TLS, rate-limit phân tán hoặc frontend auth T11. HTTP có JSON body limit, giới hạn hai tác vụ hash đang xử lý qua endpoint, bearer auth không cookie và Cache-Control no-store; không log body/credential. Session TTL là config bắt buộc, không tự đặt TTL production. Cấu hình 120000ms trong E2E chỉ phục vụ test expiry, không là quy tắc CHỐT.
+Các endpoint chỉ được bật bằng `--auth-local`, không bật production. Chưa nghiệm thu vận hành nhiều process, TLS hoặc rate-limit phân tán. HTTP backend có JSON body limit, giới hạn hai tác vụ hash đang xử lý qua endpoint, bearer auth và Cache-Control no-store; không log body/credential. Session TTL là config bắt buộc, không tự đặt TTL production. Cấu hình120000ms trong E2E chỉ phục vụ test expiry, không là quy tắc CHỐT.
 
 Chạy kiểm chứng:
 
@@ -39,6 +39,8 @@ pnpm build
 pnpm test:e2e
 ```
 
-E2E tự bật auth-local với DB mmorpg_test và TTL test. Cleanup chỉ xóa rows có UUID/requestId của lượt test. Migration 004/005 additive; dữ liệu Account/Character cũ được giữ nguyên, không tự backfill credentials/initialization. DB dev chưa được migrate trong lượt này. Rollback ứng dụng có thể chạy code cũ cùng bảng mới; không tự drop bảng/cột. Các bảng mới chưa dùng cho production.
+E2E tự bật auth-local với DB mmorpg_test và TTL test. Cleanup chỉ xóa rows có UUID/requestId của lượt test; đã dọn1 fixture UI còn lại từ lượt timeout bằng matching registration receipt. Migration004/005/006 additive; dữ liệu Account/Character cũ được giữ nguyên, không tự backfill credentials/initialization. DB dev local đã kiểm trống và deploy001–006 sau T11 để chạy auth local, không reset. Rollback ứng dụng có thể chạy code cũ cùng bảng mới; không tự drop bảng/cột. Các bảng mới chưa dùng cho production; chưa có SMTP/provider adapter thật.
 
-Chạy backend local riêng: đặt DATABASE_URL local đã migrate và AUTH_SESSION_TTL_MS hợp lệ do người vận hành lựa chọn, rồi `pnpm --filter @mmorpg/server exec node dist/index.js --auth-local`. Web `/starter` hiện vẫn nối room preview để xem map; frontend login/session là T11, chưa tự đánh dấu hoàn tất.
+Chạy backend local riêng: đặt DATABASE_URL local đã migrate và AUTH_SESSION_TTL_MS hợp lệ do người vận hành lựa chọn, rồi `pnpm --filter @mmorpg/server exec node dist/index.js --auth-local --starter-preview --foundation`. Web `/starter` nối preview; `/login` và `/game` là frontend auth T11 đã verify, dùng local auth backend. Tạo tài khoản qua POST /auth/register; frontend appearance/creation T12 vẫn chờ đầu vào, không tự tạo account mẫu.
+
+T11 broker `/api/auth/*` chỉ forward allowlist, giới hạn body/no-store, kiểm Origin với Host loopback cho POST. Login trả expiry và cookie HttpOnly/SameSiteStrict (Secure khi HTTPS), không trả token trong login body. `/game` SSR kiểm session trước mount; protected world-session lấy token vào memory để join Colyseus, không ghi storage/DOM. Refresh kiểm lại session; replacement/expiry/logout/reset đưa về login và cleanup Phaser. Cookie auth không áp dụng trực tiếp backend HTTP, broker chuyển sang Bearer. Backend/frontend chỉ hỗ trợ local ở scope hiện tại; không claim đã triển khai cookie/TLS/CORS production. Frontend error/pending và recovery UI có browser tests thật, không tự verified email khi login.

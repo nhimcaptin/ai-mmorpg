@@ -2,6 +2,8 @@
 
 ## Cập nhật resume máy nhà — 08/10/2026
 
+Phiên resume đã hoàn thành đúng3 task: T09 (7d01781), T10 (c750fff), T11 (checkpoint sau cập nhật này). Gate cuối30 unit+31 mock/DB6 suite/E2E8/8 và lint/typecheck/build PASS; UI2/2 kiểm lại sau duyệt nhãn. T60 giữ DONE, chỉ thêm auth parameter/Character UUID vào World dùng chung. /login và /game local có HttpOnly session cookie và server auth; tạo account qua backend /auth/register, frontend creation/appearance T12 vẫn chờ D12/D15/A02. DB dev local đã kiểm trống và migrate additive001–006, không reset/backfill; DB test đã migration006. Không apply lại spec patch. T13 đủ dependency để bắt đầu ở phiên sau, chưa tự DONE. Dừng đủ3 task, không push/deploy/auto-dev/codex exec. AUTH_LOCAL.md và README là hướng dẫn hiện tại.
+
 Người dùng đã yêu cầu resume; các mục PAUSE/hoãn email bên dưới là lịch sử. Checkpoint trước resume aca677f: T60 Collision Editor/Multiplayer Occlusion/house-v2/slide DONE và Git sạch. T09 recovery nay triển khai/verify đầy đủ bằng mock email test; lint/typecheck/build,30 unit/integration+31 mock, DB6 suite và E2E6/6 PASS. Migration006 chỉ trên mmorpg_test, không reset/migrate dev. GAME_SPEC không sửa. AUTH_LOCAL.md/progress.md là hướng dẫn hiện tại; không apply lại patch GAME_SPEC.pending.patch. T09 DONE, tiếp tục tối đa3 task theo yêu cầu mới; không push/deploy/auto-dev/codex exec. Email production cần chọn/cấu hình transport và TTL riêng, mock không dùng production.
 
 **Đã PAUSE theo yêu cầu chủ sản phẩm. Không bắt đầu task mới hoặc tiếp tục code.** Chỉ tiếp tục khi người dùng yêu cầu resume trên máy mới. Không chạy auto-dev.ps1/codex exec, push/deploy, reset/clean hoặc tự sửa CHỐT.

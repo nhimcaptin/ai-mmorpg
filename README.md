@@ -33,7 +33,7 @@ pnpm db:test
 
 Compose dùng PostgreSQL 17, port loopback 54329, volume riêng và tạo mmorpg_dev/mmorpg_test khi volume mới được khởi tạo. Trust authentication chỉ cho local, không có secrets thật trong repo. Không xóa/reset volume cũ. `prisma.config.ts` lấy DATABASE_URL từ môi trường, fallback local dev; cấu hình Prisma không tự nạp `.env`. `.env.example` là tham khảo để export biến vào shell, không chứa credential production.
 
-Schema hiện chỉ có FoundationProbe để chứng minh migration/transaction/rollback. Test DB chỉ chấp nhận hostname 127.0.0.1 và database mmorpg_test, không ghi vào DB game hoặc remote. Test rollback dữ liệu probe, đóng client trong finally. Account/Character chờ nhiệm vụ và quyết định nghiệp vụ phù hợp.
+Schema có Account/Character/Credential/GameplaySession, initialization và EmailChallenge theo D01/starter đã duyệt. Migrations additive; không reset DB hoặc backfill credential cho dữ liệu kỹ thuật. Test DB chỉ chấp nhận hostname127.0.0.1 và mmorpg_test; cleanup chỉ rows UUID/requestId do lượt test tạo, không ghi vào DB game/remote.
 
 ## Kiểm chứng
 
@@ -49,3 +49,11 @@ pnpm test:e2e
 Playwright tự khởi động production web build ở cổng 3137 và server local thử ở 2567, rồi đóng các tiến trình; không dùng server sẵn có. Test hai context, movement replication, collision, resize, disconnect và reload. Screenshot/trace ở test-results; cần build trước E2E. Vitest server dùng threads để tránh IPC monitoring của Colyseus.
 
 pnpm chỉ cho phép lifecycle scripts của Prisma, esbuild và sharp; optional msgpackr-extract native build chưa được cho chạy. CI workflow có quality gates; chưa push hoặc chạy CI remote. Tiến độ thực tế và các mục bị chặn ở docs/progress.md.
+
+## Auth và account recovery local
+
+Đọc [AUTH_LOCAL.md](docs/AUTH_LOCAL.md) cho register/login/logout, GET /auth/me, xác minh email và verified-email password reset. Web /login và /game dùng backend local; /starter và /tools/collision vẫn là preview/editor, không phải gameplay guest policy. Account được tạo qua POST /auth/register với username/password/class/requestId(UUID), không có API đổi class hoặc tạo Character thứ hai. Chưa có frontend tạo appearance hoàn chỉnh T12.
+
+Để dùng DB dev local đã kiểm tra đúng loopback, triển khai migrations additive bằng DATABASE_URL trỏ mmorpg_dev và pnpm db:migrate, không reset. Backend cần DATABASE_URL và AUTH_SESSION_TTL_MS do người vận hành chọn, rồi chạy `pnpm --filter @mmorpg/server exec node dist/index.js --auth-local --starter-preview --foundation`. Web chạy `pnpm --filter @mmorpg/web start --port 3137`. Không ghi secrets vào Git hoặc log.
+
+Recovery test inject mock email, không cần nhà cung cấp production. Playwright tự chọn NODE_ENV=test, mmorpg_test và mailbox logs/recovery/mock-email.jsonl ignored; không có API đọc mailbox. Backend thường không cấu hình EmailDelivery sẽ trả503 cho email endpoints. Không bật --test-email trên DB dev/production. Email thật/TLS/distributed rate-limit chưa được triển khai; không coi test mail là gửi mail thật.

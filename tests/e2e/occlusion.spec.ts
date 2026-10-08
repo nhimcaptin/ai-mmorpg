@@ -57,7 +57,8 @@ test('front-side actor is visible without fading the house; held input slides an
   const first=await a.newPage(),observer=await b.newPage();
   await first.goto('/starter');await observer.goto('/starter');
   for(const p of [first,observer]) await expect(p.getByTestId('world')).toHaveAttribute('data-status','connected');
-  await walk(first,'a','x',110);await walk(first,'w','y',330);
+  // Keep the stopping target safely in front despite the existing input/patch cadence.
+  await walk(first,'a','x',110);await walk(first,'w','y',360);
   await fade([first,observer],'house-0',1);
   const actor=await local(first);
   for(const p of [first,observer]) await expect.poll(async()=>{

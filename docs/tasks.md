@@ -65,10 +65,10 @@ D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa t
 | T59 | Starter Village và loader production | T05, T08; style/ID theo xác nhận người dùng | Terrain/house/tree host_image trong assets/maps/starter_village | DONE: Tiled/registry dùng chung FE–BE; SAFE/PK OFF; respawn (624,624) hợp bounds/AABB; footprint nhà/cây hiện theo T60, Y-sort/camera; Forge validate/nav/route và gate PASS ở checkpoint T59. Geometry/occlusion mới thay bằng T60 đã verify; A02/A03 đầy đủ không tự DONE. |
 | T09 | Backend xác thực và quản lý phiên | T04, T08, D01, T59 (vị trí starter đã kiểm định) | Không | DONE: atomic registration/login/logout/single-session/reconnect30s, email verification và verified-email reset dùng token hash/expiry/one-time, thu hồi phiên. Lint/typecheck/build,30 unit/integration+31 mock, DB6 suite và E2E6/6 PASS qua mock email test; thiếu transport vẫn503, không yêu cầu email production. |
 | T10 | Backend tạo và tải nhân vật | T05, T07–T09, D01 | Không | DONE: đăng ký atomic tạo đúng ba class theo config đã duyệt; concurrent/idempotent/rollback/unique và class immutable DB PASS. GET /auth/me chỉ tải Character/session owner, shared strict DTO/Gold lossless/no credential. Lint/typecheck/build,30 unit+31 mock, DB6 suite và E2E6/6 PASS. |
-| T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | Có trạng thái chờ/lỗi/phiên hết hạn; refresh giữ hoặc kết thúc phiên đúng chính sách; route gameplay chặn người chưa xác thực; browser test luồng đăng nhập qua. |
+| T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | DONE: /login chờ/lỗi/recovery/verify/reset, HttpOnly SameSite cookie; /game kiểm session SSR và nối room xác thực theo Character UUID; refresh giữ account/Character, replacement/expiry/logout loại session UI, text focus không gửi movement. Lint/typecheck/build,30 unit+31 mock, DB6 suite và E2E8/8 PASS; UI2/2 kiểm lại sau duyệt nhãn tiếng Việt. |
 | T12 | Frontend tạo/chọn nhân vật hiện có | T10–T11, D12 | A02 | Hiển thị ba class và appearance được duyệt; tạo một lần, lần sau vào nhân vật cũ; lỗi tên/phiên hiển thị rõ; không có điều khiển đổi class. |
 
-| T60 | Collision footprint và multiplayer occlusion chung | T05, T59; CHỐT mới GAME_SPEC 2.5 | Art hiện hữu | DONE phạm vi kỹ thuật: polygon/multiple AABB, metadata/editor/debug, fade 0.4/180ms từ tất cả authorized actors. Đã áp dụng mẫu house v2 cho3 nhà và mẫu cây đã duyệt; sửa phía trước nhà/depth và server slide theo cạnh khi giữ input. Lint/typecheck/build, 28 unit/integration +31 mock và E2E6/6 hai client PASS. Không claim đối chiếu pixel-perfect với ảnh ngoài export; T09 vẫn PAUSE. |
+| T60 | Collision footprint và multiplayer occlusion chung | T05, T59; CHỐT mới GAME_SPEC 2.5 | Art hiện hữu | DONE phạm vi kỹ thuật: polygon/multiple AABB, metadata/editor/debug, fade 0.4/180ms từ tất cả authorized actors. Đã áp dụng mẫu house v2 cho3 nhà và mẫu cây đã duyệt; sửa phía trước nhà/depth và server slide theo cạnh khi giữ input. Lint/typecheck/build, 28 unit/integration +31 mock và E2E6/6 hai client PASS tại checkpoint aca677f; regression resume E2E8/8 PASS. Không claim đối chiếu pixel-perfect với ảnh ngoài export. |
 
 ## 2. Pipeline tài nguyên đồ họa
 
@@ -172,7 +172,7 @@ Phạm vi bổ sung được người dùng cho phép: nền tảng và cảnh m
 
 ## Việc tiếp theo
 
-T59 DONE, gỡ blocker mỹ thuật/vị trí starter. T09 DOING: đăng ký/core auth/session/reconnect đã kiểm định local; người dùng hoãn email verification/recovery đến production, endpoint trả 503 nên chưa đạt toàn bộ acceptance. T10/T11/T13 không tự mở dependency T09. D02/D12 và tên Character chưa được tự chốt. Chi tiết tại STARTER_MAP.md, AUTH_LOCAL.md và progress.md. Các đoạn Phase 1 dưới đây là hồ sơ lịch sử.
+T09/T10/T11 DONE sau resume máy nhà: recovery mock test đầy đủ, backend tải Character và frontend session đã verify. T59/T60 giữ DONE. Phiên resume dừng đủ3 task; T13 đủ dependency để xem xét ở phiên tiếp theo, không tự DONE vì đã có code room từ T09. T12 còn D12/D15/A02; D02–D14 và policy tên Character chưa được tự chốt. Email production chưa cấu hình, không dùng mock thay email thật. AUTH_LOCAL.md/progress.md ghi gate hiện tại; các đoạn Phase1/handoff cũ là hồ sơ lịch sử.
 
 Phase 1 hoàn tất trong phạm vi nền tảng/cảnh thử local và kiểm chứng DB. Dừng tại đây; chỉ bắt đầu Phase 2 khi có yêu cầu mới. Các tác vụ account/gameplay và tài nguyên phát hành tiếp tục chờ quyết định D tương ứng; P1 không tự hoàn tất T07–T12 hoặc A02–A03.
 
@@ -450,7 +450,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T11",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T09",
         "D01"

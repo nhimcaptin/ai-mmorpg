@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { FOUNDATION_WORLD, FOUNDATION_ROOM, STARTER_MAP, STARTER_ROOM, PROTOCOL_VERSION, type WorldRoomState } from '@mmorpg/shared';
+import { FOUNDATION_WORLD, FOUNDATION_ROOM, STARTER_MAP, STARTER_ROOM, AUTHENTICATED_ROOM, PROTOCOL_VERSION, type WorldRoomState } from '@mmorpg/shared';
 import { MOVEMENT_MESSAGE, PROTOCOL_ERROR_MESSAGE, protocolErrorSchema } from '@mmorpg/shared';
 import { OcclusionManager, vertices } from '@mmorpg/shared';
 
-export default function World({ starter = false }: { starter?: boolean }) {
+export default function World({ starter = false, auth, onSessionInvalid }: { starter?: boolean; auth?: { token: string; characterId: string }; onSessionInvalid?: () => void }) {
   const host = useRef<HTMLDivElement>(null);
   const disconnect = useRef<(() => void) | null>(null);
   const [status, setStatus] = useState('Đang tải renderer');
@@ -50,7 +50,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
           for (let y = 0; y <= world.height; y += world.unit) grid.lineBetween(0, y, world.width, y);
           for (const r of world.obstacles) this.add.rectangle(r.x, r.y, r.width, r.height, 0x9b7650).setOrigin(0);
           }
-          this.keys = this.input.keyboard?.addKeys('W,A,S,D') as Record<string, import('phaser').Input.Keyboard.Key> | undefined;
+          this.keys = this.input.keyboard?.addKeys('W,A,S,D', false) as Record<string, import('phaser').Input.Keyboard.Key> | undefined;
           this.overlay=this.add.graphics().setDepth(Number.MAX_SAFE_INTEGER).setVisible(false);
           this.actorOverlay=this.add.graphics().setDepth(Number.MAX_SAFE_INTEGER);
           const debug=()=> { this.overlay!.setVisible(!this.overlay!.visible); element.dataset.debug=String(this.overlay!.visible); };
@@ -90,7 +90,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
         private async connect(ClientClass: typeof Client) {
           try {
             setStatus('Đang kết nối server');
-            const room = await new ClientClass(process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://127.0.0.1:2567').joinOrCreate<WorldRoomState>(starter ? STARTER_ROOM : FOUNDATION_ROOM, { version: PROTOCOL_VERSION });
+            const room = await new ClientClass(process.env.NEXT_PUBLIC_SERVER_URL ?? 'http://127.0.0.1:2567').joinOrCreate<WorldRoomState>(auth ? AUTHENTICATED_ROOM : starter ? STARTER_ROOM : FOUNDATION_ROOM, { version: PROTOCOL_VERSION, ...(auth ? { token: auth.token } : {}) });
             if (this.disposed || cancelled) { await room.leave(); return; }
             this.room = room;
             room.onStateChange(state => {
@@ -108,7 +108,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
                 const depth=this.occlusion.actorDepth(player,visual.image.getBounds());
                 visual.image.setPosition(player.x, player.y).setDepth(depth);
                 visual.shadow.setPosition(player.x, player.y).setDepth(depth-0.1);
-                if (id === room.sessionId) this.cameras.main.startFollow(visual.image, true);
+                if (id === (auth?.characterId ?? room.sessionId)) this.cameras.main.startFollow(visual.image, true);
               });
               for (const [id, visual] of this.sprites) if (!present.has(id)) { visual.image.destroy(); visual.shadow.destroy(); this.sprites.delete(id); }
               this.occlusion.update(players);
@@ -127,7 +127,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
               // Network positions stay in Phaser; DOM diagnostic avoids React movement state.
               element.dataset.players = JSON.stringify(players);
               element.dataset.rendering=JSON.stringify([...this.sprites].map(([id,v])=>({id,depth:v.image.depth,alpha:v.image.alpha})));
-              element.dataset.localId = room.sessionId;
+              element.dataset.localId = auth?.characterId ?? room.sessionId;
               element.dataset.status = 'connected';
               const count = document.getElementById('player-count');
               if (count) count.textContent = String(players.length);
@@ -140,6 +140,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
               element.dataset.players='[]';
               element.dataset.status = 'disconnected';
               if (!cancelled) setStatus('Đã ngắt kết nối');
+              if (auth && !cancelled && !this.disposed) onSessionInvalid?.();
             });
             room.onMessage(PROTOCOL_ERROR_MESSAGE, (payload: unknown) => {
               const error = protocolErrorSchema.safeParse(payload);
@@ -156,13 +157,14 @@ export default function World({ starter = false }: { starter?: boolean }) {
         update(time: number) {
           if(this.overlay?.visible) {
             this.actorOverlay!.clear();
-            for(const [id,v] of this.sprites) this.actorOverlay!.lineStyle(2,id===this.room?.sessionId?0x00ff00:0xff00ff).strokeRect(v.image.x-world.footprint.halfWidth,v.image.y-world.footprint.halfHeight,world.footprint.halfWidth*2,world.footprint.halfHeight*2);
+            for(const [id,v] of this.sprites) this.actorOverlay!.lineStyle(2,id===(auth?.characterId ?? this.room?.sessionId)?0x00ff00:0xff00ff).strokeRect(v.image.x-world.footprint.halfWidth,v.image.y-world.footprint.halfHeight,world.footprint.halfWidth*2,world.footprint.halfHeight*2);
             // Render authorized local/remote feet; no new visibility or networking channel.
-            element.dataset.debugActors=JSON.stringify([...this.sprites].map(([id,v])=>({id,x:v.image.x,y:v.image.y,local:id===this.room?.sessionId})));
+            element.dataset.debugActors=JSON.stringify([...this.sprites].map(([id,v])=>({id,x:v.image.x,y:v.image.y,local:id===(auth?.characterId ?? this.room?.sessionId)})));
           } else this.actorOverlay?.clear();
           if (time < this.nextSend || !this.keys) return;
           this.nextSend = time + world.tickMs;
-          const active = document.hasFocus();
+          const focused = document.activeElement;
+          const active = document.hasFocus() && !focused?.matches('input,textarea,select,[contenteditable="true"]');
           this.send(active ? Number(this.keys.D?.isDown) - Number(this.keys.A?.isDown) : 0,
             active ? Number(this.keys.S?.isDown) - Number(this.keys.W?.isDown) : 0);
         }
@@ -171,7 +173,7 @@ export default function World({ starter = false }: { starter?: boolean }) {
     }
     void start().catch(() => { if (!cancelled) setStatus('Không thể tải renderer'); });
     return () => { cancelled = true; close?.(); disconnect.current = null; game?.destroy(true); };
-  }, [starter]);
+  }, [starter, auth, onSessionInvalid]);
   return <section aria-label="Cảnh multiplayer thử nghiệm">
     <div className="toolbar"><span role="status">{status}</span><span>Người trong phòng: <b id="player-count">0</b></span><button onClick={() => disconnect.current?.()}>Ngắt kết nối</button>{starter && <><button onClick={()=>host.current?.dispatchEvent(new Event('toggle-debug'))}>Collision debug</button><a href="/tools/collision">Chỉnh footprint</a></>}</div>
     <div ref={host} data-testid="world" className="world" />
