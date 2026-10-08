@@ -1,5 +1,13 @@
 # Tiến độ dự án 2D MMORPG
 
+## Chuyển sang Codex Client và phục hồi T03 BLOCKED — 08/10/2026
+
+T03 DONE: bổ sung Runtime clock/RNG có thể inject cho domain, clock nhận input/tick cho room và hướng dẫn fixture cô lập trong TESTING.md. Giữ harness domain/server/DB/browser Phase 1. `pnpm db:test` PASS DB thật rollback; verify.ps1 -E2E PASS lint/typecheck/test/build/E2E, 10 tests package + 31 orchestrator, 1 scenario hai browser (26.5s). Log `logs/verify/2026-10-08T08-49-00-604Z/verification.json`. Không sinh asset vì task không yêu cầu. Chưa chạy worker CLI; verify wrapper chỉ chạy pnpm gates.
+
+Theo yêu cầu người dùng, làm trực tiếp bằng công cụ file/command của Codex Client; không gọi auto-dev.ps1 hoặc codex exec. Phiên CLI `2026-10-08T08-30-22-031Z-fc9c9183-249b-4fc5-9744-42dd14960bf4` có journal BLOCKED/T03/attempt 0, result changedFiles rỗng, không checkpoint/verification. Raw event chỉ gồm thông báo worker và turn.completed, không có tool event xác minh policy. Vì vậy lỗi sandbox là chẩn đoán worker, không phải một lỗi policy đã chứng minh bằng tool trace.
+
+Diff đầu lượt chỉ gồm trạng thái T03 BLOCKED và dòng progress do controller ghi; không có code triển khai dở. T03 chỉ phụ thuộc T02 DONE, không phụ thuộc D. Codex Client đã xác minh đọc/ghi/command bằng phép thử CLIENT_OK và đọc code trực tiếp thành công. Đã trả T03 về TODO cho workflow Client; giữ nguyên journal BLOCKED và tất cả log để CLI tiếp tục fail closed nếu ai chạy lại. Không mở khóa quyết định nghiệp vụ hoặc báo DONE từ recovery. Giữ các thay đổi tài liệu hiện có và bổ sung lịch sử, không xóa dòng lỗi cũ.
+
 ## Phục hồi journal T03 — 08/10/2026
 
 Theo yêu cầu người dùng, đã dùng quy trình recovery thủ công có review trong AUTO_DEV.md, không sửa hoặc bỏ qua kiểm tra controller. Journal và summary cùng run ID `2026-10-08T07-40-27-702Z-d5a92c42-4f59-411f-9ac5-2bfc72430ea2`: FAILED, task T03, attempt 0, Codex exit 1, completed rỗng. Phiên chỉ có lỗi PowerShell binder trước khi Codex chạy; không có result/verification/checkpoint hay event triển khai.
@@ -128,3 +136,7 @@ Không còn blocker kỹ thuật cho phạm vi Phase 1 đã nghiệm thu. Các q
 ### Auto-dev 2026-10-08T07:40:29.239Z — T03: FAILED
 
 FAILED: Codex exit 1; không có checkpoint.. Không checkpoint; log logs/auto-dev/2026-10-08T07-40-27-702Z-d5a92c42-4f59-411f-9ac5-2bfc72430ea2/summary.json.
+
+### Auto-dev 2026-10-08T08:30:46.348Z — T03: BLOCKED
+
+Sandbox chỉ cho phép đọc, không có quyền ghi file để triển khai T03.; Lệnh đọc AGENTS.md, GAME_SPEC.md, docs/tasks.md và docs/progress.md bị chính sách thực thi từ chối (blocked by policy); chưa thể kiểm tra tài liệu và code bắt buộc trước khi sửa.

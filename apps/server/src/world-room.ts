@@ -14,6 +14,7 @@ export class WorldState extends Schema {
 defineTypes(WorldState, { version: 'number', players: { map: PlayerState } });
 
 export class FoundationRoom extends Room<WorldState> {
+  now: () => number = Date.now;
   private inputs = new Map<string, { intent: MovementIntent; receivedAt: number }>();
   onCreate() {
     this.setState(new WorldState());
@@ -24,9 +25,9 @@ export class FoundationRoom extends Room<WorldState> {
       if (!parsed.success || !player) return;
       if (parsed.data.sequence <= player.lastSequence) return;
       player.lastSequence = parsed.data.sequence;
-      this.inputs.set(client.sessionId, { intent: parsed.data, receivedAt: Date.now() });
+      this.inputs.set(client.sessionId, { intent: parsed.data, receivedAt: this.now() });
     });
-    this.setSimulationInterval(() => this.tick(Date.now()), FOUNDATION_WORLD.tickMs);
+    this.setSimulationInterval(() => this.tick(this.now()), FOUNDATION_WORLD.tickMs);
   }
   onAuth(_client: Client, options: unknown) { return joinOptionsSchema.safeParse(options).success; }
   onJoin(client: Client) {
