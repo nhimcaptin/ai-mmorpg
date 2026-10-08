@@ -20,7 +20,7 @@ Tất cả mục D đang `BLOCKED — chờ chủ sản phẩm`. Đây là câu 
 | ID | Cần xác nhận | Chặn các phần |
 |---|---|---|
 | D01 | Phương thức đăng nhập/đăng ký, khôi phục tài khoản; chính sách phiên đồng thời, reconnect; tên nhân vật, đổi tên/xóa nhân vật; dữ liệu khởi đầu của ba class. | T09–T12, T20, T56 |
-| D02 | Bảng stats theo class/Realm/Star, EXP từng sao, công thức tổng hợp và làm tròn; chi phí/tỷ lệ đột phá, vật liệu; xử lý ở Đấu Đế 9★100%. | T22–T23, T34 |
+| D02 | Bảng stats theo class/Realm/Star, EXP từng sao, công thức tổng hợp và làm tròn; biểu diễn số/precision và validation khi lưu HP/KI/Gold; chi phí/tỷ lệ đột phá, vật liệu; xử lý ở Đấu Đế 9★100%. | T08, T22–T23, T34 |
 | D03 | Công thức damage/DEF/crit, nhịp đánh/range, giới hạn stat; target hợp lệ, tấn công khi di chuyển, line-of-sight; cast bị hủy/hoàn chi phí khi nào; effect, threat, taunt và CC ngoài World Boss. | T26–T28, T38, T50 |
 | D04 | Danh mục item/affix, multiplier từng rarity, phân bố roll, binding theo từng source, giá mua/bán; cách/chi phí mở túi; EnhancementConfig và nguồn đá. | T24–T25, T32–T35, T42 |
 | D05 | Danh sách map/area, spawn/NPC/portal/respawn, nội dung Tiled; interaction range; monster stats, respawn, aggro/leash, LootTable/Gold/EXP. | A03–A04, T17–T19, T27, T30, T36–T37 |
@@ -60,7 +60,7 @@ Tất cả mục D đang `BLOCKED — chờ chủ sản phẩm`. Đây là câu 
 | T05 | Thiết lập cấu hình gameplay có kiểm định | T03, T04 | Không | Schema và loader kiểm tra tham chiếu/giá trị sai; phân biệt CHỐT với balance; fixture hợp lệ nạp được; config lỗi chặn khởi động với thông báo rõ. |
 | T06 | Thiết lập PostgreSQL và Prisma nền tảng | T01, T03 | Không | Migration tạo DB trống chạy thành công; kết nối/shutdown đúng; hướng dẫn môi trường local không chứa secrets; test không ghi vào DB thật. |
 | T07 | Xây primitive giao dịch và idempotency | T04, T06 | Không | Test concurrent request/retry/crash tại ranh giới commit không double-credit/debit; rollback không ghi nửa giao dịch; cùng khóa khác payload bị từ chối. |
-| T08 | Lập schema persistence Account/Character | T05–T07 | Không | Unique account-character bảo đảm tối đa một nhân vật; enum class đúng ba loại; lưu Realm/Star/HP/KI/Gold/map/respawn/PK với validation; migration và đọc/ghi round-trip qua. |
+| T08 | Lập schema persistence Account/Character | T05–T07, D02 (biểu diễn số lưu) | Không | Unique account-character bảo đảm tối đa một nhân vật; enum class đúng ba loại; lưu Realm/Star/HP/KI/Gold/map/respawn/PK với validation; migration và đọc/ghi round-trip qua. |
 | T09 | Backend xác thực và quản lý phiên | T04, T08, D01 | Không | Đăng nhập/đăng xuất và khôi phục theo quyết định; phiên sai/hết hạn bị từ chối; kiểm thử phiên đồng thời và reconnect; credential không lộ trong response/log. |
 | T10 | Backend tạo và tải nhân vật | T05, T07–T09, D01 | Không | Tạo ba class theo dữ liệu duyệt; hai request tạo đồng thời vẫn chỉ một Character; không đổi class qua API; tải đúng dữ liệu đã lưu. |
 | T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | Có trạng thái chờ/lỗi/phiên hết hạn; refresh giữ hoặc kết thúc phiên đúng chính sách; route gameplay chặn người chưa xác thực; browser test luồng đăng nhập qua. |
@@ -363,7 +363,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T07",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T04",
         "T06"
@@ -374,11 +374,12 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T08",
       "kind": "task",
-      "status": "TODO",
+      "status": "BLOCKED",
       "dependencies": [
         "T05",
         "T06",
-        "T07"
+        "T07",
+        "D02"
       ],
       "assets": [],
       "e2e": false

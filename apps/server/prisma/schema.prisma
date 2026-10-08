@@ -10,5 +10,15 @@ datasource db {
 // Bảng probe hạ tầng; chưa phải model Account/Character hoặc economy.
 model FoundationProbe {
   id        String   @id @db.Uuid
+  value     Int      @default(0)
   createdAt DateTime @default(now())
+}
+
+// Technical atomic operation ledger, not a gameplay reward policy.
+model OperationReceipt {
+  scope       String
+  key         String
+  payloadHash String
+  result      Json
+  @@id([scope, key])
 }
