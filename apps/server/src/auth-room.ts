@@ -12,9 +12,10 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
     private inputs = new Map<string, { input: MovementIntent; at: number }>();
     private pending = new Map<string, { until: number; authId: string; accountId: string }>();
     private busy = false;
+    private disposed = false;
     private unsubscribe?: () => void;
-    onCreate() {
-      this.autoDispose = false; // Character is retained even if the last connection drops.
+    async onCreate() {
+      await this.setMetadata({ mapId: STARTER_MAP.world.id, areaId: STARTER_MAP.area.id });
       this.setState(new WorldState()); this.setPatchRate(STARTER_MAP.world.tickMs);
       this.unsubscribe = auth.subscribe((accountId, authId) => {
         for (const connection of this.connections.values()) if (connection.accountId === accountId && connection.authId !== authId) this.remove(connection);
@@ -33,11 +34,15 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
     async onAuth(_client: Client, value: unknown) {
       const parsed = authenticatedJoinSchema.safeParse(value);
       if (!parsed.success) return false;
-      try { await auth.authenticate(parsed.data.token); return true; } catch { return false; }
+      try {
+        const session = await auth.authenticate(parsed.data.token), character = session.account.character!;
+        return character.mapId === STARTER_MAP.world.id && character.areaId === STARTER_MAP.area.id;
+      } catch { return false; }
     }
     async onJoin(client: Client, value: unknown) {
       const options = authenticatedJoinSchema.parse(value), session = await auth.authenticate(options.token);
       const character = session.account.character!, pending = this.pending.get(character.id);
+      if (this.disposed || character.mapId !== STARTER_MAP.world.id || character.areaId !== STARTER_MAP.area.id) throw new Error('INVALID_WORLD_SESSION');
       if (options.reconnect && (!pending || pending.authId !== session.id || pending.until <= auth.now())) throw new Error('RECONNECT_EXPIRED');
       for (const connection of this.connections.values()) if (connection.accountId === session.accountId) this.remove(connection);
       let player = this.state.players.get(character.id);
@@ -48,6 +53,7 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
       }
       player.lastSequence = -1; // Sequence belongs to this transport, not character identity.
       this.pending.delete(character.id);
+      this.autoDispose = this.pending.size === 0;
       this.connections.set(client.sessionId, { client, accountId: session.accountId, authId: session.id, token: options.token, characterId: character.id });
     }
     onLeave(client: Client, consented: boolean) {
@@ -56,6 +62,8 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
       this.connections.delete(client.sessionId); this.inputs.delete(client.sessionId);
       if (consented) this.state.players.delete(connection.characterId);
       else this.pending.set(connection.characterId, { until: auth.now() + RECONNECT_GRACE_MS, authId: connection.authId, accountId: connection.accountId });
+      // Keep an empty room only while authoritative reconnect grace is pending.
+      this.autoDispose = this.pending.size === 0;
     }
     private remove(connection: Connection) {
       this.connections.delete(connection.client.sessionId); this.inputs.delete(connection.client.sessionId);
@@ -63,10 +71,11 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
       connection.client.leave(4001);
     }
     async tick() {
-      if (this.busy) return;
+      if (this.busy || this.disposed) return;
       this.busy = true;
       try {
         for (const [id, pending] of this.pending) if (pending.until <= auth.now()) { this.pending.delete(id); this.state.players.delete(id); }
+        this.autoDispose = this.pending.size === 0;
         for (const connection of this.connections.values()) {
           try { await auth.authenticate(connection.token); } catch { this.remove(connection); continue; }
           if (this.connections.get(connection.client.sessionId) !== connection) continue;
@@ -79,6 +88,9 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
         }
       } finally { this.busy = false; }
     }
-    onDispose() { this.unsubscribe?.(); }
+    onDispose() {
+      this.disposed = true; this.unsubscribe?.();
+      this.connections.clear(); this.inputs.clear(); this.pending.clear(); this.state.players.clear();
+    }
   };
 }

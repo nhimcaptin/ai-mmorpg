@@ -89,7 +89,7 @@ Gói nội dung lớn A04–A06 được tách theo NPC/monster/Visual Set/map t
 
 | ID | Tác vụ nhỏ | Phụ thuộc | Asset | Tiêu chí nghiệm thu |
 |---|---|---|---|---|
-| T13 | Colyseus room và join có xác thực | T04, T09–T10 | Không | Hai client join cùng room thấy entity IDs ổn định; token giả không join; lifecycle leave/dispose đúng; state nhạy cảm không broadcast cho client khác. |
+| T13 | Colyseus room và join có xác thực | T04, T09–T10 | Không | DONE: hai account cùng room/Character UUID ổn định, strict join và token giả/wrong-area reject, public state chỉ version/player IDs/position/direction/sequence. Room giữ30s grace rồi dispose khi rỗng, clear state/listener và recreate đúng. Lint/typecheck/build,30 unit+31 mock, DB7 suite và E2E9/9 PASS. |
 | T14 | Loader Map/Area và collision thuần domain | T05, T13 | Không | Map khác Area; validate IDs, bounds, polygon và spawn; fixture cùng tọa độ FE/BE; test building/tree/water và footprint chân, không dùng sprite bbox. |
 | T15 | Movement authoritative và input sequence | T04, T13–T14 | Không | Server nhận intent WASD, tính vị trí/tốc độ/collision; đi chéo không tăng tốc; reject teleport/payload sai/input cũ; test boundary và packet trùng. |
 | T16 | Phaser lifecycle, input và bridge HUD | T11, T13, T15 | Không | Mount/unmount/reconnect không nhân listener/canvas; React chỉ nhận dữ liệu HUD, không chứa state movement từng tick; input bỏ qua khi focus text/panel theo thiết kế UI. |
@@ -555,14 +555,14 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T13",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T04",
         "T09",
         "T10"
       ],
       "assets": [],
-      "e2e": false
+      "e2e": true
     },
     {
       "id": "T14",

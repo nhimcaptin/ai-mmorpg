@@ -1,5 +1,11 @@
 # Tiến độ dự án 2D MMORPG
 
+## T13 — Room và join có xác thực DONE, 08/10/2026
+
+Resume từ708ae90/Git sạch, registry T09/T10/T11 DONE và T13 phụ thuộc T04/T09/T10 đã đủ; không có D/asset blocker. Room hiện hữu từT09 được giữ, không viết lại auth hoặc Collision/Occlusion. Bổ sung room metadata mapId/areaId public và chặn Character sai Map/Area. Auto-dispose mặc định khi rỗng, chỉ giữ room khi có reconnect grace30s; sau grace tự dispose, unsubscribe/clear inputs/connections/pending/state. Không thay luật session/visibility hoặc art/movement/collision.
+
+Verification: lint/typecheck/build PASS,30 unit/integration+31 mock PASS, DB7 suites PASS (thêm authenticated-rooms). Hai SDK client thật cùng room/hai Character UUID; token/version/extra CharacterID reject; public Schema không chứa AccountID/username/password/hash/sessionID/token; movement observer, unexpected disconnect/reconnect giữ vị trí, consent leave remove, grace expiry dispose, room recreate giữ Character cũ; wrong-area record test reject. E2E9/9 PASS, thêm hai browser login hai account/movement/leave/reload/IDs/no duplication và giữ mọi regression cũ. Không có lượt sửa gate thất bại. Logs/t13 và docs/qa/authenticated-two-players.png là bằng chứng, ảnh đã kiểm. T13 DONE, chọn T14 (T05/T13 đã đủ); không tự mở D05 content hoặc mark T12/asset DONE. Không GAME_SPEC/production/DB reset/push/deploy/auto-dev/codex exec.
+
 ## T11 — Frontend auth/session DONE; dừng đủ3 task, 08/10/2026
 
 Sau T10 c750fff, thực hiện task thứ3 T11. /login có pending/disabled/error, recovery/verify/reset; /game SSR chặn thiếu/sai session, backend session query no-store. Same-origin broker allowlist + CSRF Origin/Host local; cookie HttpOnly/SameSiteStrict/expiry, không lưu password/token ở localStorage/sessionStorage. Token chỉ lấy vào memory qua protected world-session để join room existing; entity/camera/debug dùng Character UUID. Refresh giữ account/Character/session hợp lệ; server expiry/login khác/reset/logout loại active entity và UI quay về login. Text focus không gửi movement. Không thêm luật tên/appearance/animation hoặc làm lại T60 geometry/occlusion.
