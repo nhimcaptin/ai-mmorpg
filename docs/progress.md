@@ -2,6 +2,8 @@
 
 ## Chuyển sang Codex Client và phục hồi T03 BLOCKED — 08/10/2026
 
+T05 DONE trong phạm vi cấu hình nền tảng: schema strict/loader Map–Area, ID/reference, finite/bounds/spawn collision/zoom; unit 32 là CHỐT, các số fixture còn lại là config. Server validate trước khởi tạo. Bảng balance chưa có quyết định không được tự điền; xem TESTING.md. Verify -E2E PASS 5 gate, 12 tests package + 31 orchestrator; browser qua (17.6s). Log `logs/verify/2026-10-08T08-53-58-864Z/verification.json`.
+
 T04 DONE: message IDs và protocol-error versioned/schema strict nằm shared, server reject INVALID_INTENT/STALE_SEQUENCE, client parse cùng schema; test server hai client xác minh lỗi và không đổi vị trí/sequence từ outcome giả. Verify -E2E PASS cả 5 gate, 11 tests package + 31 orchestrator, browser scenario qua (19.0s). Log `logs/verify/2026-10-08T08-51-18-520Z/verification.json`. Hợp đồng này dành phòng nền tảng; auth/combat contracts sẽ bổ sung ở task liên quan.
 
 T03 DONE: bổ sung Runtime clock/RNG có thể inject cho domain, clock nhận input/tick cho room và hướng dẫn fixture cô lập trong TESTING.md. Giữ harness domain/server/DB/browser Phase 1. `pnpm db:test` PASS DB thật rollback; verify.ps1 -E2E PASS lint/typecheck/test/build/E2E, 10 tests package + 31 orchestrator, 1 scenario hai browser (26.5s). Log `logs/verify/2026-10-08T08-49-00-604Z/verification.json`. Không sinh asset vì task không yêu cầu. Chưa chạy worker CLI; verify wrapper chỉ chạy pnpm gates.

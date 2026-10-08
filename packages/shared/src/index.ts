@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { worldConfigSchema } from './config.js';
+export { WORLD_UNIT, worldConfigSchema, gameplayConfigSchema, loadGameplayConfig } from './config.js';
 
 export const PROTOCOL_VERSION = 1;
 export const FOUNDATION_ROOM = 'foundation';
@@ -28,10 +30,10 @@ export interface WorldConfig {
   renderScale: number; zoomMin: number; zoomMax: number; obstacles: Rect[];
 }
 // Dữ liệu kỹ thuật cho phòng thử local, không phải map/balance phát hành.
-export const FOUNDATION_WORLD: WorldConfig = {
+export const FOUNDATION_WORLD: WorldConfig = worldConfigSchema.parse({
   id: 'technical-fixture', areaId: 'movement-test', width: 960, height: 640, unit: 32,
   spawn: { x: 160, y: 320 }, footprint: { halfWidth: 10, halfHeight: 6 },
   moveSpeed: 160, tickMs: 50, inputTimeoutMs: 250,
   renderScale: 0.9, zoomMin: 0.5, zoomMax: 1.5,
   obstacles: [{ x: 384, y: 192, width: 96, height: 256 }]
-};
+});
