@@ -22,3 +22,28 @@ model OperationReceipt {
   result      Json
   @@id([scope, key])
 }
+
+enum CharacterClass {
+  PHYSICAL_DPS
+  MAGIC_DPS
+  TANK
+}
+model Account {
+  id String @id @db.Uuid
+  character Character?
+}
+model Character {
+  id String @id @db.Uuid
+  accountId String @unique @db.Uuid
+  account Account @relation(fields: [accountId], references: [id])
+  class CharacterClass
+  realm Int
+  star Int
+  hp BigInt
+  ki BigInt
+  gold BigInt
+  mapId String
+  areaId String
+  respawnId String
+  pkEnabled Boolean
+}

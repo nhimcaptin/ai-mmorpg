@@ -1,5 +1,6 @@
 import type { Direction, Position, WorldConfig } from '@mmorpg/shared';
 export type { Runtime } from './runtime.js';
+export * from './numeric.js';
 
 export function directionFor(x: number, y: number, previous: Direction): Direction {
   if (!x && !y) return previous;

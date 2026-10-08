@@ -10,6 +10,10 @@ Khi thêm cơ chế ngẫu nhiên hoặc timeout mới, truyền Runtime/clock v
 
 ## Transaction và idempotency
 
+T08: HP/KI domain dùng safe integer Number (biên kỹ thuật 2^53−1), DB lưu BIGINT có CHECK tương ứng. Gold domain BigInt không giới hạn bởi Number, transport chuỗi decimal canonical, DB BIGINT signed có biên kỹ thuật 2^63−1. Vượt biên lưu hoặc health overflow bị từ chối, không wrap/clamp tiền hoặc chuyển qua float. Đây là giới hạn implementation, không phải cap cân bằng. Damage/healing chỉ floor kết quả, chưa thêm công thức combat hoặc max-HP config; các công thức/bảng chưa duyệt vẫn chờ D.
+
+Account chỉ có ID, không tự chọn phương thức login; Character yêu cầu mọi field khởi đầu do caller cung cấp, không tự đặt class stats/map/respawn. Realm lưu ordinal 1–11 theo thứ tự đặc tả, Star 1–9. Map/Area/Respawn lưu ID không rỗng; tham chiếu catalog thực tế sẽ kiểm chứng khi D05 có dữ liệu. Class immutability và unique account được DB bảo vệ. Không có API Gold công khai trước auth; transactGold chỉ dành caller server tin cậy, dùng transaction row lock và receipt T07.
+
 `atomicOperation` dùng PostgreSQL advisory transaction lock cho scope/key, kiểm tra hash của payload canonical và lưu result cùng transaction với callback. Scope phải do server suy ra từ actor/operation tin cậy, không nhận trực tiếp từ client. Callback chỉ ghi qua TransactionClient; không gửi HTTP/email hoặc tác dụng ngoài DB. Retry trả receipt sau commit; cùng khóa khác payload bị từ chối. Không tự retry timeout hoặc đặt chính sách TTL; retention/cleanup theo nghiệp vụ sẽ quyết định sau.
 
 Migration operation_receipts được deploy và kiểm chứng trên mmorpg_test, chưa áp dụng mmorpg_dev. Trước dùng model mới ở dev chạy `pnpm db:migrate` sau review migration additive. `pnpm db:test` kiểm tra concurrent credit/debit bằng giá trị probe kỹ thuật (không phải Gold), mất response sau commit, lỗi mô phỏng trước commit và conflict; chỉ dọn scope/ID riêng vừa tạo. Lỗi trước commit mô phỏng bằng exception, chưa kiểm tra kill OS/PostgreSQL mất điện.

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+export * from './numeric.js';
 import { worldConfigSchema } from './config.js';
 export { WORLD_UNIT, worldConfigSchema, gameplayConfigSchema, loadGameplayConfig } from './config.js';
 

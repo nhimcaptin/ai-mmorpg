@@ -1,5 +1,15 @@
 # Tiến độ dự án 2D MMORPG
 
+## Quyết định numeric T08 — 08/10/2026
+
+T08 DONE: shared numeric/Character DTO strict, floor damage/healing và non-negative domain; Gold BigInt với chuỗi canonical lossless; Account/Character Prisma, unique một character/account, enum ba class, class immutable DB trigger, Realm 1–11/Star 1–9 và HP/KI/Gold checks. Không đặt dữ liệu khởi đầu hoặc công thức combat. Atomic Gold dùng row lock/receipt T07, reject thiếu tiền/overflow và retry không trừ hai lần. Migration 202610080003 đã deploy trên mmorpg_test, không sửa mmorpg_dev; cách triển khai dev và biên kỹ thuật safe integer/BIGINT ghi TESTING.md.
+
+Bằng chứng: pnpm db:test PASS trên DB thật, gồm round-trip bigint vượt Number precision, duplicate account, class update, negative values, star sai, storage overflow và Gold concurrent debit/underflow/conflict. Verify -E2E PASS lint/typecheck/test/build/browser tại `logs/verify/2026-10-08T09-11-56-328Z/verification.json`, browser hai client qua (23.4s). Sau bổ sung test WebSocket Colyseus thật, verify cuối PASS 4 gate tại `logs/verify/2026-10-08T09-14-11-624Z/verification.json`: 15 tests package + 31 orchestrator, có numeric transport lossless; E2E không chạy lại vì chỉ thêm test và tài liệu. Không có gate thất bại, không dùng lượt sửa. git diff --check PASS. GAME_SPEC diff chỉ thêm mục 4.1 được duyệt.
+
+Đã kiểm tra task tiếp theo: không có task đủ dependency. T09/T10 còn D01; asset A01 còn D12; stats T22 còn phần D02 chưa trả lời và các nhánh khác phụ thuộc auth/map/nội dung. Dừng sau 1 task DONE trong phiên vì cần quyết định nghiệp vụ, không tự login/phiên/nội dung/asset. Giữ journal/log CLI cũ; không gọi auto-dev.ps1/codex exec, push hoặc deploy.
+
+Nguồn: chủ sản phẩm xác nhận trực tiếp trong phiên Codex Client: HP/KI nguyên không âm; damage/healing floor; Gold BigInt, truyền chuỗi lossless; không âm và giao dịch atomic server authoritative. Đã bổ sung nguyên văn ý nghĩa tiếng Việt ở GAME_SPEC 4.1 CHỐT, không đổi quy tắc khác. T08 được mở lại; D02 chỉ giải quyết phần numeric, các bảng stats/EXP/formula/chi phí vẫn BLOCKED. D01 và các decision khác chưa có câu trả lời.
+
 ## Chuyển sang Codex Client và phục hồi T03 BLOCKED — 08/10/2026
 
 T07 DONE: atomicOperation dùng receipt scope/key, hash payload canonical, advisory transaction lock PostgreSQL và callback/receipt cùng transaction. Migration additive 202610080002 áp dụng thành công trên mmorpg_test; không đổi mmorpg_dev. DB thật PASS concurrent credit/debit, retry sau mất response, cùng key khác payload và lỗi mô phỏng trước commit không ghi nửa giao dịch. Chưa thử kill OS/mất điện DB; exception dùng để kiểm tra ranh giới rollback. verify -MaxMinutes 10 PASS lint/typecheck/test/build, 12 tests package (phần không đổi có Turbo cache) + 31 orchestrator. Log `logs/verify/2026-10-08T08-57-14-430Z/verification.json`. Không đổi browser ở T07 nên không chạy lại E2E; T05 đã PASS E2E. Cách dùng/scoping/callback side effect và migration dev được ghi trong TESTING.md.

@@ -94,6 +94,16 @@ Stats:
 
 Không có cộng điểm thủ công.
 
+### 4.1 Biểu diễn số và làm tròn — CHỐT (quyết định T08, 08/10/2026)
+
+- HP và KI được lưu bằng số nguyên không âm.
+- Kết quả tính damage và lượng hồi HP/KI phải làm tròn xuống.
+- Gold dùng BigInt trong tính toán domain và lưu trữ ở nơi hỗ trợ.
+- HP, KI và Gold không bao giờ được âm.
+- Khi truyền BigInt qua JSON/WebSocket, dùng chuỗi rõ ràng, bảo toàn giá trị; không chuyển qua Number gây mất chính xác.
+- Validation và giao dịch Gold vẫn do server quyết định, thực hiện atomically.
+- Quyết định này không xác định thêm công thức combat, giới hạn cân bằng hoặc dữ liệu khởi đầu.
+
 ## 5. Tu luyện — CHỐT
 
 Không dùng conventional level.
