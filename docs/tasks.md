@@ -64,7 +64,7 @@ D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa t
 | T08 | Lập schema persistence Account/Character | T05–T07; numeric đã duyệt mục 4.1 | Không | Unique account-character bảo đảm tối đa một nhân vật; enum class đúng ba loại; lưu Realm/Star/HP/KI/Gold/map/respawn/PK với validation; migration và đọc/ghi round-trip qua. |
 | T59 | Starter Village và loader production | T05, T08; style/ID theo xác nhận người dùng | Terrain/house/tree host_image trong assets/maps/starter_village | DONE: Tiled/registry dùng chung FE–BE; SAFE/PK OFF; respawn (624,624) hợp bounds/AABB; footprint nhà/cây hiện theo T60, Y-sort/camera; Forge validate/nav/route và gate PASS ở checkpoint T59. Geometry/occlusion mới thay bằng T60 đã verify; A02/A03 đầy đủ không tự DONE. |
 | T09 | Backend xác thực và quản lý phiên | T04, T08, D01, T59 (vị trí starter đã kiểm định) | Không | DONE: atomic registration/login/logout/single-session/reconnect30s, email verification và verified-email reset dùng token hash/expiry/one-time, thu hồi phiên. Lint/typecheck/build,30 unit/integration+31 mock, DB6 suite và E2E6/6 PASS qua mock email test; thiếu transport vẫn503, không yêu cầu email production. |
-| T10 | Backend tạo và tải nhân vật | T05, T07–T09, D01 | Không | Tạo ba class theo dữ liệu duyệt; hai request tạo đồng thời vẫn chỉ một Character; không đổi class qua API; tải đúng dữ liệu đã lưu. |
+| T10 | Backend tạo và tải nhân vật | T05, T07–T09, D01 | Không | DONE: đăng ký atomic tạo đúng ba class theo config đã duyệt; concurrent/idempotent/rollback/unique và class immutable DB PASS. GET /auth/me chỉ tải Character/session owner, shared strict DTO/Gold lossless/no credential. Lint/typecheck/build,30 unit+31 mock, DB6 suite và E2E6/6 PASS. |
 | T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | Có trạng thái chờ/lỗi/phiên hết hạn; refresh giữ hoặc kết thúc phiên đúng chính sách; route gameplay chặn người chưa xác thực; browser test luồng đăng nhập qua. |
 | T12 | Frontend tạo/chọn nhân vật hiện có | T10–T11, D12 | A02 | Hiển thị ba class và appearance được duyệt; tạo một lần, lần sau vào nhân vật cũ; lỗi tên/phiên hiển thị rõ; không có điều khiển đổi class. |
 
@@ -435,7 +435,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T10",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T05",
         "T07",

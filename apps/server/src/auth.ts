@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import type { PrismaClient } from '@prisma/client';
-import { credentialsSchema, registrationSchema } from '@mmorpg/shared';
+import { credentialsSchema, registrationSchema, accountSessionSchema } from '@mmorpg/shared';
+import { characterToWire } from './characters.js';
 import { hashPassword, verifyPassword } from './password.js';
 import { initializeCharacter, validateStarter } from './starter.js';
 import { atomicOperation } from './transactions.js';
@@ -59,4 +60,13 @@ export class AuthService {
     this.notify(session.accountId, 'logged-out');
   }
   invalidate(accountId: string) { this.notify(accountId, 'password-reset'); }
+  async current(token: string) {
+    const session = await this.authenticate(token), { initialization, ...character } = session.account.character!;
+    const credential = await this.database.credential.findUniqueOrThrow({ where: { accountId: session.accountId } });
+    return accountSessionSchema.parse({
+      sessionId: session.id, expiresAt: session.expiresAt.toISOString(), character: characterToWire(character),
+      initialization: { maxHp: Number(initialization!.maxHp), maxKi: Number(initialization!.maxKi), cultivationExp: initialization!.cultivationExp.toString() },
+      email: credential.email, emailVerified: credential.emailVerifiedAt !== null
+    });
+  }
 }

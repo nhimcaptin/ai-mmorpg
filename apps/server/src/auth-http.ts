@@ -5,6 +5,11 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { recoveryRequestSchema } from '@mmorpg/shared';
 export function mountAuth(app: Express, auth: AuthService) {
   app.use('/auth', express.json({ limit: '8kb' }));
+  app.get('/auth/me', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    try { res.json(await auth.current(req.headers.authorization?.replace(/^Bearer /, '') ?? '')); }
+    catch { res.status(401).json({ error: 'INVALID_SESSION' }); }
+  });
   // Local development only; no cookies or implicit ambient authentication.
   let inFlight = 0;
   for (const action of ['register', 'login', 'logout'] as const) app.post(`/auth/${action}`, async (req, res) => {

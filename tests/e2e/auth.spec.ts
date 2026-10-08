@@ -19,6 +19,10 @@ test('real auth HTTP contract: registration, login without verified email, verif
     expect((await request.post(`${base}/login`, { data: { username, password: 'invalid' } })).status()).toBe(401);
     const login = await request.post(`${base}/login`, { data: { username, password } }); expect(login.status()).toBe(200);
     const session = await login.json() as { token: string };
+    expect((await request.get(`${base}/me`)).status()).toBe(401);
+    const me = await request.get(`${base}/me`, { headers: { Authorization: `Bearer ${session.token}` } });
+    expect(me.status()).toBe(200); expect((await me.json()).character.id).toBe(data.characterId);
+    expect((await me.json()).initialization.maxKi).toBe(120);
     expect(login.headers()['cache-control']).toBe('no-store');
     const email = `${requestId}@example.invalid`;
     const mailbox = async () => (await readFile(resolve('logs/recovery/mock-email.jsonl'), 'utf8')).trim().split('\n').map(line => JSON.parse(line) as { to: string; purpose: string; token: string }).filter(m => m.to === email);

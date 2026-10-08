@@ -1,5 +1,9 @@
 # Tiến độ dự án 2D MMORPG
 
+## T10 — Backend tạo/tải Character DONE, 08/10/2026
+
+Sau checkpoint T09 7d01781, dependency đủ; không làm lại creation đã verify. Thêm shared AccountSession DTO và GET /auth/me chỉ lấy Character của token hiện tại, initialization/expiry/email status; không có API sửa class/target account. Gold/EXP lossless strings, credential/password hash/token không trong DTO, no-store. DB test kiểm loaded Character đúng và query account khác không đổi owner; invalid session401, PATCH class404. Suite starter giữ tạo3 class, concurrent retry, rollback và uniqueness/class immutability. Lint/typecheck/build,30 unit/integration+31 mock, DB6 suite và E2E6/6 PASS (logs/character-load). Không sửa GAME_SPEC/DB/reset. T10 DONE; chọn T11 không có blocker nghiệp vụ, là task thứ3/cuối phiên.
+
 ## Resume T09 — Account recovery DONE, 08/10/2026
 
 Resume từ aca677f, Git sạch; T60 editor/occlusion/house-v2/slide DONE, không làm lại. Yêu cầu mới thay việc hoãn recovery: email verification cần session/password hiện tại và token chứng minh mailbox; reset chỉ gửi tới email verified, token32-byte random/hash SHA256/purpose binding/expiry/one-time, Account lock, reset thu hồi session/challenges và ngắt gameplay, không auto-login. Login kiểm lại hash sau lock chống race reset. Thêm migration006 additive chỉ deploy mmorpg_test; không migrate dev/reset/production. EmailDelivery inject, mock side channel giới hạn NODE_ENV=test+DB test; thiếu transport trả503, không fake production success. GAME_SPEC CHỐT không thay đổi.
