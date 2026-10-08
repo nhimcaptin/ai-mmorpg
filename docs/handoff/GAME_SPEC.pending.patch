@@ -1,0 +1,41 @@
+diff --git a/GAME_SPEC.md b/GAME_SPEC.md
+index 6d893ec..395670c 100644
+--- a/GAME_SPEC.md
++++ b/GAME_SPEC.md
+@@ -79,6 +79,36 @@ Nguyên tắc:
+   - Magic DPS.
+   - Tank.
+ 
++### 3.1 Tài khoản, xác thực và phiên — CHỐT D01 (08/10/2026)
++
++- Đăng ký và đăng nhập bằng username/password.
++- Mỗi account có đúng một Character; class được chọn lúc đăng ký account và không thể đổi sau đăng ký.
++- Khôi phục mật khẩu dùng địa chỉ email đã xác minh. Xác minh email bắt buộc cho khôi phục mật khẩu; không mặc định bắt buộc cho đăng nhập thông thường.
++- Chỉ một phiên gameplay hoạt động trên mỗi account. Khi đăng nhập từ thiết bị khác, server phải ngắt phiên gameplay trước.
++- Khi mất kết nối bất ngờ, giữ phiên Character trong 30 giây để reconnect. Reconnect thành công khôi phục Character/phiên hiện có, không tạo Character mới.
++- Sau 30 giây không reconnect, đánh dấu offline và loại Character khỏi active world theo quy tắc server hiện có.
++- Xác thực, quản lý phiên và validation reconnect do server quyết định.
++- Password phải được hash an toàn, không lưu plaintext.
++- Session token được server quản lý và kiểm định; phiên sai hoặc hết hạn không được truy cập thao tác gameplay được bảo vệ.
++
++### 3.2 Nhân vật khởi đầu khi đăng ký — CHỐT (08/10/2026)
++
++- Đăng ký thành công phải tạo Character ngay; mỗi Account có đúng một Character, class chọn lúc đăng ký và không đổi.
++- Realm khởi đầu Đấu Chi Khí, 1★, tiến độ tu luyện 0%.
++- Gold khởi đầu 0n (BigInt), PK OFF. Current HP = Max HP, Current KI = Max KI.
++
++| Class | Max HP | Current HP | Max KI | Current KI |
++|---|---:|---:|---:|---:|
++| Physical DPS | 120 | 120 | 60 | 60 |
++| Magic DPS | 90 | 90 | 120 | 120 |
++| Tank | 180 | 180 | 50 | 50 |
++
++- Map ID `starter_village`, Area ID `area_01`, Respawn ID `starter_respawn_01`; khu vực SAFE, không cho phép PK.
++- Trước dùng trong đăng ký, server phải xác minh map load được, Area thuộc map, Respawn thuộc khu vực và tọa độ nằm trên vùng đi được, không mắc collision/vật cản; FE/BE/DB dùng cùng ID.
++- Không thay ID khác hoặc dùng fixture kỹ thuật Phase 1 làm dữ liệu đăng ký. Chỉ tạo registry/config/seed cho các ID này khi có đủ dữ liệu map/area/collision/spawn hợp lệ; thiếu map/tọa độ phải BLOCKED, không tự đặt tọa độ.
++- Account và Character được tạo cùng transaction; lỗi tạo Character rollback toàn bộ đăng ký. Concurrent request/retry không tạo trùng, theo hợp đồng idempotency.
++- Dữ liệu khởi đầu lấy từ cấu hình server được kiểm định, không cho client ghi đè HP/KI/Gold/Realm/Star hoặc vị trí. Quyết định này không mở khóa các nghiệp vụ D02 khác.
++
+ ## 4. Chỉ số — CHỐT
+ 
+ Stats:

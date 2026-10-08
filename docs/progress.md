@@ -1,5 +1,13 @@
 # Tiến độ dự án 2D MMORPG
 
+## PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
+
+Đã dừng phát triển ngay theo yêu cầu chuyển máy; không bắt đầu task mới. Kiểm tra thực tế sau interruption: commit triển khai **21613ffcd7560e79b76a31b26d92bbb50e273127** đã hoàn tất, branch main, index sạch. Git còn duy nhất GAME_SPEC.md modified (30 dòng D01/starter từ lượt trước), giữ nguyên SHA256 `2c0b1f5b60547a92cb22b2e8f566549e9afebb622af92b4712a8a4d8bfddb9f0` và không stage file đó.
+
+T59 DONE; T09 vẫn DOING và hiện PAUSE, không coi phần email recovery hoãn là DONE. D15 phần tên và D02–D14 còn BLOCKED; task phụ thuộc chưa được tự mở. Kết quả kiểm chứng gần nhất vẫn là lint/typecheck/build PASS, 19 unit/integration + 31 mock PASS, DB/HTTP/WebSocket PASS và E2E 3/3 PASS; không chạy lại gameplay tests trong lượt chỉ sửa tài liệu.
+
+Tạo docs/HANDOFF.md, danh sách 77 file checkpoint tại docs/handoff/files-at-21613ff.txt và patch nguyên văn bảo toàn thay đổi spec tại docs/handoff/GAME_SPEC.pending.patch. Patch đã kiểm reverse-apply trên workspace hiện tại, không tự áp dụng/xóa thay đổi. Tài liệu chứa các bước chuyển repo/commit local, log/journal ignored, cấu hình DB/dev/test và prerequisite máy mới. Không push/deploy hoặc tiếp tục code sau checkpoint tài liệu bàn giao.
+
 ## Starter Village và tiếp tục T09 — 08/10/2026
 
 Đã đọc AGENTS/GAME_SPEC/tasks/progress, checkpoint 15a1a31 và kiến trúc hiện tại. Người dùng xác nhận giữ painted/cartoon soft shading: blocker xung đột pixel art được gỡ, không thay CHỐT. GAME_SPEC có thay đổi chưa commit từ lượt D01/starter trước khi bắt đầu; lượt này không viết lại file đó và giữ nguyên thay đổi. Chỉ làm trực tiếp qua Codex Client, không auto-dev.ps1/codex exec/push/deploy. Đã áp dụng Forge generate2dmap cho ảnh/map QA, migration cho thay đổi additive và lean-build cho phạm vi auth local.
