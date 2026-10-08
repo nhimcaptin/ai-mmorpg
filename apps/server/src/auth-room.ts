@@ -1,8 +1,9 @@
 import { Room, type Client } from '@colyseus/core';
-import { authenticatedJoinSchema, STARTER_MAP, MOVEMENT_MESSAGE, movementIntentSchema, type MovementIntent } from '@mmorpg/shared';
+import { authenticatedJoinSchema, STARTER_MAP, MOVEMENT_MESSAGE, type MovementIntent } from '@mmorpg/shared';
 import { move, directionFor } from '@mmorpg/game-core';
 import { WorldState, PlayerState } from './world-room.js';
 import type { AuthService } from './auth.js';
+import { acceptMovementInput } from './movement-input.js';
 export const RECONNECT_GRACE_MS = 30000;
 type Connection = { client: Client; accountId: string; authId: string; token: string; characterId: string };
 /** Authenticated re-join, not native seat reconnection: every reconnect validates the current DB session. */
@@ -22,12 +23,14 @@ export function authenticatedRoom(auth: AuthService): new () => Room<WorldState>
         for (const [id, pending] of this.pending) if (pending.accountId === accountId && pending.authId !== authId) { this.pending.delete(id); this.state.players.delete(id); }
       });
       this.onMessage(MOVEMENT_MESSAGE, (client, value: unknown) => {
-        const connection = this.connections.get(client.sessionId), parsed = movementIntentSchema.safeParse(value);
-        if (!connection || !parsed.success) return;
+        const connection = this.connections.get(client.sessionId);
+        if (!connection) return;
         const player = this.state.players.get(connection.characterId);
-        if (!player || parsed.data.sequence <= Math.max(player.lastSequence, this.inputs.get(client.sessionId)?.input.sequence ?? -1)) return;
+        if (!player) return;
+        const accepted = acceptMovementInput(value, player.lastSequence, this.inputs.get(client.sessionId)?.input.sequence);
+        if ('error' in accepted) return;
         // Applied only after DB session validation in tick; caller never supplies a position.
-        this.inputs.set(client.sessionId, { input: parsed.data, at: auth.now() });
+        this.inputs.set(client.sessionId, { input: accepted.intent, at: auth.now() });
       });
       this.setSimulationInterval(() => { void this.tick(); }, STARTER_MAP.world.tickMs);
     }

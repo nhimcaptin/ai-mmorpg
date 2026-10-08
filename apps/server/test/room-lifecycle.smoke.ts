@@ -4,7 +4,8 @@ import type { AddressInfo } from 'node:net';
 import type { PrismaClient } from '@prisma/client';
 import { matchMaker } from '@colyseus/core';
 import { Client } from 'colyseus.js';
-import { AUTHENTICATED_ROOM, type WorldRoomState } from '@mmorpg/shared';
+import { AUTHENTICATED_ROOM, STARTER_MAP, type WorldRoomState } from '@mmorpg/shared';
+import { canOccupy } from '@mmorpg/game-core';
 import { AuthService } from '../src/auth.js';
 import { createGameServer } from '../src/server.js';
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -45,7 +46,44 @@ export async function testRoomLifecycle(database: PrismaClient) {
     await until(() => second.state.players.get(records[0]!.characterId)!.x > 624);
     first.send('movement', { version: 1, sequence: 1, x: 0, y: 0 });
     await until(() => first.state.players.get(records[0]!.characterId)!.lastSequence === 1);
-    const x = first.state.players.get(records[0]!.characterId)!.x;
+    // Freeze automatic simulation only in this test; packets still cross the real socket.
+    // One explicit tick proves input spam cannot buy extra distance.
+    const controlled = serverRoom as typeof serverRoom & { tick(): Promise<void> };
+    controlled.setSimulationInterval(() => {}, STARTER_MAP.world.tickMs);
+    await sleep(100);
+    const player = controlled.state.players.get(records[0]!.characterId)!;
+    const world = STARTER_MAP.world, start = { ...world.spawn };
+    Object.assign(player, start);
+    for (let sequence = 2; sequence <= 21; sequence++) first.send('movement', { version: 1, sequence, x: 1, y: 0 });
+    await sleep(100); await controlled.tick();
+    assert.equal(player.lastSequence, 21);
+    const cardinal = Math.hypot(player.x - start.x, player.y - start.y);
+    assert.ok(Math.abs(cardinal - world.moveSpeed * world.tickMs / 1000) < 1e-6);
+    first.send('movement', { version: 1, sequence: 22, x: 0, y: 0 }); await sleep(100); await controlled.tick();
+    const stationary = { x: player.x, y: player.y };
+    for (const payload of [
+      { version: 1, sequence: 22, x: -1, y: 0 }, // duplicate
+      { version: 1, sequence: 20, x: -1, y: 0 }, // reordered
+      { version: 1, sequence: 23, x: 1, y: 0, position: { x: 1000, y: 1000 } },
+      { version: 1, sequence: 23, x: 1000, y: 0 },
+      { version: 2, sequence: 23, x: 1, y: 0 }
+    ]) first.send('movement', payload);
+    await sleep(100); await controlled.tick();
+    assert.deepEqual({ x: player.x, y: player.y }, stationary); assert.equal(player.lastSequence, 22);
+    Object.assign(player, start);
+    first.send('movement', { version: 1, sequence: 24, x: 1, y: 1 }); await sleep(100); await controlled.tick();
+    assert.ok(Math.abs(Math.hypot(player.x - start.x, player.y - start.y) - cardinal) < 1e-6);
+    const held = { x: player.x, y: player.y }; now += world.inputTimeoutMs + 1;
+    await controlled.tick(); assert.deepEqual({ x: player.x, y: player.y }, held);
+    const edge = { x: world.footprint.halfWidth, y: world.footprint.halfHeight };
+    assert.ok(canOccupy(edge, world)); Object.assign(player, edge);
+    first.send('movement', { version: 1, sequence: 25, x: -1, y: -1 }); await sleep(100); await controlled.tick();
+    assert.deepEqual({ x: player.x, y: player.y }, edge);
+    Object.assign(player, start);
+    first.send('movement', { version: 1, sequence: 26, x: 0, y: 0 }); await sleep(100); await controlled.tick();
+    controlled.setSimulationInterval(() => { void controlled.tick(); }, world.tickMs);
+    await until(() => first.state.players.get(records[0]!.characterId)!.lastSequence === 26 && second.state.players.get(records[0]!.characterId)!.lastSequence === 26);
+    const x = player.x;
     first.connection.close(); await sleep(150);
     assert.equal(second.state.players.size, 2); // Retained during the CHỐT reconnect grace.
     const restored = await client.joinById<WorldRoomState>(second.roomId, { version: 1, token: sessions[0]!.token, reconnect: true }); restored.onLeave(() => {});
@@ -62,7 +100,7 @@ export async function testRoomLifecycle(database: PrismaClient) {
     const freshId = fresh.roomId; await fresh.leave(); await until(() => !matchMaker.getLocalRoomById(freshId));
     await database.character.update({ where: { id: records[0]!.characterId }, data: { areaId: 'invalid-test-area' } });
     await assert.rejects(client.joinOrCreate(AUTHENTICATED_ROOM, { version: 1, token: sessions[0]!.token }));
-    console.log('Authenticated rooms: two accounts/one room/stable IDs, strict join, private state, 30s grace, clean leave/dispose/recreate and wrong-area refusal PASS');
+    console.log('Authenticated rooms: two accounts/stable IDs/private state, movement spam/duplicates/reordering/teleport/diagonal/timeout/boundary, 30s grace and leave/dispose/recreate PASS');
   } finally {
     await game.server.gracefullyShutdown(false);
     for (const record of records) {

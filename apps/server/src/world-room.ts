@@ -1,8 +1,9 @@
 import { Room, type Client } from '@colyseus/core';
 import { Schema, MapSchema, defineTypes } from '@colyseus/schema';
-import { FOUNDATION_WORLD, movementIntentSchema, joinOptionsSchema, PROTOCOL_VERSION, type Direction, type MovementIntent, type WorldConfig, STARTER_MAP } from '@mmorpg/shared';
+import { FOUNDATION_WORLD, joinOptionsSchema, PROTOCOL_VERSION, type Direction, type MovementIntent, type WorldConfig, STARTER_MAP } from '@mmorpg/shared';
 import { move, directionFor } from '@mmorpg/game-core';
 import { MOVEMENT_MESSAGE, PROTOCOL_ERROR_MESSAGE, type ProtocolError } from '@mmorpg/shared';
+import { acceptMovementInput } from './movement-input.js';
 
 export class PlayerState extends Schema {
   id = ''; x = 0; y = 0; direction: Direction = 'S'; lastSequence = -1;
@@ -22,14 +23,13 @@ export class FoundationRoom extends Room<WorldState> {
     this.setState(new WorldState());
     this.setPatchRate(this.world.tickMs);
     this.onMessage(MOVEMENT_MESSAGE, (client, payload: unknown) => {
-      const parsed = movementIntentSchema.safeParse(payload);
       const player = this.state.players.get(client.sessionId);
       if (!player) return;
       const reject = (code: ProtocolError['code']) => client.send(PROTOCOL_ERROR_MESSAGE, { version: PROTOCOL_VERSION, code } satisfies ProtocolError);
-      if (!parsed.success) { reject('INVALID_INTENT'); return; }
-      if (parsed.data.sequence <= player.lastSequence) { reject('STALE_SEQUENCE'); return; }
-      player.lastSequence = parsed.data.sequence;
-      this.inputs.set(client.sessionId, { intent: parsed.data, receivedAt: this.now() });
+      const accepted = acceptMovementInput(payload, player.lastSequence, this.inputs.get(client.sessionId)?.intent.sequence);
+      if ('error' in accepted) { reject(accepted.error); return; }
+      player.lastSequence = accepted.intent.sequence;
+      this.inputs.set(client.sessionId, { intent: accepted.intent, receivedAt: this.now() });
     });
     this.setSimulationInterval(() => this.tick(this.now()), this.world.tickMs);
   }

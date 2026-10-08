@@ -1,5 +1,11 @@
 # PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
 
+## Trạng thái mới nhất sau checkpoint708ae90 — 08/10/2026
+
+Phiên tiếp tục đã xác nhận Git sạch và T09/T10/T11 DONE. Hoàn thành đúng3 task: T13 (57fcb62), T14 (202e999), T15 (checkpoint sau cập nhật này, xem git log). Gate cuối lint/typecheck/build,35 unit/integration+31 mock, DB7 suites và E2E9/9 PASS; không có lượt sửa gate thất bại. T13 xác thực/private state/room lifecycle, T14 shared Map/Area/Respawn validator, T15 strict input sequence + movement tests trên DB/WebSocket thật. Collision/Occlusion/art/CHỐT không sửa. Không push/deploy/reset DB/auto-dev.ps1/codex exec.
+
+Dừng đủ3 task theo yêu cầu hiện tại; T16 đủ dependency cho phiên sau. T12 còn D12/D15/A02; nội dung map mới D05 và email production/vận hành vẫn cần quyết định/cấu hình. Đọc progress.md, MULTIPLAYER.md, WORLD_REGISTRY.md và registry tasks.md để tiếp tục. Các mục pause, T09 DOING và dependency chưa đủ bên dưới chỉ là lịch sử, không áp dụng cho trạng thái mới nhất; không apply lại GAME_SPEC.pending.patch.
+
 ## Cập nhật resume máy nhà — 08/10/2026
 
 Phiên resume đã hoàn thành đúng3 task: T09 (7d01781), T10 (c750fff), T11 (checkpoint sau cập nhật này). Gate cuối30 unit+31 mock/DB6 suite/E2E8/8 và lint/typecheck/build PASS; UI2/2 kiểm lại sau duyệt nhãn. T60 giữ DONE, chỉ thêm auth parameter/Character UUID vào World dùng chung. /login và /game local có HttpOnly session cookie và server auth; tạo account qua backend /auth/register, frontend creation/appearance T12 vẫn chờ D12/D15/A02. DB dev local đã kiểm trống và migrate additive001–006, không reset/backfill; DB test đã migration006. Không apply lại spec patch. T13 đủ dependency để bắt đầu ở phiên sau, chưa tự DONE. Dừng đủ3 task, không push/deploy/auto-dev/codex exec. AUTH_LOCAL.md và README là hướng dẫn hiện tại.

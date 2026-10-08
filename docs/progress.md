@@ -1,5 +1,13 @@
 # Tiến độ dự án 2D MMORPG
 
+## T15 — Authoritative movement/input sequence DONE, 08/10/2026
+
+Sau T14 checkpoint202e999, T04/T13/T14 đã đủ; task thứ3/cuối phiên từ708ae90. Room preview và authenticated dùng chung acceptMovementInput: strict direction intent/version/safe integer sequence, reject sequence <= max(applied,queued), không nhận position/teleport. Giữ nguyên fixed server tick, auth DB trước movement, timeout config, normalization/footprint/wall-slide engine; không đổi Collision/Occlusion hay balance.
+
+Verification: lint/typecheck/build PASS;35 unit/integration+31 mock PASS; DB7 suites PASS và E2E9/9 PASS (logs/t15-*.log). SDK+DB thật kiểm20 packet spam chỉ đi một tick; duplicate/reordered/extra position/out-of-range/version sai không đổi vị trí/sequence; diagonal cùng quãng đường cardinal, input hết hạn dừng, boundary không vượt footprint. Tests kiểm duplicate queued trước tick và applied sau tick, safe sequence/malformed intent. Hai client cùng lastSequence/snapshot, reconnect/leave/dispose vẫn PASS. Browser camera, auth/recovery, collision/editor/front-side/aggregate occlusion/wall-slide regression PASS. Không gate thất bại, không bỏ test hoặc reset DB.
+
+Đã hoàn thành đúng3 task T13/T14/T15, dừng theo giới hạn phiên. T16 đủ dependency để chọn ở phiên sau; không tự DONE T12/T17/assets. T12 còn D12/D15/A02, nội dung Map/NPC/monster mới còn D05; transport email thật và vận hành production chưa cấu hình. GAME_SPEC/CHỐT giữ nguyên, không push/deploy/auto-dev.ps1/codex exec.
+
 ## T14 — Shared Map/Area registry DONE, 08/10/2026
 
 Sau T13 checkpoint57fcb62, dependency T05/T13 đủ, không có blocker nghiệp vụ. Loader shared tách maps/areas/respawns, nhiều Area trong một Map; kiểm duplicate IDs, references, area bounds, polygon hợp lệ, footprint spawn trong Area và không chồng collision. resolveLocation yêu cầu Map/Area/Respawn khớp cùng quan hệ. Starter registry dùng nguyên dữ liệu official, export qua shared cho FE/BE; server initialization dùng validator chung. Không thay geometry/collision/occlusion/art hoặc mở nội dung Map/Area chưa CHỐT theo D05.
