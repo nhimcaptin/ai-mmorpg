@@ -175,6 +175,8 @@ Phase 1 hoàn tất trong phạm vi nền tảng/cảnh thử local và kiểm c
 | Công việc | Trạng thái | Tiêu chí và bằng chứng nghiệm thu |
 |---|---|---|
 | Xây bộ điều phối auto-dev an toàn | DONE | Có auto-dev.ps1, verify.ps1, JSON schema và AUTO_DEV.md; 18 kiểm thử Codex/pnpm giả qua, quality gates thật và browser smoke qua. Dry-run roadmap thật chọn T03, báo Git bẩn/chưa HEAD; chưa chạy phát triển game. Chi tiết bằng chứng trong progress.md. |
+| Sửa launcher Windows và thêm progress realtime | DONE | Tái hiện lỗi PowerShell với đối số stdin `-`, sửa sang npm Node entry point; 25 kiểm thử qua, 4 quality gates qua, smoke CLI thật read-only/schema CODEX_OK exit 0. Progress ở stderr, summary stdout JSON thuần, log raw/structured riêng. Không chạy loop và không mở lại T03 FAILED. |
+| Thêm chế độ Live có màu và timestamp | DONE | 31/31 kiểm thử gồm stream trước exit, stderr/JSON sai/timeout/SIGINT và regression launcher qua; lint/typecheck/test/build PASS. Smoke CLI thật read-only CODEX_OK và dry-run với Live/MaxTasks/MaxMinutes/StopOnFailure qua. Summary JSON giữ nguyên, checkpoint chỉ sau PASS; T03/journal FAILED không tự mở khóa. Bằng chứng và giới hạn Ctrl+C trong progress.md. |
 
 ## Registry trạng thái cho auto-dev
 
@@ -318,7 +320,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T03",
       "kind": "task",
-      "status": "TODO",
+      "status": "FAILED",
       "dependencies": [
         "T02"
       ],

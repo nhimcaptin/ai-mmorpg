@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { outputObserver, terminalProgress } from './auto-dev-output.mjs';
 
 const START = '<!-- AUTO_DEV_TASKS_START -->';
 const END = '<!-- AUTO_DEV_TASKS_END -->';
@@ -12,7 +13,15 @@ const digest = (p) => crypto.createHash('sha256').update(fs.readFileSync(p)).dig
 const fail = (message) => { throw new Error(message); };
 const protectedNames = ['GAME_SPEC.md', 'AGENTS.md', 'docs/tasks.md', 'docs/progress.md',
   'scripts/auto-dev.ps1', 'scripts/verify.ps1', 'scripts/auto-dev.mjs',
-  'scripts/auto-dev-result.schema.json', '.gitignore'];
+  'scripts/auto-dev-result.schema.json', 'scripts/auto-dev-output.mjs', '.gitignore'];
+
+export function codexArguments({ root, resultPath, sandbox = 'workspace-write' }) {
+  if (!['workspace-write', 'read-only'].includes(sandbox)) fail('Sandbox không được hỗ trợ.');
+  return ['--no-daemon', '--ask-for-approval', 'on-request', 'exec', '--ignore-user-config',
+    '--sandbox', sandbox, '-c', 'approval_policy="on-request"', '-c', 'sandbox_workspace_write.network_access=false',
+    '--cd', root, '--output-schema', path.join(root, 'scripts/auto-dev-result.schema.json'),
+    '--json', '--output-last-message', resultPath, '-'];
+}
 
 export function roadmap(text) {
   const a = text.indexOf(START), b = text.indexOf(END);
@@ -62,26 +71,43 @@ function updateTask(root, id, status, evidence) {
     `\n### Auto-dev ${new Date().toISOString()} — ${id}: ${status}\n\n${evidence}\n`);
 }
 
-function findExecutable(name) {
-  if (process.platform !== 'win32') return { command: name, prefix: [] };
-  const dirs = (process.env.PATH || '').split(';');
-  // Invoke trusted npm launchers through PowerShell argument arrays, never cmd string interpolation.
+export function resolveCommand(name, { platform = process.platform, pathValue = process.env.PATH || '' } = {}) {
+  if (platform !== 'win32') return { command: name, prefix: [] };
+  const dirs = pathValue.split(';').filter(Boolean);
   for (const dir of dirs) {
-    for (const ext of ['.exe', '.ps1']) {
+    for (const ext of ['.exe', '.ps1', '.cmd']) {
       const candidate = path.join(dir, name + ext);
-      if (fs.existsSync(candidate)) return ext === '.exe' ? { command: candidate, prefix: [] }
-        : { command: 'powershell.exe', prefix: ['-NoProfile', '-File', candidate] };
+      if (!fs.existsSync(candidate)) continue;
+      if (ext === '.exe') return { command: candidate, prefix: [] };
+      if (name === 'codex') {
+        // powershell -File binds a trailing '-' as an invalid parameter name.
+        // Run the installed official npm entry point with literal argv/stdin instead.
+        const packageDir = path.join(dir, 'node_modules', '@openai', 'codex');
+        const metadata = path.join(packageDir, 'package.json');
+        if (!fs.existsSync(metadata)) fail('Codex npm shim thiếu package metadata; không fallback PowerShell/cmd.');
+        const pkg = JSON.parse(read(metadata));
+        if (pkg.name !== '@openai/codex' || pkg.bin?.codex !== 'bin/codex.js') fail('Codex npm entry point không được hỗ trợ.');
+        const entry = path.join(packageDir, pkg.bin.codex);
+        if (!fs.existsSync(entry)) fail('Thiếu Codex npm entry point: ' + entry);
+        return { command: process.execPath, prefix: [entry] };
+      }
+      if (ext === '.ps1') return { command: 'powershell.exe', prefix: ['-NoProfile', '-File', candidate] };
     }
   }
   fail(`Không tìm thấy ${name}.exe hoặc ${name}.ps1 trong PATH; không cài tự động.`);
 }
 
-export function runProcess(command, args, { root, timeoutMs, input = '', signal, log } = {}) {
+export function runProcess(command, args, { root, timeoutMs, input = '', signal, log, onOutput = () => {} } = {}) {
   if (timeoutMs <= 0) return Promise.resolve({ code: 124, stdout: '', stderr: 'Hết thời gian', timedOut: true });
-  const executable = findExecutable(command);
+  const executable = resolveCommand(command);
+  const stem = log ? log.replace(/\.[^./\\]+$/, '') : null;
+  if (stem) writeJson(stem + '.invocation.json', { command: executable.command, args: [...executable.prefix, ...args],
+    cwd: root, shell: false, timeoutMs, stdinBytes: Buffer.byteLength(input) });
   return new Promise((resolve) => {
     let stdout = '', stderr = '', timedOut = false, interrupted = false, settled = false, killTimer;
     const output = log ? fs.createWriteStream(log, { flags: 'a' }) : null;
+    const errorOutput = stem ? fs.createWriteStream(stem + '.stderr.log', { flags: 'a' }) : null;
+    const streams = [output, errorOutput].filter(Boolean);
     const child = spawn(executable.command, [...executable.prefix, ...args], {
       cwd: root, shell: false, windowsHide: true, detached: process.platform !== 'win32',
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -102,26 +128,38 @@ export function runProcess(command, args, { root, timeoutMs, input = '', signal,
     const abort = () => { interrupted = true; stop(); };
     signal?.addEventListener('abort', abort, { once: true });
     if (signal?.aborted) abort();
-    child.stdout.on('data', (data) => { stdout = (stdout + data).slice(-2_000_000); output?.write(data); });
-    child.stderr.on('data', (data) => { stderr = (stderr + data).slice(-2_000_000); output?.write(data); });
+    child.stdout.on('data', (data) => { stdout = (stdout + data).slice(-2_000_000); output?.write(data); onOutput('stdout', data); });
+    child.stderr.on('data', (data) => { stderr = (stderr + data).slice(-2_000_000); errorOutput?.write(data); onOutput('stderr', data); });
     child.stdin.on('error', () => {});
     child.stdin.end(input);
-    function finish(code, error) {
+    function finish(code, error, exitSignal) {
       if (settled) return; settled = true;
-      clearTimeout(timer); clearTimeout(killTimer); signal?.removeEventListener('abort', abort); output?.end();
-      resolve({ code: interrupted ? 130 : timedOut ? 124 : code ?? 1,
-        stdout, stderr: error ? String(error) : stderr, timedOut, interrupted });
+      clearTimeout(timer); clearTimeout(killTimer); signal?.removeEventListener('abort', abort);
+      const result = { code: interrupted ? 130 : timedOut ? 124 : code ?? 1, exitCode: code,
+        exitSignal: exitSignal || null, stdout, stderr: error ? String(error) : stderr, timedOut, interrupted };
+      if (stem) writeJson(stem + '.process.json', { code: result.code, exitCode: code, exitSignal: result.exitSignal,
+        timedOut, interrupted, stdoutLog: log, stderrLog: stem + '.stderr.log', error: error ? String(error) : null });
+      // Flush logs before callers inspect them or print the final summary.
+      Promise.all(streams.map((stream) => new Promise((done) => stream.end(done)))).then(() => resolve(result));
     }
     child.on('error', (error) => finish(1, error));
-    child.on('close', (code) => finish(code));
+    child.on('close', (code, exitSignal) => finish(code, null, exitSignal));
   });
 }
 
-export async function verify({ root, e2e = false, deadline, runner = runProcess, signal, logDir }) {
+export async function verify({ root, e2e = false, deadline, runner = runProcess, signal, logDir, progress = () => {}, taskId = '-', attempt = 0, live = false }) {
   const gates = [];
   for (const script of ['lint', 'typecheck', 'test', 'build', ...(e2e ? ['test:e2e'] : [])]) {
-    const result = await runner('pnpm', [script], { root, signal, timeoutMs: deadline - Date.now(),
-      log: path.join(logDir, script.replace(':', '-') + '.log') });
+    const label = { taskId, attempt };
+    const stem = path.join(logDir, script.replace(':', '-'));
+    progress({ ...label, message: 'Chạy pnpm ' + script });
+    const observer = outputObserver({ live, emit: (message, kind) => progress({ ...label, message, kind }), structuredLog: stem + '.events.jsonl' });
+    let result;
+    try {
+      result = await runner('pnpm', [script], { root, signal, timeoutMs: deadline - Date.now(),
+        log: stem + '.log', onOutput: observer.write });
+    } finally { observer.end(); }
+    progress({ ...label, kind: result.code === 0 ? 'result' : 'error', message: `pnpm ${script}: exit ${result.code}${result.timedOut ? ' TIMEOUT' : ''}${result.interrupted ? ' INTERRUPTED' : ''}` });
     gates.push({ command: `pnpm ${script}`, code: result.code, timedOut: !!result.timedOut, interrupted: !!result.interrupted });
     if (result.code !== 0) break;
   }
@@ -167,7 +205,7 @@ changedFiles liệt kê toàn bộ file sửa/tạo/xóa với đường dẫn t
 Kết quả kiểm chứng lượt trước: ${JSON.stringify(previous || null)}.`;
 
 export async function orchestrate(options, runner = runProcess) {
-  const { root, dryRun = false, maxTasks = 1, maxMinutes = 30, stopOnFailure = false, signal } = options;
+  const { root, dryRun = false, live = false, maxTasks = 1, maxMinutes = 30, stopOnFailure = false, signal, progress = () => {} } = options;
   if (!Number.isInteger(maxTasks) || maxTasks < 1 || maxTasks > 100
     || !Number.isFinite(maxMinutes) || maxMinutes <= 0 || maxMinutes > 240) fail('Ngân sách phải hữu hạn và hợp lệ.');
   const deadline = Date.now() + maxMinutes * 60_000;
@@ -177,6 +215,7 @@ export async function orchestrate(options, runner = runProcess) {
   const stateFile = path.join(root, 'logs', 'auto-dev-state.json');
   const lockFile = path.join(root, 'logs', 'auto-dev.lock');
   const summary = { runId, status: 'STARTING', dryRun, completed: [], taskId: null, attempt: 0, logDir };
+  const emit = (message, kind = 'activity') => progress({ taskId: summary.taskId || '-', attempt: summary.attempt, message, kind });
   let lock, currentTask, workerStarted = false, baseline;
   const save = () => { writeJson(path.join(logDir, 'summary.json'), summary); if (!dryRun && lock !== undefined) writeJson(stateFile, summary); };
   const invoke = (command, args, extra = {}) => runner(command, args,
@@ -192,6 +231,7 @@ export async function orchestrate(options, runner = runProcess) {
     return [...new Set([...tracked, ...untracked])].sort();
   };
   try {
+    emit('Kiểm tra Codex CLI và Git');
     const help = await invoke('codex', ['exec', '--help']);
     const rootHelp = await invoke('codex', ['--help']);
     if (help.code !== 0 || rootHelp.code !== 0) fail('Codex CLI help không chạy được.');
@@ -209,11 +249,18 @@ export async function orchestrate(options, runner = runProcess) {
     const dirty = await git(['status', '--porcelain']);
     const headResult = await invoke('git', ['rev-parse', '--verify', 'HEAD']);
     summary.preflight = { clean: dirty === '', hasHead: headResult.code === 0 };
+    emit(`Git clean=${summary.preflight.clean}, HEAD=${summary.preflight.hasHead}`);
     if (dryRun) {
       summary.status = 'DRY_RUN'; summary.nextTask = next || null;
       summary.launchBlockers = [...(dirty ? ['Git còn thay đổi người dùng; cần checkpoint thủ công.'] : []),
         ...(headResult.code !== 0 ? ['Chưa có commit nền HEAD.'] : []),
-        ...(fs.existsSync(lockFile) ? ['Có lock cần kiểm tra.'] : [])];
+        ...(fs.existsSync(lockFile) ? ['Có lock cần kiểm tra.'] : []),
+        ...(parsed.registry.tasks.some((t) => ['DOING', 'FAILED'].includes(t.status)) ? ['Có task DOING/FAILED cần xử lý thủ công.'] : [])];
+      if (fs.existsSync(stateFile)) {
+        const previous = JSON.parse(read(stateFile));
+        if (!['COMPLETE', 'NO_READY_TASK'].includes(previous.status)) summary.launchBlockers.push('Journal lượt trước ' + previous.status + '; cần xử lý thủ công.');
+      }
+      emit('DRY_RUN: ' + (next ? next.id : 'không có task đủ phụ thuộc'));
       save(); return summary;
     }
     if (dirty || headResult.code !== 0) fail('Yêu cầu Git sạch và commit HEAD; không stage/ghi đè thay đổi người dùng.');
@@ -238,6 +285,7 @@ export async function orchestrate(options, runner = runProcess) {
         break;
       }
       summary.taskId = currentTask.id;
+      emit('Chọn task: ' + currentTask.title);
       const baselineHead = await git(['rev-parse', 'HEAD']);
       baseline = new Map(protectedNames.map((p) => [p, digest(path.join(root, p))]));
       const baselineScripts = JSON.parse(read(path.join(root, 'package.json'))).scripts;
@@ -250,18 +298,28 @@ export async function orchestrate(options, runner = runProcess) {
       let previous, success = false;
       for (let attempt = 0; attempt <= 3; attempt++) {
         summary.attempt = attempt; summary.status = 'RUNNING'; save();
+        emit(attempt ? `Bắt đầu phiên sửa ${attempt}/3` : 'Bắt đầu phiên Codex đầu tiên');
         const attemptDir = path.join(logDir, `${currentTask.id}-${attempt}`); fs.mkdirSync(attemptDir);
         const resultPath = path.join(attemptDir, 'result.json');
-        const args = ['--no-daemon', '--ask-for-approval', 'on-request', 'exec', '--ignore-user-config',
-          '--sandbox', 'workspace-write', '-c', 'approval_policy="on-request"', '-c', 'sandbox_workspace_write.network_access=false',
-          '--cd', root, '--output-schema', path.join(root, 'scripts/auto-dev-result.schema.json'),
-          '--json', '--output-last-message', resultPath, '-'];
+        const args = codexArguments({ root, resultPath });
         workerStarted = true;
-        const session = await invoke('codex', args, { input: promptFor(currentTask, previous), log: path.join(attemptDir, 'session.jsonl') });
+        const observer = outputObserver({ codex: true, live, emit, structuredLog: path.join(attemptDir, 'session.events.jsonl') });
+        let session;
+        try {
+          session = await invoke('codex', args, { input: promptFor(currentTask, previous), log: path.join(attemptDir, 'session.jsonl'), onOutput: observer.write });
+        } finally { observer.end(); }
+        summary.sessionExit = { code: session.code, timedOut: !!session.timedOut, interrupted: !!session.interrupted,
+          stdoutLog: path.join(attemptDir, 'session.jsonl'), stderrLog: path.join(attemptDir, 'session.stderr.log') };
+        writeJson(path.join(attemptDir, 'session-result.json'), { ...summary.sessionExit,
+          exitCode: session.exitCode ?? null, exitSignal: session.exitSignal || null,
+          stderrTail: (session.stderr || '').slice(-4000) });
+        save();
+        emit(`Codex exit ${session.code}${session.timedOut ? ' TIMEOUT' : ''}${session.interrupted ? ' INTERRUPTED' : ''}`);
         await guard();
-        if (session.code !== 0) fail(`Codex exit ${session.code}; không có checkpoint.`);
+        if (session.code !== 0) fail(`Codex exit ${session.code}; xem ${summary.sessionExit.stderrLog}; không có checkpoint.`);
         const result = validateResult(JSON.parse(read(resultPath)), currentTask.id);
         const changed = await changes();
+        if (live) for (const p of changed) emit('Git xác nhận file thay đổi: ' + p, 'file');
         if (JSON.stringify(changed) !== JSON.stringify([...new Set(result.changedFiles)].sort())) fail('changedFiles không khớp Git diff.');
         for (const p of changed) {
           const absolute = path.join(root, p);
@@ -276,10 +334,11 @@ export async function orchestrate(options, runner = runProcess) {
         const e2e = currentTask.e2e || result.requiresE2E || changed.some((p) => /^(apps\/web\/|assets\/|packages\/(shared|game-core)\/|tests\/e2e\/|playwright)/.test(p)
           || p === 'apps/server/src/world-room.ts');
         summary.status = 'VERIFYING'; save();
-        previous = await verify({ root, e2e, deadline, runner, signal, logDir: attemptDir });
+        previous = await verify({ root, e2e, deadline, runner, signal, logDir: attemptDir, progress, taskId: currentTask.id, attempt, live });
         await guard();
         if (previous.status === 'FAIL') {
           if (signal?.aborted || Date.now() >= deadline || stopOnFailure || attempt === 3) fail('Verification thất bại; dừng, không checkpoint.');
+          emit('Verification FAIL; chuyển sang phiên sửa kế tiếp');
           continue;
         }
         if (JSON.stringify(await changes()) !== JSON.stringify(changed)) fail('Verification thay đổi file nguồn ngoài diff phiên.');
@@ -289,6 +348,7 @@ export async function orchestrate(options, runner = runProcess) {
         const commit = await git(['rev-parse', 'HEAD']);
         if (await git(['status', '--porcelain'])) fail('Git không sạch sau checkpoint; dừng.');
         summary.completed.push({ taskId: currentTask.id, commit, attempt, gates: previous.gates });
+        emit('Verification PASS; checkpoint local ' + commit.slice(0, 12), 'result');
         summary.status = 'COMPLETE'; save(); success = true; workerStarted = false;
         break;
       }
@@ -298,6 +358,7 @@ export async function orchestrate(options, runner = runProcess) {
     save(); return summary;
   } catch (error) {
     summary.status = signal?.aborted ? 'INTERRUPTED' : 'FAILED'; summary.reason = error.message;
+    emit(summary.status + ': ' + summary.reason, 'error');
     // Leave worker changes untouched. Never restore or reset protected/user files.
     if (workerStarted && currentTask) {
       summary.recovery = 'Xem diff/journal; sửa trạng thái và checkpoint thủ công. Không tự chạy lại.';
@@ -311,26 +372,41 @@ export async function orchestrate(options, runner = runProcess) {
   }
 }
 
+export function cancellationController(progress = () => {}, signals = process) {
+  const controller = new AbortController();
+  const stop = () => {
+    if (controller.signal.aborted) return;
+    progress({ kind: 'error', message: 'Nhận tín hiệu dừng; đang đóng phiên con và giữ log/diff.' });
+    controller.abort();
+  };
+  signals.on('SIGINT', stop); signals.on('SIGTERM', stop);
+  return { controller, dispose() { signals.removeListener('SIGINT', stop); signals.removeListener('SIGTERM', stop); } };
+}
+
 async function main() {
   const args = process.argv.slice(2), mode = args.shift();
   const get = (key, fallback) => { const i = args.indexOf(key); return i < 0 ? fallback : args[i + 1]; };
   const root = path.resolve(get('--root', process.cwd()));
   const maxMinutes = Number(get('--max-minutes', '30'));
-  const controller = new AbortController();
-  process.once('SIGINT', () => controller.abort()); process.once('SIGTERM', () => controller.abort());
+  const live = args.includes('--live');
+  const progress = terminalProgress(undefined, Date.now(), { live });
+  const cancellation = cancellationController(progress), { controller } = cancellation;
   let result;
-  if (mode === 'verify') {
-    if (!Number.isInteger(maxMinutes) || maxMinutes < 1 || maxMinutes > 240) fail('MaxMinutes không hợp lệ.');
-    const logDir = path.join(root, 'logs', 'verify', new Date().toISOString().replace(/[:.]/g, '-'));
-    fs.mkdirSync(logDir, { recursive: true });
-    result = await verify({ root, e2e: args.includes('--e2e'), deadline: Date.now() + maxMinutes * 60_000, logDir, signal: controller.signal });
-    result.logDir = logDir;
-  } else if (mode === 'auto') result = await orchestrate({ root, maxMinutes,
-    maxTasks: Number(get('--max-tasks', '1')), dryRun: args.includes('--dry-run'),
-    stopOnFailure: get('--stop-on-failure', 'false') === 'true', signal: controller.signal });
-  else fail('Mode phải là auto hoặc verify.');
-  console.log(JSON.stringify(result, null, 2));
-  process.exitCode = ['PASS', 'COMPLETE', 'DRY_RUN', 'NO_READY_TASK'].includes(result.status) ? 0 : 1;
+  try {
+    if (mode === 'verify') {
+      if (!Number.isInteger(maxMinutes) || maxMinutes < 1 || maxMinutes > 240) fail('MaxMinutes không hợp lệ.');
+      const logDir = path.join(root, 'logs', 'verify', new Date().toISOString().replace(/[:.]/g, '-'));
+      fs.mkdirSync(logDir, { recursive: true });
+      result = await verify({ root, e2e: args.includes('--e2e'), deadline: Date.now() + maxMinutes * 60_000, logDir, signal: controller.signal, progress, live });
+      result.logDir = logDir;
+    } else if (mode === 'auto') result = await orchestrate({ root, maxMinutes,
+      maxTasks: Number(get('--max-tasks', '1')), dryRun: args.includes('--dry-run'), live,
+      stopOnFailure: get('--stop-on-failure', 'false') === 'true', signal: controller.signal, progress });
+    else fail('Mode phải là auto hoặc verify.');
+    progress({ taskId: result.taskId || '-', attempt: result.attempt || 0, message: 'Kết quả: ' + result.status });
+    console.log(JSON.stringify(result, null, 2));
+    process.exitCode = ['PASS', 'COMPLETE', 'DRY_RUN', 'NO_READY_TASK'].includes(result.status) ? 0 : 1;
+  } finally { cancellation.dispose(); }
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => { console.error(error.message); process.exitCode = 1; });

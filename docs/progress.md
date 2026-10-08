@@ -1,5 +1,45 @@
 # Tiến độ dự án 2D MMORPG
 
+## Chế độ Live cho auto-dev — 08/10/2026
+
+**DONE trong phạm vi công cụ; chưa chạy phát triển game tự chủ. T03 và journal cũ vẫn FAILED.**
+
+Đã đọc lại AGENTS.md, GAME_SPEC.md, wrapper/helper, tài liệu và log lỗi; dùng skill lean-build để giới hạn phạm vi. Thêm `-Live` vào auto-dev.ps1 và truyền qua controller/observer. Event JSONL được hiển thị ngay khi nhận đủ dòng, có timestamp UTC, thời gian đã chạy, task/retry, hoạt động CLI, file, lệnh/tool output và kết quả verification. Màu bật khi terminal hỗ trợ; NO_COLOR hoặc redirect dùng chữ thường. Progress ra stderr, final summary stdout vẫn JSON tương thích. Log raw JSONL/stderr, invocation, process exit và summary được giữ nguyên.
+
+Chỉ hiển thị reasoning text do CLI cung cấp; không đọc hidden reasoning. Nhận diện lời gọi asset thực tế, không coi tìm kiếm tên tool là sinh asset hoặc coi tool hoàn tất là asset đã được nghiệm thu. File thay đổi cũng được đối chiếu Git. SIGINT/SIGTERM dừng phiên đang chạy, lưu log/journal và không chọn task tiếp theo. Giữ workspace-write/on-request, Git preflight, ngân sách hữu hạn, tối đa ba lượt sửa và checkpoint chỉ sau verification PASS.
+
+Bằng chứng kiểm chứng:
+
+- `powershell -NoProfile -File .\scripts\verify.ps1 -MaxMinutes 10`: PASS cả lint/typecheck/test/build, exit 0. 31/31 tests orchestrator chạy mới; 9 tests nền tảng dùng Turbo cache vì gameplay không đổi. Log: `logs/verify/2026-10-08T08-18-59-779Z/verification.json`.
+- Mock kiểm tra streaming trước process exit, output delta, timestamp/màu, file/tool/asset/reasoning thực, stderr, JSON sai, process exit 9, timeout exit 124, cancellation và không DONE khi verification thất bại. Regression launcher PowerShell với đối số stdin `-` vẫn qua. Ctrl+C được kiểm thử bằng SIGINT mô phỏng qua cùng handler runtime và subprocess cancellation; chưa thử phím Ctrl+C trực tiếp trong VS Code.
+- `node scripts/codex-smoke.mjs --live`: CLI thật read-only, CODEX_OK, exit 0, schema hợp lệ, GAME_SPEC không đổi. Log: `logs/codex-smoke/2026-10-08T08-17-46-707Z/summary.json`. Warning shell snapshot PowerShell và skill prompt dài không chặn smoke. Chưa thử worker workspace-write thật.
+- `powershell -NoProfile -File .\scripts\auto-dev.ps1 -Live -DryRun -MaxTasks 2 -MaxMinutes 5 -StopOnFailure`: exit 0, stdout parse JSON thành công; DRY_RUN, nextTask=null, hasHead=true, clean=false. Báo T03 FAILED và journal FAILED. Log: `logs/auto-dev/2026-10-08T08-19-49-009Z-923c1e32-e399-4bdb-9198-352fe8aa8337/summary.json`; transport `logs/live-dry-run.*`.
+- GAME_SPEC SHA256 giữ nguyên `0dbaea03d64d9641b390e083656ad06c7c85354c2acca281765593e79cc0e92f`. Không sửa gameplay, sinh asset, cài dependency, checkpoint repo người dùng, push hoặc deploy. Không chạy lại E2E vì không đổi browser/gameplay.
+
+Nguyên nhân T03 đã xác minh: launcher cũ `powershell -File codex.ps1` bị PowerShell binder từ chối đối số cuối `-`, trước khi Codex chạy. Bản sửa dùng Node gọi npm entry point với argv/stdin nguyên vẹn; giữ schema và cờ an toàn. Trước khi chạy thật vẫn cần review/checkpoint thay đổi hiện tại và xử lý thủ công T03/journal FAILED theo AUTO_DEV.md; công cụ không tự reset trạng thái hoặc retry budget.
+
+## Sửa phiên auto-dev lỗi và progress realtime — 08/10/2026
+
+**DONE trong phạm vi sửa công cụ. T03 vẫn FAILED; chưa chạy lại vòng phát triển tự chủ.**
+
+Đã đọc AGENTS.md, hai wrapper PowerShell, AUTO_DEV.md, helper/schema/tests và log thật `logs/auto-dev/2026-10-08T07-40-27-702Z-d5a92c42-4f59-411f-9ac5-2bfc72430ea2`. Dùng skill investigate-first; xác minh trước khi sửa.
+
+Nguyên nhân có bằng chứng: log cũ ghi `codex.ps1: ... argument "name" is not valid`, không có event model. Launcher cũ dùng `powershell -File codex.ps1` để chuyển argv, có đối số cuối `-` dành cho stdin. Phép tái hiện `exec --help -` qua đúng launcher trả exit 1, stdout rỗng, stderr đúng lỗi cũ; bỏ `-` thì exit 0. PowerShell binder lỗi trước khi chạy Codex, không phải Git preflight/model/schema. Log cũ trộn stdout/stderr nên không thể tách ngược channel; phép tái hiện ghi nhận riêng hai channel. Các cờ và schema giữ nguyên, smoke backend thật sau sửa chấp nhận schema.
+
+Thay đổi: scripts/auto-dev.mjs gọi npm entry point đã cài qua Node với shell:false trên Windows, giữ nguyên argv/stdin; builder cờ chung cho worker và smoke. scripts/auto-dev-output.mjs đọc event JSONL/chunk UTF-8, format thời gian/task/retry/tool/exit/test và lỗi quan sát được. scripts/codex-smoke.mjs là lệnh kiểm tra read-only độc lập, timeout 120 giây, không vào vòng task. Tests bổ sung regression launcher, quoting/path/stdin, JSON lỗi/unknown/oversized, UTF-8 chia byte, output concise, stream tách riêng, cancellation và không DONE khi gate thất bại. AUTO_DEV.md ghi workflow, output/log và chẩn đoán/phục hồi. Hai wrapper PowerShell và JSON schema không cần sửa.
+
+Log mới tách stdout raw, stderr raw, events JSONL, invocation (executable/argv/cwd/stdin byte count), process (exit code/signal/timeout/cancel), session-result và summary. Progress chỉ ra stderr, stdout cuối vẫn JSON machine-readable; không tạo progress giả hoặc dùng event turn.completed để nghiệm thu task. Git clean-tree, protected hashes, workspace-write/on-request, no-daemon, giới hạn một phiên đầu + ba lượt sửa và checkpoint sau PASS giữ nguyên. Không tự stage/commit/push/deploy repository hiện tại.
+
+Bằng chứng kiểm chứng:
+
+- `node --test tests/orchestrator/auto-dev.test.mjs`: 25/25 qua. Codex/pnpm dùng mock; Git thật chỉ trong repo tạm. Regression launcher trên Windows tái hiện lỗi `-` và kiểm tra Node nhận nguyên argv/stdin tiếng Việt có quote/khoảng trắng. Một assertion ban đầu đặt nhầm ở test BLOCKED đã chuyển sang case gate FAILED, không xóa/vô hiệu hóa test.
+- `node scripts/codex-smoke.mjs`: PASS, CLI thật exit 0, sandbox read-only, cùng builder/cờ/schema của worker, trả summary CODEX_OK và changedFiles rỗng. Không có tool event. Log: `logs/codex-smoke/2026-10-08T07-57-14-304Z/summary.json`, `session.invocation.json`, `session.process.json`, `session.jsonl`, `session.stderr.log`. Có warning shell snapshot PowerShell không được hỗ trợ và skill interface.default_prompt quá dài; không chặn smoke.
+- Gate cuối `powershell -NoProfile -File .\scripts\verify.ps1 -MaxMinutes 10`: PASS, lint/typecheck/test/build đều exit 0. 25 tests orchestrator chạy mới; 9 tests nền tảng lấy kết quả Turbo cache do gameplay không đổi. Log: `logs/verify/2026-10-08T08-02-17-379Z/verification.json`. Không có thay đổi browser/gameplay nên E2E không chạy lại cho bản sửa công cụ này.
+- Dry-run wrapper thật exit 0; stdout parse JSON thành công, progress ở stderr. Kết quả DRY_RUN, nextTask=null, hasHead=true, clean=false; báo task FAILED và journal FAILED cần xử lý thủ công. Log: `logs/auto-dev/2026-10-08T07-58-04-500Z-ef2af3fc-2079-489e-bd07-0be2c416da2a/summary.json`, transport log `logs/dry-run-fix.*`.
+- GAME_SPEC.md không có diff, SHA256 vẫn `0dbaea03d64d9641b390e083656ad06c7c85354c2acca281765593e79cc0e92f`. Không sửa apps/packages, tạo asset, cài dependency hay nâng quyền.
+
+Blocker còn lại cho chạy thật: review/checkpoint các thay đổi hiện tại; xử lý T03 FAILED và journal FAILED theo quy trình phục hồi thủ công. Chưa xác nhận một task thật sử dụng shell workspace-write; smoke chỉ chứng minh transport/flags/schema/auth read-only. Không tự mở khóa task, archive journal hoặc reset retry budget trong lượt sửa này.
+
 ## Bộ điều phối auto-dev — 08/10/2026
 
 **DONE: triển khai và kiểm chứng bộ công cụ; chưa chạy tự chủ phát triển game. Phase 1 vẫn hoàn tất, Phase 2 chưa bắt đầu.**
@@ -74,3 +114,7 @@ Screenshot: `test-results/foundation-scene.png`. Bằng chứng chi tiết quali
 Docker Desktop và container my-mmorpg-postgres-1 còn chạy để phát triển local; volume my-mmorpg_foundation_postgres chứa DB dev/test mới. Không xóa volume. Playwright đã đóng tiến trình web/server thử do nó tạo. Chạy `pnpm dev` để mở lại cảnh thử; README có hướng dẫn DB và các gate.
 
 Không còn blocker kỹ thuật cho phạm vi Phase 1 đã nghiệm thu. Các quyết định nghiệp vụ còn thiếu ở D01–D14 trong tasks.md sẽ chặn các tác vụ tương ứng khi có yêu cầu Phase 2.
+
+### Auto-dev 2026-10-08T07:40:29.239Z — T03: FAILED
+
+FAILED: Codex exit 1; không có checkpoint.. Không checkpoint; log logs/auto-dev/2026-10-08T07-40-27-702Z-d5a92c42-4f59-411f-9ac5-2bfc72430ea2/summary.json.

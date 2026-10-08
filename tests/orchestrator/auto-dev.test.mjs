@@ -4,7 +4,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { orchestrate, roadmap, nextTask, runProcess, validateResult, verify } from '../../scripts/auto-dev.mjs';
+import { EventEmitter } from 'node:events';
+import { orchestrate, roadmap, nextTask, runProcess, validateResult, verify, resolveCommand, codexArguments, cancellationController } from '../../scripts/auto-dev.mjs';
+import { outputObserver, terminalProgress } from '../../scripts/auto-dev-output.mjs';
 
 const project = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const help = '--sandbox --ignore-user-config --output-schema --json --output-last-message --cd';
@@ -25,7 +27,7 @@ async function fixture(config = {}) {
   fs.writeFileSync(path.join(root, 'docs/tasks.md'), document(config.tasks || tasks()));
   fs.writeFileSync(path.join(root, 'docs/progress.md'), '# Tiến độ\n');
   fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ scripts: Object.fromEntries(['lint', 'typecheck', 'test', 'build', 'test:e2e'].map((s) => [s, s])) }));
-  for (const name of ['auto-dev.ps1', 'verify.ps1', 'auto-dev.mjs', 'auto-dev-result.schema.json']) {
+  for (const name of ['auto-dev.ps1', 'verify.ps1', 'auto-dev.mjs', 'auto-dev-output.mjs', 'auto-dev-result.schema.json']) {
     fs.copyFileSync(path.join(project, 'scripts', name), path.join(root, 'scripts', name));
   }
   const git = async (args) => {
@@ -43,11 +45,13 @@ async function fixture(config = {}) {
     }
     if (command === 'pnpm') {
       gateCount++;
+      options.onOutput?.('stdout', Buffer.from(`mock ${args[0]}\n`));
       return { code: config.failGate?.(args[0], gateCount) ? 1 : 0, stdout: '', stderr: '' };
     }
     assert.equal(command, 'codex');
     if (args.includes('--help')) return { code: 0, stdout: args[0] === 'exec' ? (config.help || help) : '--ask-for-approval on-request --no-daemon', stderr: '' };
     sessions.push(args);
+    options.onOutput?.('stdout', Buffer.from('{"type":"turn.started"}\n'));
     const id = /tác vụ (T\d{2})/.exec(options.input)[1];
     const relative = config.relative || `${id}.txt`;
     fs.mkdirSync(path.dirname(path.join(root, relative)), { recursive: true });
@@ -111,6 +115,7 @@ test('3 fix attempts maximum (4 sessions total), failed gates never checkpoint',
   const r = await orchestrate({ root: f.root }, f.runner);
   assert.equal(r.status, 'FAILED'); assert.equal(f.sessions.length, 4);
   assert.equal(await f.git(['rev-parse', 'HEAD']), head);
+  assert.equal(roadmap(read(path.join(f.root, 'docs/tasks.md'))).ids.get('T01').status, 'FAILED');
 });
 
 test('StopOnFailure stops on first failure; recovery reruns all gates', async () => {
@@ -235,4 +240,192 @@ test('real subprocess timeout returns bounded failure; verification propagates t
   const v = await verify({ root, logDir: root, deadline: Date.now() - 1,
     runner: async () => ({ code: 124, timedOut: true }) });
   assert.equal(v.status, 'FAIL'); assert.equal(v.gates.length, 1);
+});
+
+test('Windows launcher regression: literal dash, quoted config, paths and raw UTF-8 stdin reach Node intact', async () => {
+  if (process.platform !== 'win32') return;
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg argv '));
+  fs.writeFileSync(path.join(root, 'codex.ps1'), '$args | ConvertTo-Json\n');
+  const pkg = path.join(root, 'node_modules/@openai/codex'); fs.mkdirSync(path.join(pkg, 'bin'), { recursive: true });
+  fs.writeFileSync(path.join(pkg, 'package.json'), JSON.stringify({ name: '@openai/codex', bin: { codex: 'bin/codex.js' } }));
+  fs.writeFileSync(path.join(pkg, 'bin/codex.js'), "const fs=require('fs'); console.log(JSON.stringify({args:process.argv.slice(2),input:fs.readFileSync(0,'utf8')}));");
+  const legacy = await runProcess('powershell', ['-NoProfile', '-File', path.join(root, 'codex.ps1'), 'exec', '--help', '-'], { root, timeoutMs: 15000 });
+  assert.equal(legacy.code, 1); assert.match(legacy.stderr, /name/);
+  const executable = resolveCommand('codex', { platform: 'win32', pathValue: root });
+  assert.equal(executable.command, process.execPath); assert.deepEqual(executable.prefix, [path.join(pkg, 'bin/codex.js')]);
+  const oldPath = process.env.PATH;
+  try {
+    process.env.PATH = root + ';' + oldPath;
+    const args = codexArguments({ root, resultPath: path.join(root, 'result with spaces.json') });
+    const input = 'Kiểm thử nguyên văn\n"quotes" $() ` & <>\n';
+    const result = await runProcess('codex', args, { root, input, timeoutMs: 15000, log: path.join(root, 'raw.jsonl') });
+    assert.equal(result.code, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), { args, input });
+    assert.equal(JSON.parse(read(path.join(root, 'raw.process.json'))).exitCode, 0);
+    assert.equal(read(path.join(root, 'raw.stderr.log')), '');
+  } finally { process.env.PATH = oldPath; }
+});
+
+test('unsupported npm shim fails closed; argument builder refuses unsafe sandbox', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg-bad-cli-'));
+  fs.writeFileSync(path.join(root, 'codex.ps1'), '# no installed package');
+  assert.throws(() => resolveCommand('codex', { platform: 'win32', pathValue: root }), /metadata/);
+  assert.throws(() => codexArguments({ root, sandbox: 'danger-full-access' }), /Sandbox/);
+});
+
+test('live JSON events handle split UTF-8, stderr, malformed/unknown JSON and trailing lines; raw events remain structured', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg-events-'));
+  const messages = [], structuredLog = path.join(root, 'events.jsonl');
+  const observer = outputObserver({ codex: true, emit: (message) => messages.push(message), structuredLog });
+  const data = Buffer.from('{"type":"item.started","item":{"type":"command_execution","command":"pnpm test"}}\n'
+    + '{"type":"item.completed","item":{"type":"reasoning","text":"Kiểm chứng"}}\n');
+  for (const byte of data) observer.write('stdout', Buffer.from([byte]));
+  observer.write('stderr', Buffer.from('actual error\n'));
+  observer.write('stdout', Buffer.from('bad json\nnull\n{"type":"future.event"}\n'
+    + '{"type":"turn.failed","error":{"message":"backend error"}}\n'
+    + '{"type":"item.completed","item":{"type":"command_execution","command":"pnpm test","exit_code":1}}'));
+  observer.end(); observer.end();
+  assert.ok(messages.some((s) => s.includes('pnpm test')));
+  assert.ok(messages.some((s) => s.includes('Kiểm chứng')));
+  assert.ok(messages.some((s) => s.includes('stderr: actual error')));
+  assert.ok(messages.some((s) => s.includes('stdout không phải JSON: bad json')));
+  assert.ok(messages.some((s) => s.includes('future.event')));
+  assert.ok(messages.some((s) => s.includes('backend error')));
+  assert.ok(messages.some((s) => s.includes('exit 1')));
+  assert.ok(!messages.some((s) => s.includes('DONE') || s.includes('PASS')));
+  const lines = read(structuredLog).trim().split('\n').map(JSON.parse);
+  assert.equal(lines.length, 8); assert.equal(lines[2].channel, 'stderr'); assert.equal(lines[3].kind, 'invalid_json');
+  assert.equal(lines[4].kind, 'invalid_event');
+});
+
+test('gate live output is concise while routine stdout remains in structured logs', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg-gate-output-'));
+  const messages = [], structuredLog = path.join(root, 'gate.events.jsonl');
+  const observer = outputObserver({ emit: (m) => messages.push(m), structuredLog });
+  observer.write('stdout', Buffer.from('cache hit\npackage chatter\n# tests 24\n# pass 24\nnot ok 1 - failure\n'));
+  observer.write('stderr', Buffer.from('actual diagnostic\n')); observer.end();
+  assert.equal(messages.length, 4);
+  assert.ok(messages.some((m) => m.includes('# pass 24')));
+  assert.ok(messages.some((m) => m.includes('actual diagnostic')));
+  assert.equal(read(structuredLog).trim().split('\n').length, 6);
+});
+
+test('oversized event line is bounded, logged and followed by recoverable valid event', () => {
+  const messages = [], observer = outputObserver({ codex: true, emit: (m) => messages.push(m) });
+  observer.write('stdout', Buffer.from('x'.repeat(130_000) + '\n{"type":"turn.started"}\n')); observer.end();
+  assert.equal(messages.length, 2); assert.match(messages[0], /quá dài/); assert.match(messages[1], /bắt đầu/);
+});
+
+test('progress reports retries and test exit codes without changing summary or granting completion on gate failure', async () => {
+  const f = await fixture({ failGate: () => true }), events = [];
+  const r = await orchestrate({ root: f.root, progress: (e) => events.push(e) }, f.runner);
+  assert.equal(r.status, 'FAILED'); assert.deepEqual(r.completed, []);
+  assert.ok(events.some((e) => e.taskId === 'T01' && e.attempt === 3 && e.message.includes('phiên sửa')));
+  assert.ok(events.some((e) => e.message.includes('pnpm lint: exit 1')));
+  assert.ok(!events.some((e) => e.message.includes('checkpoint local')));
+  const lines = [], render = terminalProgress((line) => lines.push(line), Date.now() - 2000);
+  render({ taskId: 'T03', attempt: 1, message: 'actual\u001b[31m event\n' });
+  assert.match(lines[0], /^\[0:0[2-9]\]\[T03\]\[sửa 1\/3\]/); assert.ok(!lines[0].includes('\u001b'));
+});
+
+test('real process streams stdout/stderr separately, records exit code and cancellation', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg-process-'));
+  const seen = [], log = path.join(root, 'session.jsonl');
+  const r = await runProcess('node', ['-e', 'console.log(JSON.stringify({type:"turn.started"})); console.error("actual stderr"); process.exitCode=7'],
+    { root, timeoutMs: 15000, log, onOutput: (channel, data) => seen.push({ channel, text: data.toString() }) });
+  assert.equal(r.code, 7); assert.equal(r.exitCode, 7);
+  assert.ok(seen.some((s) => s.channel === 'stderr' && s.text.includes('actual stderr')));
+  assert.equal(JSON.parse(read(log)).type, 'turn.started'); assert.match(read(path.join(root, 'session.stderr.log')), /actual stderr/);
+  const controller = new AbortController(); setTimeout(() => controller.abort(), 200);
+  const cancelled = await runProcess('node', ['-e', 'setInterval(()=>{},1000)'], { root, timeoutMs: 5000, signal: controller.signal });
+  assert.equal(cancelled.code, 130); assert.equal(cancelled.interrupted, true);
+});
+
+test('Live renders timestamps/colors without changing plain mode or leaking terminal control codes', () => {
+  const lines = [], time = Date.parse('2026-10-08T10:00:03Z');
+  const render = terminalProgress((line) => lines.push(line), time - 3000, { live: true, color: true, now: () => time });
+  render({ taskId: 'T03', attempt: 2, kind: 'file', message: 'File update: src/test.ts' });
+  assert.ok(lines[0].includes('[2026-10-08T10:00:03.000Z][0:03][T03][sửa 2/3]'));
+  assert.ok(lines[0].startsWith(String.fromCharCode(27) + '[33m'));
+  const plain = [];
+  terminalProgress((line) => plain.push(line), time, { live: true, color: false, now: () => time })({ message: 'Observed' });
+  assert.ok(!plain[0].includes(String.fromCharCode(27)));
+});
+
+test('Live file changes, tool output deltas, asset tools and exposed reasoning are emitted immediately', () => {
+  const events = [], observer = outputObserver({ codex: true, live: true, emit: (message, kind) => events.push({ message, kind }) });
+  const send = (item, type = 'item.completed') => observer.write('stdout', Buffer.from(JSON.stringify({ type, item }) + '\n'));
+  send({ type: 'file_change', status: 'completed', changes: [{ path: 'src/a.ts', kind: 'update' }] });
+  assert.equal(events.length, 1); // Already visible before observer.end/process exit.
+  send({ id: 'tool1', type: 'command_execution', command: 'pnpm test', aggregated_output: 'first line\n' }, 'item.updated');
+  send({ id: 'tool1', type: 'command_execution', command: 'pnpm test', exit_code: 0, aggregated_output: 'first line\n25 passed\n' });
+  assert.equal(events.filter((e) => e.message === 'Tool output: first line').length, 1);
+  assert.ok(events.some((e) => e.message.includes('25 passed')));
+  send({ type: 'mcp_tool_call', server: 'image_gen', tool: 'imagegen', status: 'completed', result: { content: [{ type: 'text', text: 'artifact: asset.png' }] } });
+  send({ type: 'command_execution', command: 'python route_media.py image', status: 'in_progress' }, 'item.started');
+  assert.equal(events.filter((e) => e.kind === 'asset').length, 2);
+  assert.ok(events.some((e) => e.message.includes('artifact: asset.png')));
+  send({ type: 'reasoning', text: 'Exposed CLI summary' });
+  send({ type: 'reasoning', encrypted_content: 'HIDDEN_SENTINEL', internal_reasoning: 'HIDDEN_TEXT' });
+  send({ type: 'command_execution', command: 'rg image_gen scripts/', status: 'completed', exit_code: 0 });
+  observer.end();
+  assert.equal(events.filter((e) => e.kind === 'asset').length, 2); // Searches are not generation events.
+  assert.ok(events.some((e) => e.kind === 'reasoning' && e.message.includes('Exposed CLI summary')));
+  assert.ok(!JSON.stringify(events).includes('HIDDEN_'));
+});
+
+test('real process streaming is observed before exit and preserves mock JSONL/stderr despite malformed events', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg-live-stream-'));
+  const messages = [], observer = outputObserver({ codex: true, live: true, emit: (message) => messages.push(message) });
+  let exited = false, firstResolve;
+  const first = new Promise((resolve) => { firstResolve = resolve; });
+  const pending = runProcess('node', ['-e', 'console.log(JSON.stringify({type:"turn.started"})); console.error("stderr live"); console.log("invalid json"); setTimeout(()=>process.exit(9),1500)'],
+    { root, timeoutMs: 10000, log: path.join(root, 'session.jsonl'), onOutput(channel, data) {
+      observer.write(channel, data); if (messages.length) firstResolve();
+    } }).then((r) => { exited = true; return r; });
+  await first;
+  assert.equal(exited, false); assert.ok(messages.length > 0);
+  const result = await pending; observer.end();
+  assert.equal(result.code, 9); assert.ok(messages.some((m) => m.includes('stderr live')));
+  assert.ok(messages.some((m) => m.includes('stdout không phải JSON')));
+  assert.match(read(path.join(root, 'session.jsonl')), /invalid json/);
+  assert.equal(JSON.parse(read(path.join(root, 'session.process.json'))).code, 9);
+});
+
+test('Ctrl+C handler aborts once, preserves interrupted journal and prevents checkpoint/next task in Live', async () => {
+  const signals = new EventEmitter(), messages = [];
+  const cancel = cancellationController((e) => messages.push(e), signals);
+  const f = await fixture({ interrupt: { abort() { signals.emit('SIGINT'); signals.emit('SIGINT'); } } });
+  try {
+    const result = await orchestrate({ root: f.root, live: true, maxTasks: 2, signal: cancel.controller.signal,
+      progress: (e) => messages.push(e) }, f.runner);
+    assert.equal(result.status, 'INTERRUPTED'); assert.deepEqual(result.completed, []); assert.equal(f.sessions.length, 1);
+    assert.equal(JSON.parse(read(path.join(f.root, 'logs/auto-dev-state.json'))).status, 'INTERRUPTED');
+    assert.equal(messages.filter((e) => e.message.includes('Nhận tín hiệu dừng')).length, 1);
+  } finally { cancel.dispose(); }
+  assert.equal(signals.listenerCount('SIGINT'), 0);
+});
+
+test('Live sequential task gates and confirmed file events retain bounded retries and safe CLI policy', async () => {
+  const f = await fixture(), events = [];
+  const result = await orchestrate({ root: f.root, live: true, maxTasks: 2, progress: (e) => events.push(e) }, f.runner);
+  assert.equal(result.status, 'COMPLETE'); assert.equal(result.completed.length, 2);
+  assert.ok(events.some((e) => e.kind === 'file' && e.message.includes('T01.txt')));
+  for (const args of f.sessions) {
+    assert.ok(args.includes('--json'));
+    assert.equal(args[args.indexOf('--sandbox') + 1], 'workspace-write');
+    assert.equal(args[args.indexOf('--ask-for-approval') + 1], 'on-request');
+  }
+});
+
+test('Live stream timeout preserves observed events and process metadata without inventing completion', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mmorpg-live-timeout-'));
+  const messages = [], observer = outputObserver({ codex: true, live: true, emit: (m) => messages.push(m) });
+  const result = await runProcess('node', ['-e', 'console.log(JSON.stringify({type:"turn.started"})); setInterval(()=>{},1000)'],
+    { root, timeoutMs: 500, log: path.join(root, 'session.jsonl'), onOutput: observer.write });
+  observer.end();
+  assert.equal(result.code, 124); assert.equal(result.timedOut, true);
+  assert.ok(messages.some((m) => m.includes('bắt đầu')));
+  assert.ok(!messages.some((m) => m.includes('kết thúc') || m.includes('PASS')));
+  assert.equal(JSON.parse(read(path.join(root, 'session.process.json'))).timedOut, true);
 });
