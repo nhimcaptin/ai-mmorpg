@@ -1,0 +1,18 @@
+{
+  "name": "my-mmorpg", "private": true, "packageManager": "pnpm@10.34.0",
+  "engines": { "node": ">=20.9.0" },
+  "scripts": {
+    "dev": "turbo dev", "build": "turbo build", "lint": "turbo lint && eslint scripts/*.mjs tests/orchestrator/*.mjs",
+    "typecheck": "pnpm db:generate && turbo typecheck", "test": "turbo test && pnpm test:auto-dev", "test:e2e": "playwright test",
+    "test:auto-dev": "node --test tests/orchestrator/auto-dev.test.mjs",
+    "db:generate": "pnpm --filter @mmorpg/server db:generate",
+    "db:validate": "pnpm --filter @mmorpg/server db:validate",
+    "db:migrate": "pnpm --filter @mmorpg/server db:migrate",
+    "db:test": "pnpm --filter @mmorpg/server db:test"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0", "typescript": "^5.9.3", "eslint": "^9.39.0",
+    "typescript-eslint": "^8.46.0", "@eslint/js": "^9.39.0", "globals": "^16.4.0",
+    "vitest": "^3.2.4", "@playwright/test": "^1.56.0", "@types/node": "^22.18.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "cultivation-idle-south-smoke",
+  "status": "technical-test-only",
+  "source": "assets/test/cultivation-idle-south/clean.png",
+  "provenance": "assets/test/cultivation-idle-south-raw/run.json",
+  "backend": "local:codex-cli",
+  "image": "cultivation-idle-south.png",
+  "sha256": "d5d32e4c439fe45a7573a313b138f0d96ee3707fac80da52b5b0e887ebdd5edb",
+  "frameSize": [128, 128], "frameCount": 1, "direction": "S",
+  "origin": [0.45120234375, 0.890625],
+  "limitations": ["Static smoke frame only", "Not a completed IDLE/RUN animation set"]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "taskId", "status", "summary", "changedFiles", "requiresE2E", "blockers"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "taskId": { "type": "string" },
+    "status": { "type": "string", "enum": ["READY_FOR_VERIFY", "BLOCKED", "FAILED"] },
+    "summary": { "type": "string" },
+    "changedFiles": { "type": "array", "items": { "type": "string" } },
+    "requiresE2E": { "type": "boolean" },
+    "blockers": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -1,0 +1,11 @@
+Create exactly ONE square image (1024x1024).
+
+Style: premium HD 2D game art for a 2D top-down fantasy cultivation MMORPG: a clean, high-resolution hand-painted sprite illustration with crisp sharp edges, a clean dark outline, rich but controlled colours, cel shading with soft highlights and clear light and shadow shapes, fine readable detail, no blur, no photo-realism, no 3D render look. No text, no letters, no numbers, no logo, no watermark, no signature, no UI, no border, no frame, no grid.
+
+Subject: one original chibi fantasy cultivation character, full body, top-down three-quarter camera, character facing south toward the bottom of the screen, clearly FACING THE VIEWER: their face, gaze and chest turn straight toward the viewer; forward is out of the picture and their back is never visible. Young adult cultivator with dark ink-blue hair in a neat topknot, warm brown anime eyes, ivory layered Chinese fantasy robes with teal trim, dark teal pants and simple cloth boots. Moderately large head, small body with clearly readable arms and legs. No weapon, no effects, no shadow. Original design, no existing copyrighted character. One neutral standing IDLE pose, arms relaxed, feet planted, facing SOUTH toward the viewer. Exactly one character and one frame.
+
+Size and position: one single figure, the top of the figure (including hair, headgear, raised weapons and effects) about 14 percent below the top edge of the canvas and its lowest point about 14 percent above the bottom edge (the figure about 72 percent of the canvas height), centred horizontally, generous empty magenta margin on every side, nothing touching or crossing the edges. The whole figure is drawn with solid, fully opaque pixels: no transparency, no semi-transparent glow, no soft aura, nothing blended with the background.
+
+Painted cartoon sprite with soft shading and clean outlines, not pixel art. Final delivery is a single 128x128 transparent PNG after deterministic chroma-key cleanup and downscale. Keep silhouette readable at that size. No ground plane or baked shadow.
+
+Background: solid flat pure magenta #FF00FF everywhere outside the character, no shadow, no ground, no glow on the background.

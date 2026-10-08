@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Bảng probe hạ tầng; chưa phải model Account/Character hoặc economy.
+model FoundationProbe {
+  id        String   @id @db.Uuid
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@mmorpg/server", "version": "0.0.0", "private": true, "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts --foundation", "start": "node dist/index.js", "build": "prisma generate && tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit", "lint": "eslint src test", "test": "vitest run",
+    "db:generate": "prisma generate", "db:validate": "prisma validate", "db:migrate": "prisma migrate deploy",
+    "db:test": "tsx test/database.smoke.ts"
+  },
+  "dependencies": {
+    "@mmorpg/shared": "workspace:*", "@mmorpg/game-core": "workspace:*",
+    "@colyseus/core": "0.16.26", "@colyseus/ws-transport": "0.16.5", "@colyseus/schema": "3.0.76",
+    "@prisma/client": "6.19.3", "express": "^4.21.2"
+  },
+  "devDependencies": { "tsx": "^4.20.6", "prisma": "6.19.3", "@types/express": "^4.17.23", "colyseus.js": "0.16.22" }
+}

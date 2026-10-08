@@ -1,0 +1,18 @@
+{
+  "schema": "generate2dmedia.route_proofs.v1",
+  "proofs": [
+    {
+      "route": "codex-cli",
+      "tool": "image_gen",
+      "version": "0.161.0",
+      "versionText": "codex-cli 0.161.0",
+      "recipe": "codex-exec-imagegen/1",
+      "level": "VERIFIED",
+      "verifiedAt": "2026-10-08T06:33:34.227Z",
+      "runId": "1b8f48bf75ad4fb68ce99f463a8a0567",
+      "method": "cli_media.py run: native tool output adopted from the CLI's own run folder with scoped checks",
+      "jobDir": "assets/test/.cultivation-idle-south-raw.stage-ad3960f1/takes/take-01",
+      "artifactSha256": "892bc38973f5c319a500f611cad0313065579c491465ebe78c654ac7016168b8"
+    }
+  ]
+}
