@@ -1,5 +1,9 @@
 # PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
 
+## Cập nhật resume máy nhà — 08/10/2026
+
+Người dùng đã yêu cầu resume; các mục PAUSE/hoãn email bên dưới là lịch sử. Checkpoint trước resume aca677f: T60 Collision Editor/Multiplayer Occlusion/house-v2/slide DONE và Git sạch. T09 recovery nay triển khai/verify đầy đủ bằng mock email test; lint/typecheck/build,30 unit/integration+31 mock, DB6 suite và E2E6/6 PASS. Migration006 chỉ trên mmorpg_test, không reset/migrate dev. GAME_SPEC không sửa. AUTH_LOCAL.md/progress.md là hướng dẫn hiện tại; không apply lại patch GAME_SPEC.pending.patch. T09 DONE, tiếp tục tối đa3 task theo yêu cầu mới; không push/deploy/auto-dev/codex exec. Email production cần chọn/cấu hình transport và TTL riêng, mock không dùng production.
+
 **Đã PAUSE theo yêu cầu chủ sản phẩm. Không bắt đầu task mới hoặc tiếp tục code.** Chỉ tiếp tục khi người dùng yêu cầu resume trên máy mới. Không chạy auto-dev.ps1/codex exec, push/deploy, reset/clean hoặc tự sửa CHỐT.
 
 ## Git và dữ liệu chưa commit

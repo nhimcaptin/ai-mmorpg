@@ -33,6 +33,22 @@ model Account {
   character Character?
   credential Credential?
   session GameplaySession?
+  emailChallenges EmailChallenge[]
+}
+
+enum EmailChallengePurpose {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+model EmailChallenge {
+  accountId String @db.Uuid
+  account Account @relation(fields: [accountId], references: [id])
+  purpose EmailChallengePurpose
+  tokenHash String @unique
+  email String
+  issuedAt DateTime
+  expiresAt DateTime
+  @@id([accountId, purpose])
 }
 
 model Credential {

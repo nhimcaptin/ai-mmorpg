@@ -1,5 +1,11 @@
 # Tiến độ dự án 2D MMORPG
 
+## Resume T09 — Account recovery DONE, 08/10/2026
+
+Resume từ aca677f, Git sạch; T60 editor/occlusion/house-v2/slide DONE, không làm lại. Yêu cầu mới thay việc hoãn recovery: email verification cần session/password hiện tại và token chứng minh mailbox; reset chỉ gửi tới email verified, token32-byte random/hash SHA256/purpose binding/expiry/one-time, Account lock, reset thu hồi session/challenges và ngắt gameplay, không auto-login. Login kiểm lại hash sau lock chống race reset. Thêm migration006 additive chỉ deploy mmorpg_test; không migrate dev/reset/production. EmailDelivery inject, mock side channel giới hạn NODE_ENV=test+DB test; thiếu transport trả503, không fake production success. GAME_SPEC CHỐT không thay đổi.
+
+Gate: lint/typecheck/build PASS; pnpm test30 unit/integration +31 mock PASS; DB6 suites PASS (thêm recovery, có WS thật reset-disconnect); E2E6/6 PASS, gồm HTTP verification/recovery/reset qua mock inbox, invalid/reused token, old password/session reject và login mới; các browser collision/occlusion/camera/editor regressions vẫn PASS. DB còn kiểm expired/wrong-purpose/concurrent single consume/cooldown/email change/transport failure/Character không nhân đôi. T09 đủ acceptance backend và DONE; SMTP production/TLS/multi-process rate limiting vẫn là phạm vi vận hành chưa triển khai, không là yêu cầu mock test. Logs/recovery giữ gate và lỗi test cũ gọi stub (đã cập nhật, không tắt tests). Sau T09 chọn T10: dependency đủ, dữ liệu ba class/tạo atomic đã có, còn hoàn thiện API tải Character của phiên hiện tại. Giới hạn phiên3 task.
+
 ## T60 — House v2, phía trước nhà và trượt collision, 08/10/2026
 
 Áp dụng house-0 từ export object-metadata (1).json cho house-1/house-2 bằng translation, giữ các cây đã duyệt. Source reviewed-house-metadata-v2.json và reviewed-house-v2-provenance.json giữ SHA256. Không sửa art. Shared/Tiled/runtime consistency PASS.

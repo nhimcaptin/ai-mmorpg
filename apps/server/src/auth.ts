@@ -4,8 +4,10 @@ import { credentialsSchema, registrationSchema } from '@mmorpg/shared';
 import { hashPassword, verifyPassword } from './password.js';
 import { initializeCharacter, validateStarter } from './starter.js';
 import { atomicOperation } from './transactions.js';
+import type { RecoveryService } from './recovery.js';
 export const tokenHash = (token: string) => createHash('sha256').update(token).digest('hex');
 export class AuthService {
+  recovery?: RecoveryService;
   private listeners = new Set<(accountId: string, sessionId: string) => void>();
   private readonly dummyHash: Promise<string>;
   constructor(readonly database: PrismaClient, readonly ttlMs: number, readonly now = Date.now) {
@@ -38,6 +40,8 @@ export class AuthService {
     const token = randomBytes(32).toString('hex'), id = randomUUID(), expiresAt = new Date(this.now() + this.ttlMs);
     await this.database.$transaction(async tx => {
       await tx.$queryRaw`SELECT "id" FROM "Account" WHERE "id" = ${credential.accountId}::uuid FOR UPDATE`;
+      const current = await tx.credential.findUniqueOrThrow({ where: { accountId: credential.accountId } });
+      if (current.passwordHash !== credential.passwordHash) throw new Error('INVALID_CREDENTIALS');
       await tx.gameplaySession.upsert({ where: { accountId: credential.accountId }, create: { accountId: credential.accountId, id, tokenHash: tokenHash(token), expiresAt }, update: { id, tokenHash: tokenHash(token), expiresAt } });
     });
     this.notify(credential.accountId, id);
@@ -54,4 +58,5 @@ export class AuthService {
     await this.database.gameplaySession.deleteMany({ where: { accountId: session.accountId, id: session.id, tokenHash: tokenHash(token) } });
     this.notify(session.accountId, 'logged-out');
   }
+  invalidate(accountId: string) { this.notify(accountId, 'password-reset'); }
 }

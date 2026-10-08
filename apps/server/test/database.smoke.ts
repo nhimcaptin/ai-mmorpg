@@ -5,6 +5,7 @@ import { testTransactions } from './transactions.smoke.js';
 import { testCharacters } from './characters.smoke.js';
 import { testStarter } from './starter.smoke.js';
 import { testAuth } from './auth.smoke.js';
+import { testRecovery } from './recovery.smoke.js';
 
 const url = process.env.TEST_DATABASE_URL ?? 'postgresql://postgres@127.0.0.1:54329/mmorpg_test';
 const parsed = new URL(url);
@@ -30,8 +31,9 @@ try {
   await testCharacters(database);
   await testStarter(database);
   await testAuth(database);
+  await testRecovery(database);
   if (process.argv.includes('--fail-gate-test')) throw new Error('Intentional verification gate failure');
-  console.log(JSON.stringify({ status: 'PASS', suites: ['database', 'transactions', 'characters', 'starter', 'auth'] }));
+  console.log(JSON.stringify({ status: 'PASS', suites: ['database', 'transactions', 'characters', 'starter', 'auth', 'recovery'] }));
 } catch (error) {
   // Colyseus installs an uncaught-exception logger. Never let that turn a failed DB suite into exit 0.
   process.exitCode = 1;
