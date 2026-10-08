@@ -2,6 +2,8 @@
 
 ## Chuyển sang Codex Client và phục hồi T03 BLOCKED — 08/10/2026
 
+T04 DONE: message IDs và protocol-error versioned/schema strict nằm shared, server reject INVALID_INTENT/STALE_SEQUENCE, client parse cùng schema; test server hai client xác minh lỗi và không đổi vị trí/sequence từ outcome giả. Verify -E2E PASS cả 5 gate, 11 tests package + 31 orchestrator, browser scenario qua (19.0s). Log `logs/verify/2026-10-08T08-51-18-520Z/verification.json`. Hợp đồng này dành phòng nền tảng; auth/combat contracts sẽ bổ sung ở task liên quan.
+
 T03 DONE: bổ sung Runtime clock/RNG có thể inject cho domain, clock nhận input/tick cho room và hướng dẫn fixture cô lập trong TESTING.md. Giữ harness domain/server/DB/browser Phase 1. `pnpm db:test` PASS DB thật rollback; verify.ps1 -E2E PASS lint/typecheck/test/build/E2E, 10 tests package + 31 orchestrator, 1 scenario hai browser (26.5s). Log `logs/verify/2026-10-08T08-49-00-604Z/verification.json`. Không sinh asset vì task không yêu cầu. Chưa chạy worker CLI; verify wrapper chỉ chạy pnpm gates.
 
 Theo yêu cầu người dùng, làm trực tiếp bằng công cụ file/command của Codex Client; không gọi auto-dev.ps1 hoặc codex exec. Phiên CLI `2026-10-08T08-30-22-031Z-fc9c9183-249b-4fc5-9744-42dd14960bf4` có journal BLOCKED/T03/attempt 0, result changedFiles rỗng, không checkpoint/verification. Raw event chỉ gồm thông báo worker và turn.completed, không có tool event xác minh policy. Vì vậy lỗi sandbox là chẩn đoán worker, không phải một lỗi policy đã chứng minh bằng tool trace.

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { FOUNDATION_WORLD, FOUNDATION_ROOM, PROTOCOL_VERSION, type WorldRoomState } from '@mmorpg/shared';
+import { MOVEMENT_MESSAGE, PROTOCOL_ERROR_MESSAGE, protocolErrorSchema } from '@mmorpg/shared';
 
 export default function World() {
   const host = useRef<HTMLDivElement>(null);
@@ -79,13 +80,17 @@ export default function World() {
               element.dataset.status = 'disconnected';
               if (!cancelled) setStatus('Đã ngắt kết nối');
             });
+            room.onMessage(PROTOCOL_ERROR_MESSAGE, (payload: unknown) => {
+              const error = protocolErrorSchema.safeParse(payload);
+              if (error.success && !cancelled) setStatus(`Input bị từ chối: ${error.data.code}`);
+            });
             room.onError((_code, message) => { if (!cancelled) setStatus(`Lỗi server: ${message ?? 'không rõ'}`); });
           } catch {
             if (!cancelled) { element.dataset.status = 'error'; setStatus('Không thể kết nối server local'); }
           }
         }
         private send(x: number, y: number) {
-          if (this.room?.connection.isOpen) this.room.send('movement', { version: PROTOCOL_VERSION, sequence: this.sequence++, x, y });
+          if (this.room?.connection.isOpen) this.room.send(MOVEMENT_MESSAGE, { version: PROTOCOL_VERSION, sequence: this.sequence++, x, y });
         }
         update(time: number) {
           if (time < this.nextSend || !this.keys) return;

@@ -2,6 +2,13 @@ import { z } from 'zod';
 
 export const PROTOCOL_VERSION = 1;
 export const FOUNDATION_ROOM = 'foundation';
+export const MOVEMENT_MESSAGE = 'movement';
+export const PROTOCOL_ERROR_MESSAGE = 'protocol-error';
+export const protocolErrorSchema = z.object({
+  version: z.literal(PROTOCOL_VERSION),
+  code: z.enum(['INVALID_INTENT', 'STALE_SEQUENCE'])
+}).strict();
+export type ProtocolError = z.infer<typeof protocolErrorSchema>;
 export const movementIntentSchema = z.object({
   version: z.literal(PROTOCOL_VERSION), sequence: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
   x: z.number().int().min(-1).max(1), y: z.number().int().min(-1).max(1)
