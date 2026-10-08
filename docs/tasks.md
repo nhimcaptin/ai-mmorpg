@@ -320,7 +320,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T03",
       "kind": "task",
-      "status": "FAILED",
+      "status": "TODO",
       "dependencies": [
         "T02"
       ],

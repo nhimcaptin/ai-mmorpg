@@ -1,5 +1,15 @@
 # Tiến độ dự án 2D MMORPG
 
+## Phục hồi journal T03 — 08/10/2026
+
+Theo yêu cầu người dùng, đã dùng quy trình recovery thủ công có review trong AUTO_DEV.md, không sửa hoặc bỏ qua kiểm tra controller. Journal và summary cùng run ID `2026-10-08T07-40-27-702Z-d5a92c42-4f59-411f-9ac5-2bfc72430ea2`: FAILED, task T03, attempt 0, Codex exit 1, completed rỗng. Phiên chỉ có lỗi PowerShell binder trước khi Codex chạy; không có result/verification/checkpoint hay event triển khai.
+
+Git trước recovery sạch, HEAD `eb98e2b`; đối chiếu commit nền `5e1c24e` chỉ khác script/test/tài liệu điều phối, không khác apps/packages/assets. Không có lock hoặc tiến trình controller/exec worker cũ. Không phát hiện T03 được triển khai dở trong phiên lỗi; các chức năng kiểm thử nền tảng đã có từ commit nền không phải bằng chứng task T03 hoàn tất.
+
+Đã chuyển nguyên journal vào `logs/recovery/2026-10-08T08-28-19-105Z/journal.original.json`, xác nhận SHA256 trước/sau trùng nhau. `recovery.json` ghi run/task/trạng thái, HEAD, hash journal/session và bằng chứng; danh sách diff baseline nằm cùng thư mục. Toàn bộ log cũ giữ nguyên. T03 FAILED → TODO, không DONE; không tạo journal COMPLETE giả, xóa log, rollback hoặc commit thay đổi người dùng. Tài liệu AUTO_DEV.md được cập nhật để ghi rõ trường hợp đã phục hồi và điều kiện cho các phiên khác.
+
+Kiểm chứng sau recovery: `pnpm test:auto-dev` qua 31/31, exit 0, bao gồm chặn replay journal lỗi, bảo toàn diff và không checkpoint khi gate thất bại. `powershell -NoProfile -File .\scripts\auto-dev.ps1 -Live -DryRun -MaxTasks 1 -MaxMinutes 5 -StopOnFailure` exit 0, chọn T03 TODO; không còn blocker journal/task FAILED. Summary tại `logs/auto-dev/2026-10-08T08-28-37-944Z-7405db56-88ea-4cf3-a2be-64d276248146/summary.json`. Blocker duy nhất còn lại: Git dirty do tài liệu recovery, cần người dùng review/checkpoint thủ công trước chạy thật. GAME_SPEC hash không đổi; không khởi chạy phát triển tự chủ, push hoặc deploy.
+
 ## Chế độ Live cho auto-dev — 08/10/2026
 
 **DONE trong phạm vi công cụ; chưa chạy phát triển game tự chủ. T03 và journal cũ vẫn FAILED.**
