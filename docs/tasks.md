@@ -90,7 +90,7 @@ Gói nội dung lớn A04–A06 được tách theo NPC/monster/Visual Set/map t
 | ID | Tác vụ nhỏ | Phụ thuộc | Asset | Tiêu chí nghiệm thu |
 |---|---|---|---|---|
 | T13 | Colyseus room và join có xác thực | T04, T09–T10 | Không | DONE: hai account cùng room/Character UUID ổn định, strict join và token giả/wrong-area reject, public state chỉ version/player IDs/position/direction/sequence. Room giữ30s grace rồi dispose khi rỗng, clear state/listener và recreate đúng. Lint/typecheck/build,30 unit+31 mock, DB7 suite và E2E9/9 PASS. |
-| T14 | Loader Map/Area và collision thuần domain | T05, T13 | Không | Map khác Area; validate IDs, bounds, polygon và spawn; fixture cùng tọa độ FE/BE; test building/tree/water và footprint chân, không dùng sprite bbox. |
+| T14 | Loader Map/Area và collision thuần domain — DONE | T05, T13 | Không | Shared registry tách Map/Area/Respawn, validate IDs/references/bounds/polygon/spawn footprint; Starter dùng cùng tọa độ FE/BE. Building/tree/water footprint tests, lint/typecheck/build,33 unit/integration+31 mock, DB7 suites và E2E9/9 PASS; Collision/Occlusion giữ nguyên. |
 | T15 | Movement authoritative và input sequence | T04, T13–T14 | Không | Server nhận intent WASD, tính vị trí/tốc độ/collision; đi chéo không tăng tốc; reject teleport/payload sai/input cũ; test boundary và packet trùng. |
 | T16 | Phaser lifecycle, input và bridge HUD | T11, T13, T15 | Không | Mount/unmount/reconnect không nhân listener/canvas; React chỉ nhận dữ liệu HUD, không chứa state movement từng tick; input bỏ qua khi focus text/panel theo thiết kế UI. |
 | T17 | Render map, depth và tree occlusion | T14, T16 | A03 | Map Tiled tải đúng; Y-sort theo chân; đi dưới tán nhưng không xuyên trunk/building/water; occlusion chung theo GAME_SPEC 2.5/T60: mọi authorized local/remote actor, fade0.4/150–200ms, không đổi collision server. |
@@ -567,7 +567,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T14",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T05",
         "T13"

@@ -3,6 +3,9 @@ import { loadStarterMap } from './map.js';
 import { STARTER_TILED_DATA, STARTER_REGISTRY, STARTER_OBJECT_METADATA } from './starter-data.js';
 export { loadStarterMap, STARTER_TILED_DATA, STARTER_REGISTRY, STARTER_OBJECT_METADATA };
 export const STARTER_MAP = loadStarterMap(STARTER_TILED_DATA, STARTER_REGISTRY);
+export * from './world-registry.js';
+import { loadWorldRegistry } from './world-registry.js';
+export const STARTER_WORLD_REGISTRY = loadWorldRegistry({ maps: [STARTER_MAP.world], areas: [{ id: STARTER_MAP.area.id, mapId: STARTER_MAP.area.mapId, bounds: { x: 0, y: 0, width: STARTER_MAP.world.width, height: STARTER_MAP.world.height } }], respawns: [STARTER_MAP.respawn] });
 export function isPkAllowed(area: { zone: string }): boolean { if (area.zone !== 'SAFE') throw new Error('Unknown starter zone'); return false; }
 export const STARTER_ROOM = 'starter-village-preview';
 export * from './numeric.js';

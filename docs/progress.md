@@ -1,5 +1,11 @@
 # Tiến độ dự án 2D MMORPG
 
+## T14 — Shared Map/Area registry DONE, 08/10/2026
+
+Sau T13 checkpoint57fcb62, dependency T05/T13 đủ, không có blocker nghiệp vụ. Loader shared tách maps/areas/respawns, nhiều Area trong một Map; kiểm duplicate IDs, references, area bounds, polygon hợp lệ, footprint spawn trong Area và không chồng collision. resolveLocation yêu cầu Map/Area/Respawn khớp cùng quan hệ. Starter registry dùng nguyên dữ liệu official, export qua shared cho FE/BE; server initialization dùng validator chung. Không thay geometry/collision/occlusion/art hoặc mở nội dung Map/Area chưa CHỐT theo D05.
+
+Verification: lint/typecheck/build PASS,33 unit/integration+31 mock PASS; DB7 suites PASS; E2E9/9 PASS (hai client, auth/recovery, camera, editor, front/behind occlusion, wall slide, tree/house). Runtime generated/Tiled/registry consistency --check PASS. Fixture kỹ thuật kiểm base nhà/root cây/water polygon chặn footprint, mái/tán không chặn; metadata/reference sai reject. Logs/t14-*.log. Không gate thất bại, không DB reset/push/deploy/auto-dev/codex exec. T14 DONE, tiếp tục T15 là task thứ3/cuối phiên.
+
 ## T13 — Room và join có xác thực DONE, 08/10/2026
 
 Resume từ708ae90/Git sạch, registry T09/T10/T11 DONE và T13 phụ thuộc T04/T09/T10 đã đủ; không có D/asset blocker. Room hiện hữu từT09 được giữ, không viết lại auth hoặc Collision/Occlusion. Bổ sung room metadata mapId/areaId public và chặn Character sai Map/Area. Auto-dispose mặc định khi rỗng, chỉ giữ room khi có reconnect grace30s; sau grace tự dispose, unsubscribe/clear inputs/connections/pending/state. Không thay luật session/visibility hoặc art/movement/collision.
