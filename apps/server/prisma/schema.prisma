@@ -31,6 +31,24 @@ enum CharacterClass {
 model Account {
   id String @id @db.Uuid
   character Character?
+  credential Credential?
+  session GameplaySession?
+}
+
+model Credential {
+  accountId String @id @db.Uuid
+  account Account @relation(fields: [accountId], references: [id])
+  username String @unique
+  passwordHash String
+  email String?
+  emailVerifiedAt DateTime?
+}
+model GameplaySession {
+  accountId String @id @db.Uuid
+  account Account @relation(fields: [accountId], references: [id])
+  id String @unique @db.Uuid
+  tokenHash String @unique
+  expiresAt DateTime
 }
 model Character {
   id String @id @db.Uuid
@@ -46,4 +64,16 @@ model Character {
   areaId String
   respawnId String
   pkEnabled Boolean
+  initialization CharacterInitialization?
+}
+
+// Additive: legacy numeric fixtures remain untouched and are never valid registrations.
+model CharacterInitialization {
+  characterId String @id @db.Uuid
+  character Character @relation(fields: [characterId], references: [id])
+  maxHp BigInt
+  maxKi BigInt
+  cultivationExp BigInt
+  x Float
+  y Float
 }

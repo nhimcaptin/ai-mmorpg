@@ -14,3 +14,4 @@ export const characterSchema = z.object({
   mapId: z.string().min(1), areaId: z.string().min(1), respawnId: z.string().min(1), pkEnabled: z.boolean()
 }).strict();
 export type CharacterData = z.infer<typeof characterSchema>;
+export const characterInitializationRequestSchema = characterSchema.pick({ id: true, accountId: true, class: true }).strict();

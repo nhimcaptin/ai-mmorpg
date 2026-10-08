@@ -1,5 +1,12 @@
 import { z } from 'zod';
+import { loadStarterMap } from './map.js';
+import { STARTER_TILED_DATA, STARTER_REGISTRY } from './starter-data.js';
+export { loadStarterMap, STARTER_TILED_DATA, STARTER_REGISTRY };
+export const STARTER_MAP = loadStarterMap(STARTER_TILED_DATA, STARTER_REGISTRY);
+export function isPkAllowed(area: { zone: string }): boolean { if (area.zone !== 'SAFE') throw new Error('Unknown starter zone'); return false; }
+export const STARTER_ROOM = 'starter-village-preview';
 export * from './numeric.js';
+export * from './auth.js';
 import { worldConfigSchema } from './config.js';
 export { WORLD_UNIT, worldConfigSchema, gameplayConfigSchema, loadGameplayConfig } from './config.js';
 

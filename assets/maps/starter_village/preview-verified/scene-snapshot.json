@@ -1,0 +1,154 @@
+{
+  "schema": "generate2dmap.scene_snapshot.v1",
+  "runtime": {
+    "name": "map-runtime",
+    "version": "1.1.2"
+  },
+  "world": {
+    "width": 1254,
+    "height": 1254,
+    "actorRadius": 12,
+    "ySquash": 1,
+    "cell": 6,
+    "tickHz": 60,
+    "solids": 6,
+    "portals": 0,
+    "oneWay": false
+  },
+  "actor": {
+    "x": 624,
+    "y": 624,
+    "valid": true,
+    "facing": [
+      0,
+      1
+    ],
+    "latched": [],
+    "travelled": 117.6,
+    "pathLength": 0
+  },
+  "ready": true,
+  "error": null,
+  "tick": 101,
+  "title": "Starter Village",
+  "source": {
+    "file": "map-bundle.json",
+    "sha256": "50870f9040641d8a7bab9b2ae7db17db69ba42f8e009e4f670c1c0eb36ac4509",
+    "schema": "generate2dmap.map_bundle.v2"
+  },
+  "start": "starter_respawn_01",
+  "speed": 144,
+  "zoom": 1,
+  "debug": false,
+  "assets": {
+    "total": 3,
+    "loaded": 3,
+    "failed": []
+  },
+  "drawOrder": [
+    "house-0",
+    "house-1",
+    "tree-5",
+    "tree-4",
+    "tree-3",
+    "house-2"
+  ],
+  "exitsFired": [],
+  "interactionsReached": [],
+  "events": [
+    {
+      "tick": 0,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    },
+    {
+      "tick": 7,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    },
+    {
+      "tick": 20,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    },
+    {
+      "tick": 33,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    },
+    {
+      "tick": 45,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    },
+    {
+      "tick": 57,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    },
+    {
+      "tick": 57,
+      "type": "routes",
+      "ok": true,
+      "failing": 0
+    },
+    {
+      "tick": 65,
+      "type": "arrive",
+      "id": "starter_respawn_01"
+    }
+  ],
+  "routes": {
+    "ok": true,
+    "speed": 144,
+    "budget": 2.4,
+    "tickHz": 60,
+    "cell": 6,
+    "spawns": [
+      {
+        "id": "starter_respawn_01",
+        "valid": true,
+        "reachableCells": 34284
+      }
+    ],
+    "results": [
+      {
+        "target": "paths.slot[0]",
+        "kind": "slot",
+        "from": "starter_respawn_01",
+        "ok": true,
+        "reachable": true,
+        "reason": null,
+        "ticks": 221,
+        "distance": 528.403,
+        "maxStep": 2.4,
+        "zeroMotionTicks": 0,
+        "blocked": false,
+        "firedEnRoute": [],
+        "end": [
+          624,
+          96
+        ]
+      },
+      {
+        "target": "paths.slot[1]",
+        "kind": "slot",
+        "from": "starter_respawn_01",
+        "ok": true,
+        "reachable": true,
+        "reason": null,
+        "ticks": 221,
+        "distance": 528.403,
+        "maxStep": 2.4,
+        "zeroMotionTicks": 0,
+        "blocked": false,
+        "firedEnRoute": [],
+        "end": [
+          96,
+          624
+        ]
+      }
+    ],
+    "portals": []
+  }
+}

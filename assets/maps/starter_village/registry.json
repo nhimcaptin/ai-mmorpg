@@ -1,0 +1,27 @@
+{
+  "areas": [
+    {
+      "id": "area_01",
+      "mapId": "starter_village",
+      "zone": "SAFE",
+      "bounds": [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    }
+  ],
+  "runtime": {
+    "moveSpeed": 160,
+    "tickMs": 50,
+    "inputTimeoutMs": 250,
+    "footprint": {
+      "halfWidth": 10,
+      "halfHeight": 6
+    },
+    "renderScale": 0.9,
+    "zoomMin": 0.5,
+    "zoomMax": 1.5
+  }
+}

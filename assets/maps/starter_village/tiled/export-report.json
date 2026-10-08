@@ -1,0 +1,111 @@
+{
+  "schema": "generate2dmap.tiled_export.v1",
+  "status": "pass",
+  "method": "TMJ and TSX written from the bundle, read back with the built-in reader (TSX via ElementTree) and re-rendered (tile layers, image layers, prop tile objects in draw order); the re-render must equal render_map(bundle) pixel for pixel (preview.png)",
+  "notProven": [
+    "Tiled GUI not verified: opening the map, wang/terrain brushes and the mixed blob wangset in the editor",
+    "Phaser or another engine rendering map.embedded.tmj the same way",
+    "runtime depth sorting by the sortY property (Tiled's own topdown order sorts by image bottom)"
+  ],
+  "checks": [
+    {
+      "id": "tsx_well_formed",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "rerender_map_tmj",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0
+    },
+    {
+      "id": "rerender_map_embedded_tmj",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "6b0e9a912e7a288a8aa03087bc1bd677c0c79d734d8efae45afbafafe1738dd8",
+      "bytes": 5216
+    },
+    {
+      "path": "../raw/terrain.png",
+      "sha256": "679a38f80c10e62b43a9eb2fd9b372c1dc0e73ec9e1bbd5c6cf90c3001d10887",
+      "bytes": 2847848
+    },
+    {
+      "path": "../props-clean/house/prop.png",
+      "sha256": "5bac043280b1ab67fbe2268a394dfcc48d9b61da81c0ccaeea25510a8ea6b9fd",
+      "bytes": 500771
+    },
+    {
+      "path": "../props-clean/tree/prop.png",
+      "sha256": "e702b65dedb18b79ccf47d52ad049a7229c946c1f956e32872ea2e286718c0f4",
+      "bytes": 544300
+    }
+  ],
+  "outputs": [
+    {
+      "path": "images/prop-2.png",
+      "sha256": "e702b65dedb18b79ccf47d52ad049a7229c946c1f956e32872ea2e286718c0f4",
+      "bytes": 544300
+    },
+    {
+      "path": "images/prop.png",
+      "sha256": "5bac043280b1ab67fbe2268a394dfcc48d9b61da81c0ccaeea25510a8ea6b9fd",
+      "bytes": 500771
+    },
+    {
+      "path": "images/terrain.png",
+      "sha256": "679a38f80c10e62b43a9eb2fd9b372c1dc0e73ec9e1bbd5c6cf90c3001d10887",
+      "bytes": 2847848
+    },
+    {
+      "path": "map.embedded.tmj",
+      "sha256": "8a652a43ff0397663574d1d9b9f567e9805cca1e90a3f8a962eb76f9405936b7",
+      "bytes": 14148
+    },
+    {
+      "path": "map.tmj",
+      "sha256": "4a7d74d23fb519b73bcc58d682de54fe7a534ed220e3c1764fdceeb2c635017f",
+      "bytes": 12643
+    },
+    {
+      "path": "preview.png",
+      "sha256": "14070d4921424e3d43f821f7c10ca418cfe964ae3aedecda270b7ecd3edf786d",
+      "bytes": 3372693
+    },
+    {
+      "path": "props.tsx",
+      "sha256": "d768cf22749078dbb49cf4f448e3b09938ae2f5d7ef0c26656a7c7c27927d6eb",
+      "bytes": 812
+    }
+  ],
+  "tool": {
+    "name": "export_tiled.py",
+    "version": "0.4.0"
+  },
+  "tiled": {
+    "format": "1.10",
+    "app": "1.11.0",
+    "tilesets": [
+      {
+        "file": "props.tsx",
+        "name": "props",
+        "firstgid": 1,
+        "tilecount": 2
+      }
+    ],
+    "layers": [
+      "terrain",
+      "props",
+      "collision",
+      "interactions"
+    ]
+  }
+}

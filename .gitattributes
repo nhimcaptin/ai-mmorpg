@@ -1,0 +1,2 @@
+# Machine-readable roadmap parser requires LF even on Windows checkouts.
+docs/tasks.md text eol=lf

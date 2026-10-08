@@ -1,0 +1,286 @@
+{
+  "schema": "generate2dmap.map_bundle.v2",
+  "id": "starter_village",
+  "name": "Starter Village",
+  "tile_size": 32,
+  "world": {
+    "width": 1254,
+    "height": 1254,
+    "unit": "px"
+  },
+  "layers": [
+    {
+      "name": "terrain",
+      "kind": "image",
+      "image": "raw/terrain.png",
+      "offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "props",
+      "kind": "objects"
+    }
+  ],
+  "objects": [
+    {
+      "id": "house-0",
+      "prop": "house",
+      "kind": "house",
+      "x": 260,
+      "y": 400,
+      "scale": 0.5,
+      "image": "props-clean/house/prop.png",
+      "anchor_px": [
+        284,
+        552
+      ],
+      "sortY": 400,
+      "solid": false,
+      "footprint": {
+        "shape": "none"
+      },
+      "occupant_policy": "y_sort",
+      "runtimeCollision": [
+        118,
+        124,
+        274,
+        281
+      ],
+      "occlusionRect": null
+    },
+    {
+      "id": "house-1",
+      "prop": "house",
+      "kind": "house",
+      "x": 990,
+      "y": 400,
+      "scale": 0.5,
+      "image": "props-clean/house/prop.png",
+      "anchor_px": [
+        284,
+        552
+      ],
+      "sortY": 400,
+      "solid": false,
+      "footprint": {
+        "shape": "none"
+      },
+      "occupant_policy": "y_sort",
+      "runtimeCollision": [
+        848,
+        124,
+        274,
+        281
+      ],
+      "occlusionRect": null
+    },
+    {
+      "id": "house-2",
+      "prop": "house",
+      "kind": "house",
+      "x": 260,
+      "y": 1070,
+      "scale": 0.5,
+      "image": "props-clean/house/prop.png",
+      "anchor_px": [
+        284,
+        552
+      ],
+      "sortY": 1070,
+      "solid": false,
+      "footprint": {
+        "shape": "none"
+      },
+      "occupant_policy": "y_sort",
+      "runtimeCollision": [
+        118,
+        794,
+        274,
+        281
+      ],
+      "occlusionRect": null
+    },
+    {
+      "id": "tree-3",
+      "prop": "tree",
+      "kind": "tree",
+      "x": 990,
+      "y": 1040,
+      "scale": 0.5,
+      "image": "props-clean/tree/prop.png",
+      "anchor_px": [
+        306,
+        676
+      ],
+      "sortY": 1040,
+      "solid": false,
+      "footprint": {
+        "shape": "none"
+      },
+      "occupant_policy": "y_sort",
+      "runtimeCollision": [
+        972,
+        1028,
+        36,
+        24
+      ],
+      "occlusionRect": [
+        837,
+        702,
+        262,
+        318
+      ]
+    },
+    {
+      "id": "tree-4",
+      "prop": "tree",
+      "kind": "tree",
+      "x": 300,
+      "y": 750,
+      "scale": 0.5,
+      "image": "props-clean/tree/prop.png",
+      "anchor_px": [
+        306,
+        676
+      ],
+      "sortY": 750,
+      "solid": false,
+      "footprint": {
+        "shape": "none"
+      },
+      "occupant_policy": "y_sort",
+      "runtimeCollision": [
+        282,
+        738,
+        36,
+        24
+      ],
+      "occlusionRect": [
+        147,
+        412,
+        262,
+        318
+      ]
+    },
+    {
+      "id": "tree-5",
+      "prop": "tree",
+      "kind": "tree",
+      "x": 1010,
+      "y": 700,
+      "scale": 0.5,
+      "image": "props-clean/tree/prop.png",
+      "anchor_px": [
+        306,
+        676
+      ],
+      "sortY": 700,
+      "solid": false,
+      "footprint": {
+        "shape": "none"
+      },
+      "occupant_policy": "y_sort",
+      "runtimeCollision": [
+        992,
+        688,
+        36,
+        24
+      ],
+      "occlusionRect": [
+        857,
+        362,
+        262,
+        318
+      ]
+    }
+  ],
+  "collision": {
+    "actorRadius": 12,
+    "ySquash": 1,
+    "rects": [
+      [
+        118,
+        124,
+        274,
+        281
+      ],
+      [
+        848,
+        124,
+        274,
+        281
+      ],
+      [
+        118,
+        794,
+        274,
+        281
+      ],
+      [
+        972,
+        1028,
+        36,
+        24
+      ],
+      [
+        282,
+        738,
+        36,
+        24
+      ],
+      [
+        992,
+        688,
+        36,
+        24
+      ]
+    ]
+  },
+  "nav": {
+    "cell": 6
+  },
+  "spawns": [
+    {
+      "id": "starter_respawn_01",
+      "x": 624,
+      "y": 624,
+      "facing": "S"
+    }
+  ],
+  "art_source": "host_image",
+  "placeholder": false,
+  "provenance": {
+    "tool": "build-starter-map",
+    "version": "1",
+    "params": {
+      "unit": 32,
+      "artSource": "host_image"
+    },
+    "inputs": [],
+    "route": "host_image",
+    "model": "not exposed by host tool",
+    "estimateUsd": null,
+    "note": "Original terrain and props generated in Codex Client; retained raw originals. Runtime movement parameters inherited unchanged; not new balance. Spawn at plaza-center walkable cell."
+  },
+  "anchors": {
+    "paths": {
+      "slots": [
+        [
+          624,
+          96
+        ],
+        [
+          96,
+          624
+        ]
+      ],
+      "approach": [],
+      "point": [
+        624,
+        624
+      ]
+    }
+  }
+}

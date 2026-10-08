@@ -1,0 +1,302 @@
+{
+  "schema": "generate2dmap.prop_pack.v2",
+  "tool": {
+    "name": "extract_prop_pack",
+    "version": "0.4.0"
+  },
+  "input": "../raw/props.png",
+  "source_size": [
+    1254,
+    1254
+  ],
+  "source_sha256": "cb69273f21afcf0b5780f7d56112f960c27b654d0dec6092b6f8769b74d895ba",
+  "source_mode": "RGBA",
+  "layout_mode": "grid",
+  "boxes_file": null,
+  "labels_file": null,
+  "background_mode": "native_alpha",
+  "art_source": "host_image",
+  "rows": 1,
+  "cols": 2,
+  "threshold": 100,
+  "edge_threshold": 150,
+  "despill_radius": 0,
+  "despill": {
+    "mode": "off",
+    "applied": "off",
+    "radius": 0,
+    "margin": 12,
+    "changed_px": 0
+  },
+  "hygiene": {
+    "mode": "both",
+    "floor": 4,
+    "solid_min": 32,
+    "attach_radius": 2,
+    "connectivity": 8,
+    "floor_px": 19895,
+    "detached_px": 13,
+    "detached_components": 10,
+    "max_removed_alpha": 5
+  },
+  "alpha_floor": 4,
+  "alpha_floor_pixels_removed": 19895,
+  "trim_border": 0,
+  "edge_clean_depth": 0,
+  "component_mode": "largest",
+  "component_padding": 8,
+  "min_component_area": "auto",
+  "edge_touch_margin": 0,
+  "geometry": {
+    "connectivity": 8,
+    "alpha_geometry_threshold": 16,
+    "anchor_mode": "feet",
+    "support_band_fraction": 0.25,
+    "anchor_rounding": "whole pixels, half-up",
+    "grid_rounding": "exact",
+    "keep_canvas": false,
+    "world_scale": "1/2"
+  },
+  "accepted": [
+    {
+      "index": 0,
+      "label": "house",
+      "display_name": "house",
+      "status": "accepted",
+      "image": "house/prop.png",
+      "sha256": "5bac043280b1ab67fbe2268a394dfcc48d9b61da81c0ccaeea25510a8ea6b9fd",
+      "output_size": [
+        548,
+        562
+      ],
+      "grid": [
+        0,
+        0
+      ],
+      "cell_box": [
+        0,
+        0,
+        627,
+        1254
+      ],
+      "source_box": [
+        0,
+        0,
+        627,
+        1254
+      ],
+      "source_rect": [
+        67,
+        416,
+        615,
+        978
+      ],
+      "trim_offset": [
+        67,
+        416
+      ],
+      "padding": [
+        9,
+        9,
+        8,
+        9
+      ],
+      "anchor_px": [
+        284,
+        552
+      ],
+      "anchor_source": "measured",
+      "component_mode": "largest",
+      "component_count": 1,
+      "min_component_area": 100,
+      "trim_applied": 0,
+      "crop_bbox": [
+        76,
+        425,
+        607,
+        969
+      ],
+      "padded_crop_bbox": [
+        67,
+        416,
+        615,
+        978
+      ],
+      "selected_component_area": 199164,
+      "selected_component_bbox": [
+        76,
+        425,
+        607,
+        969
+      ],
+      "kept_area": 199164,
+      "dropped_components": 62,
+      "dropped_area": 116,
+      "edge_touch": false,
+      "world_size": [
+        274,
+        281
+      ],
+      "world_anchor": [
+        142,
+        276
+      ]
+    },
+    {
+      "index": 1,
+      "label": "tree",
+      "display_name": "tree",
+      "status": "accepted",
+      "image": "tree/prop.png",
+      "sha256": "e702b65dedb18b79ccf47d52ad049a7229c946c1f956e32872ea2e286718c0f4",
+      "output_size": [
+        524,
+        684
+      ],
+      "grid": [
+        0,
+        1
+      ],
+      "cell_box": [
+        627,
+        0,
+        1254,
+        1254
+      ],
+      "source_box": [
+        627,
+        0,
+        1254,
+        1254
+      ],
+      "source_rect": [
+        696,
+        345,
+        1220,
+        1029
+      ],
+      "trim_offset": [
+        69,
+        345
+      ],
+      "padding": [
+        8,
+        9,
+        8,
+        8
+      ],
+      "anchor_px": [
+        306,
+        676
+      ],
+      "anchor_source": "measured",
+      "component_mode": "largest",
+      "component_count": 1,
+      "min_component_area": 100,
+      "trim_applied": 0,
+      "crop_bbox": [
+        77,
+        354,
+        585,
+        1021
+      ],
+      "padded_crop_bbox": [
+        69,
+        345,
+        593,
+        1029
+      ],
+      "selected_component_area": 218570,
+      "selected_component_bbox": [
+        77,
+        354,
+        585,
+        1021
+      ],
+      "kept_area": 218570,
+      "dropped_components": 59,
+      "dropped_area": 96,
+      "edge_touch": false,
+      "world_size": [
+        262,
+        342
+      ],
+      "world_anchor": [
+        153,
+        338
+      ]
+    }
+  ],
+  "rejected": [],
+  "edge_touch_props": [],
+  "warnings": [],
+  "qa": {
+    "status": "pass",
+    "method": "native alpha, not keyed; alpha hygiene both; 8-connected components (largest); checks measured on the published pixels",
+    "notProven": [
+      "that each label names the art in its cell or box",
+      "that a prop is complete: clipping is detected only where art meets the cell edge",
+      "keyed-edge quality beyond the edge fringe count",
+      "that anchors and suggested footprints match gameplay contact (both are measured from alpha)",
+      "runtime placement, collision or occlusion"
+    ],
+    "checks": [
+      {
+        "id": "accepted",
+        "status": "pass",
+        "value": 2,
+        "threshold": ">= 1"
+      },
+      {
+        "id": "edge_touch",
+        "status": "pass",
+        "value": [],
+        "threshold": 0
+      },
+      {
+        "id": "dropped_area",
+        "status": "pass",
+        "value": {
+          "house": 0.0006,
+          "tree": 0.0004
+        },
+        "threshold": 0.01
+      },
+      {
+        "id": "strategy_aspect",
+        "status": "skipped",
+        "value": null,
+        "threshold": 1.6
+      },
+      {
+        "id": "edge_fringe",
+        "status": "skipped",
+        "value": null,
+        "threshold": 0.02
+      }
+    ],
+    "inputs": [
+      {
+        "path": "../raw/props.png",
+        "sha256": "cb69273f21afcf0b5780f7d56112f960c27b654d0dec6092b6f8769b74d895ba",
+        "bytes": 1108989
+      }
+    ],
+    "outputs": [
+      {
+        "path": "house/prop.png",
+        "sha256": "5bac043280b1ab67fbe2268a394dfcc48d9b61da81c0ccaeea25510a8ea6b9fd",
+        "bytes": 500771
+      },
+      {
+        "path": "tree/prop.png",
+        "sha256": "e702b65dedb18b79ccf47d52ad049a7229c946c1f956e32872ea2e286718c0f4",
+        "bytes": 544300
+      }
+    ],
+    "tool": {
+      "name": "extract_prop_pack",
+      "version": "0.4.0"
+    }
+  }
+}

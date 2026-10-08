@@ -1,5 +1,57 @@
 # Tiến độ dự án 2D MMORPG
 
+## Starter Village và tiếp tục T09 — 08/10/2026
+
+Đã đọc AGENTS/GAME_SPEC/tasks/progress, checkpoint 15a1a31 và kiến trúc hiện tại. Người dùng xác nhận giữ painted/cartoon soft shading: blocker xung đột pixel art được gỡ, không thay CHỐT. GAME_SPEC có thay đổi chưa commit từ lượt D01/starter trước khi bắt đầu; lượt này không viết lại file đó và giữ nguyên thay đổi. Chỉ làm trực tiếp qua Codex Client, không auto-dev.ps1/codex exec/push/deploy. Đã áp dụng Forge generate2dmap cho ảnh/map QA, migration cho thay đổi additive và lean-build cho phạm vi auth local.
+
+**T59 DONE:** map production starter_village, area_01 SAFE/PK OFF, starter_respawn_01 tại (624,624), terrain/nhà/cây thật từ host image_gen. Không fixture Phase 1 hoặc placeholder. Hai prop native-alpha extraction PASS; world 1254×1254, unit 32, chân AABB (10,6); nhà chặn toàn vùng, cây root-only, tán alpha 0.5→1, Y-sort theo chân. Phaser load ảnh/Tiled-derived data, camera bounds/follow/zoom và letterbox căn giữa. FE/BE dùng cùng parsed shared WorldConfig/registry. Server chỉ bật preview bằng cờ local, từ chối production.
+
+Forge final: bundle-report-v4 PASS/0 warnings; nav-verified 2 targets/0 unreachable/0 thin gaps; preview-verified verify PASS, tất cả route ok:true. Đã xem nav-debug, Forge preview và screenshot game có actor thực. Actor vẫn South tĩnh 128×128 đã kiểm định; chưa có animation A02 đầy đủ, không đánh dấu A03/T17 DONE. Chưa nghiệm thu touch/mobile performance/water/NPC/combat. Backend ảnh chính xác: Codex Client `image_gen`, route `host_image`; model/cost không được tool công bố. Originals/hash/prompt nguyên văn/report giữ ở assets/maps/starter_village. Chi tiết WARN/FAIL ban đầu nguyên văn tại STARTER_MAP.md; không coi preview SKIPPED hoặc nav 0 targets cũ là nghiệm thu.
+
+**T09 DOING, chưa DONE đầy đủ:** đã triển khai đăng ký username/password/class/requestId, transaction Account+Credential+Character+initialization, strict server config cho cả ba class (120/60, 90/120, 180/50), Realm1/Star1/EXP0n/Gold0n/PKOFF. Native async scrypt/salt và timing-safe compare; DB chỉ lưu hash password/token. Login lock Account, thay duy nhất session/token; room xác thực dùng Character UUID, re-join kiểm token DB, reconnect 30 giây giữ vị trí/Character, timeout/expiry/logout/replacement loại active entity. Không phát credential/token qua room state. Email không bắt buộc login.
+
+Chủ sản phẩm trả lời: “Hiện tại cứ làm function rỗng để đó đã bh lên prod thì làm tính năng đó sau”. Vì vậy sendRecoveryEmail chưa thực hiện và báo RECOVERY_NOT_CONFIGURED, HTTP 503; không giả gửi/xác minh email/hoàn tất recovery. GAME_SPEC D01 vẫn giữ nguyên. T09 không đủ acceptance recovery, không tự DONE hoặc mở T10/T11/T13. Auth mới chỉ --auth-local, không production; TTL bắt buộc từ config, 120000ms chỉ ở test. D15 còn chính sách tên/đổi tên/xóa chưa CHỐT; phụ thuộc vị trí T09/T10 chuyển sang T59 đã kiểm định. D02/D12 không tự mở. Loader registry read-only kiểm tra nextTask=null; không chạy loop.
+
+Bằng chứng kiểm chứng:
+
+- pnpm lint/typecheck/test/build PASS ở root sau tích hợp auth; 19 unit/integration tests và 31 mock orchestrator PASS. Kiểm thử mock không gọi Codex CLI. Sau chỉnh camera/tiếng Việt đã chạy lại web lint/typecheck/build và E2E.
+- pnpm db:generate và migration 004_starter/005_auth trên DB **mmorpg_test** PASS, không reset/drop hoặc migrate DB dev. Các bảng mới additive; không backfill tài khoản cũ thành tài khoản thật. pnpm db:test PASS, trả JSON status PASS với năm suite database/transactions/characters/starter/auth.
+- DB thật kiểm ba class/max=current/EXP0/Gold0/PKOFF/ba ID/spawn, concurrent registration/retry/unique Character, rollback sau tạo Character và config invalid không để Account dở dang. Đọc/ghi BigInt/T08 và class immutable vẫn qua.
+- Test DB+HTTP+Colyseus thật kiểm invalid credentials/token, concurrent login chỉ một token hợp lệ, movement, reconnect giữ vị trí/cùng Character, login mới disconnect cũ, reconnect quá 30 giây, expiry/logout và recovery 503. Clock server inject để kiểm đúng boundary 30 giây, không chờ giả làm thành công.
+- Phát hiện Colyseus global exception logger có thể khiến smoke bị lỗi nhưng process exit 0: suite DB nay catch và đặt exitCode=1. `pnpm --filter @mmorpg/server exec tsx test/database.smoke.ts --fail-gate-test` cố tình fail ở cuối suite: JSON FAIL/exit1 đúng mong đợi; không vô hiệu hóa assertions.
+- pnpm test:e2e final: 3/3 PASS (31.7s): auth HTTP/DB contract, hai browser foundation regression, starter load/canopy/root/building/movement/resize/zoom. Screenshot test-results/starter-canopy.png và starter-scene.png đã xem; không còn lỗi tiếng Việt/căn map. Assets HTTP không lỗi, pageerror rỗng.
+- node scripts/build-starter-runtime.mjs --check PASS: Tiled/registry/generated TS và ảnh public đúng bytes. Registry roadmap parse được, T59 DONE/T09 DOING, không có task đủ dependency tiếp theo. git diff --check PASS trước checkpoint.
+
+Lượt gate cuối có một regression tài liệu: Python ghi CRLF khiến test JSON fence fail; sau sửa LF, cột “Chặn các phần” D15 còn nhắc T09/T10 dù registry đã chuyển sang T59. Đã sửa cột chỉ còn T12 (tên), giữ business blocker đó, thêm .gitattributes eol=lf cho tasks.md. Test roadmap tập trung rồi pnpm test toàn bộ PASS (19 tests từ cache vì code không đổi, 31 mock chạy lại), pnpm build PASS. Không sửa hoặc tắt test. Log lỗi đầu giữ ở logs/starter-final; kết quả lượt sửa có trong activity Codex Client.
+
+Lỗi đã sửa trong ngân sách tối đa ba lượt/issue: provenance thiếu field; anchor thiếu point; edge alpha; wrapper Python encoding/partial edit lặp; TS declaration của class factory; test spawn chọn nhầm điểm walkable; polling E2E dừng lệch root (hai lượt sửa); lint middleware; DB state chưa có players; encoding trang mới và letterbox screenshot. Assertions/collision/balance giữ nguyên; report lỗi QA vẫn được lưu.
+
+Tài liệu chi tiết mới: docs/STARTER_MAP.md và docs/AUTH_LOCAL.md. Không có HANDOFF.md hiện hữu để cập nhật. Checkpoint chỉ ghi phần đã kiểm định cùng trạng thái T09 chưa hoàn tất; GAME_SPEC chưa commit từ trước vẫn được giữ lại. Không chạy sản xuất hoặc tự quyết định nghiệp vụ tiếp theo.
+
+## Kiểm tra yêu cầu Starter Village — 08/10/2026
+
+Đã đọc AGENTS/GAME_SPEC/tasks/progress và kiểm tra generate2dmap/generate2dmedia/generate2dsprite trong .agents/skills. Ba skill có source/scripts; chưa chạy capability check hoặc generation vì còn xung đột mỹ thuật. Yêu cầu mới ghi pixel art, trong khi GAME_SPEC 2.2–2.4 CHỐT painted/cartoon soft shading, không pixel art thuần/pixelation nặng và asset mới phải cùng thẩm mỹ. AGENTS yêu cầu làm rõ khi business conflict; đã gửi câu hỏi giữ painted/cartoon hay phê duyệt ngoại lệ riêng cho map. Chưa tự sửa CHỐT.
+
+Runtime hiện dùng WorldConfig shared, không phải Tiled map loader hoàn chỉnh: unit 32px, AABB footprint chân (halfWidth=10, halfHeight=6) và obstacle rect trong fixture, collision/timestep authoritative game-core/server. Phaser vẽ grid/rect, đặt origin chân và Y-depth cho actor, camera bounds/follow/zoom clamp; chưa có prop occlusion hoặc registry Respawn/SAFE production. Tiled là target đã chốt, chưa có map production để load. Character đang tích hợp chỉ một frame South 128x128 với manifest technical-test-only, chưa phải bộ 4 hướng IDLE/RUN hoàn chỉnh.
+
+Starter Village được phép thiết kế geometry theo yêu cầu mới, nhưng chưa tạo asset/config hoặc dùng fixture thay production. T09 tiếp tục BLOCKED. Chờ làm rõ phong cách trước generation; sau đó vẫn phải validate art/geometry/spawn/SAFE/FE–BE/browser thật và các QA của skill trước mở đăng ký. Không gọi auto-dev.ps1/codex exec, push/deploy; không báo backend hoặc map đã qua kiểm chứng.
+
+## Quyết định D01 và blocker đăng ký T09 — 08/10/2026
+
+Chủ sản phẩm đã trả lời bổ sung: starter Realm Đấu Chi Khí 1★/0%, Gold 0n, PK OFF, Physical HP/KI 120/60, Magic 90/120, Tank 180/50; current=max. ID chính thức starter_village/area_01/starter_respawn_01, SAFE. Đã ghi GAME_SPEC 3.2 CHỐT cùng yêu cầu xác minh tọa độ/collision và atomic/idempotent registration; không thay 3.1/T08/rule khác.
+
+Kiểm tra Phase 2 starter: rg ba ID trên apps/packages/assets không có định nghĩa runtime/seed/map; shared config chỉ có technical-fixture/movement-test, server chỉ đăng ký FoundationRoom local. Asset hiện chỉ là ảnh test nhân vật và metadata, không có map chính thức. Schema Character chứa string ID nhưng không chứng minh map tồn tại; test-map/test-area/test-respawn trong DB smoke là fixture, không dùng đăng ký. Không có registry respawn/tọa độ starter, dữ liệu area bounds/collision hoặc SAFE runtime để kiểm định. Vì vậy T09 tiếp tục BLOCKED theo chính yêu cầu dừng khi thiếu dữ liệu; không sinh map/đặt tọa độ hoặc thay ID. Cần dữ liệu map loadable của starter_village, area_01 bounds/collision/SAFE và tọa độ starter_respawn_01 hợp lệ, hoặc đầu vào/phê duyệt đủ để tạo chúng. Không mở D05/D12 toàn bộ.
+
+Kiểm thử registry ban đầu phát hiện thiếu dependency D15 ở T10/T12, đã bổ sung (không sửa/vô hiệu hóa test). Case registry focused sau sửa PASS; sẽ chạy lại toàn bộ orchestrator tests để xác nhận tài liệu nhất quán. Không có task implementation hoàn tất trong lượt này; không báo auth/reconnect đã kiểm chứng.
+
+Kết quả cuối: pnpm test:auto-dev PASS 31/31 (26.2s), git diff --check PASS, nextTask=NO_ELIGIBLE_TASK. Chỉ thay GAME_SPEC/tasks/progress; chưa có thay đổi code nên không chạy lại build/browser/DB/auth gates và không báo chúng đã qua. Không tạo checkpoint T09 hoặc đánh dấu DONE khi thiếu starter world. HANDOFF không có để cập nhật.
+
+Đã đọc AGENTS/GAME_SPEC/tasks/progress và code; HANDOFF.md không tồn tại. HEAD đầu lượt `15a1a31`, Git sạch. Chủ sản phẩm chốt D01 trực tiếp: username/password, class lúc đăng ký, một Character/account, email verified cho recovery (không tự bắt buộc login), một phiên gameplay, thay thế phiên cũ, reconnect 30 giây và validation/hash/token server-authoritative. Đã thêm GAME_SPEC 3.1 CHỐT, giữ mọi rule cũ và mục T08 4.1. D01 registry DONE chỉ nghĩa quyết định đã duyệt, không phải T09 DONE.
+
+T09 BLOCKED trước implementation: đăng ký phải tạo Character, nhưng createCharacter/schema hiện yêu cầu Realm/Star/HP/KI/Gold/Map/Area/Respawn/PK và chưa có config khởi đầu được duyệt cho ba class. TESTING.md xác nhận fixture technical không được dùng làm dữ liệu phát hành. Phần này vốn có trong D01 cũ, nay tách D15 để không coi phê duyệt xác thực là phê duyệt balance/spawn. Đã gửi câu hỏi yêu cầu dữ liệu hoặc nguồn config được duyệt. Không tự đặt HP/KI/Gold hoặc map mới, không để account đã đăng ký thiếu Character, không viết auth nửa phần rồi báo DONE.
+
+Chưa sửa code/schema, cài library, gửi email, chạy worker CLI, checkpoint triển khai T09, push/deploy. Các task sau vẫn phụ thuộc T09 hoặc decision khác; cần trả lời D15 phần dữ liệu đăng ký để tiếp tục. Policy tên/đổi tên/xóa chưa duyệt cũng được giữ trong D15, không tự áp dụng vào auth.
+
 ## Quyết định numeric T08 — 08/10/2026
 
 T08 DONE: shared numeric/Character DTO strict, floor damage/healing và non-negative domain; Gold BigInt với chuỗi canonical lossless; Account/Character Prisma, unique một character/account, enum ba class, class immutable DB trigger, Realm 1–11/Star 1–9 và HP/KI/Gold checks. Không đặt dữ liệu khởi đầu hoặc công thức combat. Atomic Gold dùng row lock/receipt T07, reject thiếu tiền/overflow và retry không trừ hai lần. Migration 202610080003 đã deploy trên mmorpg_test, không sửa mmorpg_dev; cách triển khai dev và biên kỹ thuật safe integer/BIGINT ghi TESTING.md.

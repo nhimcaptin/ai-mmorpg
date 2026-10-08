@@ -15,11 +15,11 @@ Ngày lập: 08/10/2026. Nguồn quy tắc: `../AGENTS.md` và `../GAME_SPEC.md`
 
 ## Quyết định nghiệp vụ và đầu vào còn thiếu
 
-Tất cả mục D đang `BLOCKED — chờ chủ sản phẩm`. Đây là câu hỏi cần quyết định, không phải đề xuất luật mặc định. Không phát hiện mâu thuẫn trực tiếp giữa AGENTS.md và GAME_SPEC.md; nếu câu trả lời xung đột CHỐT phải báo trước khi triển khai.
+D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa trả lời vẫn BLOCKED. Phần numeric T08 đã CHỐT, phần còn lại D02 vẫn chờ. Đây là câu hỏi cần quyết định, không phải đề xuất luật mặc định. Không phát hiện mâu thuẫn trực tiếp giữa AGENTS.md và GAME_SPEC.md; nếu câu trả lời xung đột CHỐT phải báo trước khi triển khai.
 
 | ID | Cần xác nhận | Chặn các phần |
 |---|---|---|
-| D01 | Phương thức đăng nhập/đăng ký, khôi phục tài khoản; chính sách phiên đồng thời, reconnect; tên nhân vật, đổi tên/xóa nhân vật; dữ liệu khởi đầu của ba class. | T09–T12, T20, T56 |
+| D01 | CHỐT: username/password, chọn class lúc đăng ký, đúng một Character, recovery qua email verified, một phiên gameplay, thay thế phiên cũ, reconnect 30 giây, hash/token/server validation. Nguồn GAME_SPEC 3.1; phần dữ liệu khởi đầu và tên chưa duyệt tách D15. | T09–T12, T20, T56 |
 | D02 | Bảng stats theo class/Realm/Star, EXP từng sao, công thức tổng hợp và làm tròn ngoài damage/healing; chi phí/tỷ lệ đột phá, vật liệu; xử lý ở Đấu Đế 9★100%. Phần numeric T08 đã duyệt, không mở khóa các câu hỏi còn lại. | T22–T23, T34 |
 | D03 | Công thức damage/DEF/crit, nhịp đánh/range, giới hạn stat; target hợp lệ, tấn công khi di chuyển, line-of-sight; cast bị hủy/hoàn chi phí khi nào; effect, threat, taunt và CC ngoài World Boss. | T26–T28, T38, T50 |
 | D04 | Danh mục item/affix, multiplier từng rarity, phân bố roll, binding theo từng source, giá mua/bán; cách/chi phí mở túi; EnhancementConfig và nguồn đá. | T24–T25, T32–T35, T42 |
@@ -33,6 +33,7 @@ Tất cả mục D đang `BLOCKED — chờ chủ sản phẩm`. Đây là câu 
 | D12 | Danh sách player/NPC/monster/Visual Set/icon/effect/map cần phát hành, appearance chọn khi tạo nhân vật; animation combat/death ngoài IDLE/RUN; phạm vi nội dung từng đợt và người duyệt mỹ thuật. | A01–A06, T12, T53 |
 | D13 | Trade invite/timeout, điều kiện hai bên accept; PendingReward thời hạn, thứ tự claim và partial claim; quy tắc lưu ground loot/party/cooldown qua restart. | T31, T33, T45–T46, T55 |
 | D14 | Thiết bị/trình duyệt hỗ trợ, có mobile/touch không; người đồng thời/room/instance, latency và FPS mục tiêu; yêu cầu lưu trữ/backup, môi trường vận hành và người phê duyệt phát hành. | T54–T58 |
+| D15 | Starter stats/Realm/Star/0%/Gold/PK và ba ID CHỐT tại GAME_SPEC 3.2 đã được kiểm định bằng T59. BLOCKED còn chính sách tên nhân vật/đổi tên/xóa chưa duyệt; phần này không chặn auth hoặc khởi tạo Character không có trường tên. Không dùng fixture Phase 1. | T12 (tên) |
 
 **Nghiệm thu mỗi D:** câu trả lời được chủ sản phẩm xác nhận, ghi vị trí nguồn và ngày trong `docs/progress.md`; cập nhật đặc tả/tài liệu quyết định bằng nội dung được duyệt, không sửa luật CHỐT. Các mục liên quan chưa có câu trả lời vẫn bị chặn; có thể chia D thành các câu hỏi nhỏ để mở khóa từng tác vụ.
 
@@ -61,7 +62,8 @@ Tất cả mục D đang `BLOCKED — chờ chủ sản phẩm`. Đây là câu 
 | T06 | Thiết lập PostgreSQL và Prisma nền tảng | T01, T03 | Không | Migration tạo DB trống chạy thành công; kết nối/shutdown đúng; hướng dẫn môi trường local không chứa secrets; test không ghi vào DB thật. |
 | T07 | Xây primitive giao dịch và idempotency | T04, T06 | Không | Test concurrent request/retry/crash tại ranh giới commit không double-credit/debit; rollback không ghi nửa giao dịch; cùng khóa khác payload bị từ chối. |
 | T08 | Lập schema persistence Account/Character | T05–T07; numeric đã duyệt mục 4.1 | Không | Unique account-character bảo đảm tối đa một nhân vật; enum class đúng ba loại; lưu Realm/Star/HP/KI/Gold/map/respawn/PK với validation; migration và đọc/ghi round-trip qua. |
-| T09 | Backend xác thực và quản lý phiên | T04, T08, D01 | Không | Đăng nhập/đăng xuất và khôi phục theo quyết định; phiên sai/hết hạn bị từ chối; kiểm thử phiên đồng thời và reconnect; credential không lộ trong response/log. |
+| T59 | Starter Village và loader production | T05, T08; style/ID theo xác nhận người dùng | Terrain/house/tree host_image trong assets/maps/starter_village | DONE: Tiled/registry dùng chung FE–BE; SAFE/PK OFF; respawn (624,624) hợp bounds/AABB; nhà chặn toàn vùng, cây chặn root và fade 0.5→1, Y-sort/camera; Forge validate/nav/route PASS, unit/DB/browser gate PASS. A02/A03 đầy đủ không tự DONE. |
+| T09 | Backend xác thực và quản lý phiên | T04, T08, D01, T59 (vị trí starter đã kiểm định) | Không | Đăng nhập/đăng xuất và khôi phục theo quyết định; phiên sai/hết hạn bị từ chối; kiểm thử phiên đồng thời và reconnect; credential không lộ trong response/log. |
 | T10 | Backend tạo và tải nhân vật | T05, T07–T09, D01 | Không | Tạo ba class theo dữ liệu duyệt; hai request tạo đồng thời vẫn chỉ một Character; không đổi class qua API; tải đúng dữ liệu đã lưu. |
 | T11 | Frontend đăng nhập và phiên người dùng | T09 | Không | Có trạng thái chờ/lỗi/phiên hết hạn; refresh giữ hoặc kết thúc phiên đúng chính sách; route gameplay chặn người chưa xác thực; browser test luồng đăng nhập qua. |
 | T12 | Frontend tạo/chọn nhân vật hiện có | T10–T11, D12 | A02 | Hiển thị ba class và appearance được duyệt; tạo một lần, lần sau vào nhân vật cũ; lỗi tên/phiên hiển thị rõ; không có điều khiển đổi class. |
@@ -168,6 +170,8 @@ Phạm vi bổ sung được người dùng cho phép: nền tảng và cảnh m
 
 ## Việc tiếp theo
 
+T59 DONE, gỡ blocker mỹ thuật/vị trí starter. T09 DOING: đăng ký/core auth/session/reconnect đã kiểm định local; người dùng hoãn email verification/recovery đến production, endpoint trả 503 nên chưa đạt toàn bộ acceptance. T10/T11/T13 không tự mở dependency T09. D02/D12 và tên Character chưa được tự chốt. Chi tiết tại STARTER_MAP.md, AUTH_LOCAL.md và progress.md. Các đoạn Phase 1 dưới đây là hồ sơ lịch sử.
+
 Phase 1 hoàn tất trong phạm vi nền tảng/cảnh thử local và kiểm chứng DB. Dừng tại đây; chỉ bắt đầu Phase 2 khi có yêu cầu mới. Các tác vụ account/gameplay và tài nguyên phát hành tiếp tục chờ quyết định D tương ứng; P1 không tự hoàn tất T07–T12 hoặc A02–A03.
 
 ## Công cụ điều phối phát triển
@@ -188,9 +192,17 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
   "version": 1,
   "tasks": [
     {
-      "id": "D01",
+      "id": "D15",
       "kind": "decision",
       "status": "BLOCKED",
+      "dependencies": [],
+      "assets": [],
+      "e2e": false
+    },
+    {
+      "id": "D01",
+      "kind": "decision",
+      "status": "DONE",
       "dependencies": [],
       "assets": [],
       "e2e": false
@@ -384,16 +396,28 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
       "e2e": false
     },
     {
+      "id": "T59",
+      "kind": "task",
+      "status": "DONE",
+      "dependencies": [
+        "T05",
+        "T08"
+      ],
+      "assets": [],
+      "e2e": true
+    },
+    {
       "id": "T09",
       "kind": "task",
-      "status": "TODO",
+      "status": "DOING",
       "dependencies": [
         "T04",
         "T08",
-        "D01"
+        "D01",
+        "T59"
       ],
       "assets": [],
-      "e2e": false
+      "e2e": true
     },
     {
       "id": "T10",
@@ -404,7 +428,8 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
         "T07",
         "T08",
         "T09",
-        "D01"
+        "D01",
+        "T59"
       ],
       "assets": [],
       "e2e": false
@@ -428,7 +453,8 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
         "T10",
         "T11",
         "D12",
-        "D01"
+        "D01",
+        "D15"
       ],
       "assets": [
         "A02"

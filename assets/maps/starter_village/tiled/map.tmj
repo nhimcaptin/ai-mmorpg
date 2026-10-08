@@ -1,0 +1,562 @@
+{
+  "compressionlevel": -1,
+  "height": 40,
+  "infinite": false,
+  "layers": [
+    {
+      "id": 1,
+      "image": "images/terrain.png",
+      "imageheight": 1254,
+      "imagewidth": 1254,
+      "name": "terrain",
+      "offsetx": 0.0,
+      "offsety": 0.0,
+      "opacity": 1,
+      "repeatx": false,
+      "repeaty": false,
+      "type": "imagelayer",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "index",
+      "id": 2,
+      "name": "props",
+      "objects": [
+        {
+          "gid": 1,
+          "height": 281.0,
+          "id": 1,
+          "name": "house-0",
+          "properties": [
+            {
+              "name": "prop",
+              "type": "string",
+              "value": "house"
+            },
+            {
+              "name": "anchorWorldX",
+              "type": "float",
+              "value": 260.0
+            },
+            {
+              "name": "anchorWorldY",
+              "type": "float",
+              "value": 400.0
+            },
+            {
+              "name": "sortY",
+              "type": "float",
+              "value": 400.0
+            },
+            {
+              "name": "scale",
+              "type": "float",
+              "value": 0.5
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "occupantPolicy",
+              "type": "string",
+              "value": "y_sort"
+            }
+          ],
+          "rotation": 0,
+          "type": "prop",
+          "visible": true,
+          "width": 274.0,
+          "x": 118.0,
+          "y": 405.0
+        },
+        {
+          "gid": 1,
+          "height": 281.0,
+          "id": 2,
+          "name": "house-1",
+          "properties": [
+            {
+              "name": "prop",
+              "type": "string",
+              "value": "house"
+            },
+            {
+              "name": "anchorWorldX",
+              "type": "float",
+              "value": 990.0
+            },
+            {
+              "name": "anchorWorldY",
+              "type": "float",
+              "value": 400.0
+            },
+            {
+              "name": "sortY",
+              "type": "float",
+              "value": 400.0
+            },
+            {
+              "name": "scale",
+              "type": "float",
+              "value": 0.5
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "occupantPolicy",
+              "type": "string",
+              "value": "y_sort"
+            }
+          ],
+          "rotation": 0,
+          "type": "prop",
+          "visible": true,
+          "width": 274.0,
+          "x": 848.0,
+          "y": 405.0
+        },
+        {
+          "gid": 2,
+          "height": 342.0,
+          "id": 3,
+          "name": "tree-5",
+          "properties": [
+            {
+              "name": "prop",
+              "type": "string",
+              "value": "tree"
+            },
+            {
+              "name": "anchorWorldX",
+              "type": "float",
+              "value": 1010.0
+            },
+            {
+              "name": "anchorWorldY",
+              "type": "float",
+              "value": 700.0
+            },
+            {
+              "name": "sortY",
+              "type": "float",
+              "value": 700.0
+            },
+            {
+              "name": "scale",
+              "type": "float",
+              "value": 0.5
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "occupantPolicy",
+              "type": "string",
+              "value": "y_sort"
+            }
+          ],
+          "rotation": 0,
+          "type": "prop",
+          "visible": true,
+          "width": 262.0,
+          "x": 857.0,
+          "y": 704.0
+        },
+        {
+          "gid": 2,
+          "height": 342.0,
+          "id": 4,
+          "name": "tree-4",
+          "properties": [
+            {
+              "name": "prop",
+              "type": "string",
+              "value": "tree"
+            },
+            {
+              "name": "anchorWorldX",
+              "type": "float",
+              "value": 300.0
+            },
+            {
+              "name": "anchorWorldY",
+              "type": "float",
+              "value": 750.0
+            },
+            {
+              "name": "sortY",
+              "type": "float",
+              "value": 750.0
+            },
+            {
+              "name": "scale",
+              "type": "float",
+              "value": 0.5
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "occupantPolicy",
+              "type": "string",
+              "value": "y_sort"
+            }
+          ],
+          "rotation": 0,
+          "type": "prop",
+          "visible": true,
+          "width": 262.0,
+          "x": 147.0,
+          "y": 754.0
+        },
+        {
+          "gid": 2,
+          "height": 342.0,
+          "id": 5,
+          "name": "tree-3",
+          "properties": [
+            {
+              "name": "prop",
+              "type": "string",
+              "value": "tree"
+            },
+            {
+              "name": "anchorWorldX",
+              "type": "float",
+              "value": 990.0
+            },
+            {
+              "name": "anchorWorldY",
+              "type": "float",
+              "value": 1040.0
+            },
+            {
+              "name": "sortY",
+              "type": "float",
+              "value": 1040.0
+            },
+            {
+              "name": "scale",
+              "type": "float",
+              "value": 0.5
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "occupantPolicy",
+              "type": "string",
+              "value": "y_sort"
+            }
+          ],
+          "rotation": 0,
+          "type": "prop",
+          "visible": true,
+          "width": 262.0,
+          "x": 837.0,
+          "y": 1044.0
+        },
+        {
+          "gid": 1,
+          "height": 281.0,
+          "id": 6,
+          "name": "house-2",
+          "properties": [
+            {
+              "name": "prop",
+              "type": "string",
+              "value": "house"
+            },
+            {
+              "name": "anchorWorldX",
+              "type": "float",
+              "value": 260.0
+            },
+            {
+              "name": "anchorWorldY",
+              "type": "float",
+              "value": 1070.0
+            },
+            {
+              "name": "sortY",
+              "type": "float",
+              "value": 1070.0
+            },
+            {
+              "name": "scale",
+              "type": "float",
+              "value": 0.5
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "name": "occupantPolicy",
+              "type": "string",
+              "value": "y_sort"
+            }
+          ],
+          "rotation": 0,
+          "type": "prop",
+          "visible": true,
+          "width": 274.0,
+          "x": 118.0,
+          "y": 1075.0
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "properties": [
+        {
+          "name": "sortBy",
+          "type": "string",
+          "value": "sortY, then x, then id (ground line)"
+        }
+      ]
+    },
+    {
+      "draworder": "index",
+      "id": 3,
+      "name": "collision",
+      "objects": [
+        {
+          "id": 7,
+          "name": "collision.rects[0]",
+          "type": "solid",
+          "rotation": 0,
+          "visible": true,
+          "x": 118,
+          "y": 124,
+          "width": 274,
+          "height": 281,
+          "properties": [
+            {
+              "name": "source",
+              "type": "string",
+              "value": "collision.rects[0]"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "collision.rects[1]",
+          "type": "solid",
+          "rotation": 0,
+          "visible": true,
+          "x": 848,
+          "y": 124,
+          "width": 274,
+          "height": 281,
+          "properties": [
+            {
+              "name": "source",
+              "type": "string",
+              "value": "collision.rects[1]"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "collision.rects[2]",
+          "type": "solid",
+          "rotation": 0,
+          "visible": true,
+          "x": 118,
+          "y": 794,
+          "width": 274,
+          "height": 281,
+          "properties": [
+            {
+              "name": "source",
+              "type": "string",
+              "value": "collision.rects[2]"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "collision.rects[3]",
+          "type": "solid",
+          "rotation": 0,
+          "visible": true,
+          "x": 972,
+          "y": 1028,
+          "width": 36,
+          "height": 24,
+          "properties": [
+            {
+              "name": "source",
+              "type": "string",
+              "value": "collision.rects[3]"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "collision.rects[4]",
+          "type": "solid",
+          "rotation": 0,
+          "visible": true,
+          "x": 282,
+          "y": 738,
+          "width": 36,
+          "height": 24,
+          "properties": [
+            {
+              "name": "source",
+              "type": "string",
+              "value": "collision.rects[4]"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "collision.rects[5]",
+          "type": "solid",
+          "rotation": 0,
+          "visible": true,
+          "x": 992,
+          "y": 688,
+          "width": 36,
+          "height": 24,
+          "properties": [
+            {
+              "name": "source",
+              "type": "string",
+              "value": "collision.rects[5]"
+            }
+          ]
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": false,
+      "x": 0,
+      "y": 0,
+      "properties": [
+        {
+          "name": "actorRadius",
+          "type": "float",
+          "value": 12.0
+        },
+        {
+          "name": "ySquash",
+          "type": "float",
+          "value": 1.0
+        },
+        {
+          "name": "navCell",
+          "type": "int",
+          "value": 6
+        },
+        {
+          "name": "semantics",
+          "type": "string",
+          "value": "plan Appendix C; tile collision lives in the tilesets"
+        }
+      ]
+    },
+    {
+      "draworder": "index",
+      "id": 4,
+      "name": "interactions",
+      "objects": [
+        {
+          "height": 0,
+          "id": 13,
+          "name": "starter_respawn_01",
+          "point": true,
+          "properties": [
+            {
+              "name": "facing",
+              "type": "string",
+              "value": "S"
+            }
+          ],
+          "rotation": 0,
+          "type": "spawn",
+          "visible": true,
+          "width": 0,
+          "x": 624,
+          "y": 624
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 5,
+  "nextobjectid": 14,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "mapId",
+      "type": "string",
+      "value": "starter_village"
+    },
+    {
+      "name": "bundleSchema",
+      "type": "string",
+      "value": "generate2dmap.map_bundle.v2"
+    },
+    {
+      "name": "worldWidth",
+      "type": "float",
+      "value": 1254.0
+    },
+    {
+      "name": "worldHeight",
+      "type": "float",
+      "value": 1254.0
+    },
+    {
+      "name": "generator",
+      "type": "string",
+      "value": "generate2dmap export_tiled.py 0.4.0"
+    },
+    {
+      "name": "actorRadius",
+      "type": "float",
+      "value": 12.0
+    },
+    {
+      "name": "ySquash",
+      "type": "float",
+      "value": 1.0
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.0",
+  "tileheight": 32,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "props.tsx"
+    }
+  ],
+  "tilewidth": 32,
+  "type": "map",
+  "version": "1.10",
+  "width": 40
+}

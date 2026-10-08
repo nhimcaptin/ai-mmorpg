@@ -1,0 +1,192 @@
+{
+  "schema": "generate2dmap.map_bundle_report.v1",
+  "status": "warn",
+  "method": "JSON Schema map.schema.json#/$defs/map_bundle_v2 (vendored copy, built-in Draft 2020-12 evaluator), file existence and sha256 of every referenced file, and cross-field rules: unique ids, tile indices against tilesets, wang/blob topology, material colours, portal targets and arrivals, slots and approach points",
+  "notProven": [
+    "reachability, portal arrivals and collision geometry (run map_nav.py check)",
+    "that collision and footprints match the painted art",
+    "engine or editor import (Tiled GUI, Godot, LDtk not verified)"
+  ],
+  "checks": [
+    {
+      "id": "schema",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "files",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "sha256",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "tilesets",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "layers",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "props_and_objects",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "collision",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "material_map",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "portals",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "spawns_anchors_interactions",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "document",
+      "status": "warn",
+      "value": {
+        "errors": 0,
+        "warnings": 2
+      },
+      "threshold": {
+        "errors": 0
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "path": "map-bundle.json",
+      "sha256": "6b0e9a912e7a288a8aa03087bc1bd677c0c79d734d8efae45afbafafe1738dd8",
+      "bytes": 5216
+    },
+    {
+      "path": "raw/terrain.png",
+      "sha256": "679a38f80c10e62b43a9eb2fd9b372c1dc0e73ec9e1bbd5c6cf90c3001d10887",
+      "bytes": 2847848
+    },
+    {
+      "path": "props-clean/house/prop.png",
+      "sha256": "5bac043280b1ab67fbe2268a394dfcc48d9b61da81c0ccaeea25510a8ea6b9fd",
+      "bytes": 500771
+    },
+    {
+      "path": "props-clean/tree/prop.png",
+      "sha256": "e702b65dedb18b79ccf47d52ad049a7229c946c1f956e32872ea2e286718c0f4",
+      "bytes": 544300
+    }
+  ],
+  "outputs": [],
+  "tool": {
+    "name": "map_bundle.py",
+    "version": "0.4.0"
+  },
+  "bundle": {
+    "id": "starter_village",
+    "version": 2,
+    "world": [
+      1254.0,
+      1254.0
+    ],
+    "counts": {
+      "tilesets": 0,
+      "layers": 2,
+      "props": 0,
+      "objects": 6,
+      "portals": 0,
+      "spawns": 1,
+      "anchors": 0,
+      "interactions": 0
+    }
+  },
+  "problems": [
+    {
+      "severity": "warning",
+      "path": "$",
+      "message": "unknown top-level field(s) ignored: areas, routes, runtime",
+      "code": "rule"
+    },
+    {
+      "severity": "warning",
+      "path": "$.nav.cell",
+      "message": "nav.cell 32 differs from max(1, round(actorRadius/2)) = 6, which map_nav uses",
+      "code": "rule"
+    }
+  ]
+}
