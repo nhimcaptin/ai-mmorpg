@@ -92,7 +92,7 @@ Gói nội dung lớn A04–A06 được tách theo NPC/monster/Visual Set/map t
 | T13 | Colyseus room và join có xác thực | T04, T09–T10 | Không | DONE: hai account cùng room/Character UUID ổn định, strict join và token giả/wrong-area reject, public state chỉ version/player IDs/position/direction/sequence. Room giữ30s grace rồi dispose khi rỗng, clear state/listener và recreate đúng. Lint/typecheck/build,30 unit+31 mock, DB7 suite và E2E9/9 PASS. |
 | T14 | Loader Map/Area và collision thuần domain — DONE | T05, T13 | Không | Shared registry tách Map/Area/Respawn, validate IDs/references/bounds/polygon/spawn footprint; Starter dùng cùng tọa độ FE/BE. Building/tree/water footprint tests, lint/typecheck/build,33 unit/integration+31 mock, DB7 suites và E2E9/9 PASS; Collision/Occlusion giữ nguyên. |
 | T15 | Movement authoritative và input sequence — DONE | T04, T13–T14 | Không | Room dùng chung strict intent/monotonic sequence guard; tick server tính movement/collision hiện hữu. Spam/duplicate/reordered/teleport/diagonal/timeout/boundary đã verify qua DB+WS thật; lint/typecheck/build,35 unit/integration+31 mock, DB7 suites và E2E9/9 PASS. |
-| T16 | Phaser lifecycle, input và bridge HUD | T11, T13, T15 | Không | Mount/unmount/reconnect không nhân listener/canvas; React chỉ nhận dữ liệu HUD, không chứa state movement từng tick; input bỏ qua khi focus text/panel theo thiết kế UI. |
+| T16 | Phaser lifecycle, input và bridge HUD — DONE | T11, T13, T15 | Không | Mount/unmount/reconnect không nhân listener/canvas; React chỉ nhận dữ liệu HUD, không chứa state movement từng tick; input bỏ qua khi focus text/panel theo thiết kế UI. Native keyup/heartbeat không chờ render; lint/typecheck/build,37 unit/integration+31 mock, DB7 suites, E2E10/10 và nhóm regression5/5 PASS; xem T16_RCA.md/progress. |
 | T17 | Render map, depth và tree occlusion | T14, T16 | A03 | Map Tiled tải đúng; Y-sort theo chân; đi dưới tán nhưng không xuyên trunk/building/water; occlusion chung theo GAME_SPEC 2.5/T60: mọi authorized local/remote actor, fade0.4/150–200ms, không đổi collision server. |
 | T18 | Player animation, scale và camera responsive | T15–T17 | A02 | N/E/S/W, IDLE 4/RUN 8×128; mapping hướng chéo nhất quán; origin/baseline/shadow ổn định; scale map/camera cấu hình, preview 70–100 world px; viewport 1920×1080 và resize/zoom clamp qua browser. |
 | T19 | Đặt entities và spawn theo dữ liệu map | T05, T14, T17, D05 | A03–A04 (phần map đầu) | NPC/monster/spawn/respawn ID đúng catalog; vị trí không mắc collision; render cùng vị trí server; spawn sai bị validator từ chối. |
@@ -590,7 +590,7 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T16",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T11",
         "T13",

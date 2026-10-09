@@ -44,7 +44,7 @@ export default function Game() {
     <p role="status">{message}</p>
     {session && <div className="toolbar"><span data-testid="character-id" data-character-id={session.character.id}>Class: {classNames[session.character.class]}</span><span>Email: {session.emailVerified ? 'Đã xác minh' : 'Chưa xác minh'}</span><button disabled={busy} onClick={() => void logout()}>Đăng xuất</button></div>}
     {auth && <World starter auth={auth} onSessionInvalid={invalid} />}
-    <details className="auth-panel"><summary>Xác minh địa chỉ email để khôi phục tài khoản</summary>
+    <details className="auth-panel" data-block-world-input><summary>Xác minh địa chỉ email để khôi phục tài khoản</summary>
       <form onSubmit={event => void requestEmail(event)}><label>Email<input name="email" type="email" required maxLength={254} /></label><label>Mật khẩu hiện tại<input name="password" type="password" autoComplete="current-password" required /></label><button disabled={busy}>Gửi mã xác minh</button></form>
     </details>
     <p className="notice">Nhân vật hiện dùng frame South tĩnh đã kiểm định; bộ animation đầy đủ đang chờ nghiệm thu.</p>

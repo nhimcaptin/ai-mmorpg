@@ -3,12 +3,20 @@ import { useEffect, useRef, useState } from 'react';
 import { FOUNDATION_WORLD, FOUNDATION_ROOM, STARTER_MAP, STARTER_ROOM, AUTHENTICATED_ROOM, PROTOCOL_VERSION, type WorldRoomState } from '@mmorpg/shared';
 import { MOVEMENT_MESSAGE, PROTOCOL_ERROR_MESSAGE, protocolErrorSchema } from '@mmorpg/shared';
 import { OcclusionManager, vertices } from '@mmorpg/shared';
+import { acceptsWorldInput, MovementKeys } from './world-input';
 
 export default function World({ starter = false, auth, onSessionInvalid }: { starter?: boolean; auth?: { token: string; characterId: string }; onSessionInvalid?: () => void }) {
   const host = useRef<HTMLDivElement>(null);
   const disconnect = useRef<(() => void) | null>(null);
   const [status, setStatus] = useState('Đang tải renderer');
+  const [playerCount, setPlayerCount] = useState(0);
+  const [generation, setGeneration] = useState(0);
+  const invalidSession = useRef(onSessionInvalid);
+  useEffect(() => { invalidSession.current = onSessionInvalid; }, [onSessionInvalid]);
+  const token = auth?.token, characterId = auth?.characterId;
   useEffect(() => {
+    const auth = token && characterId ? { token, characterId } : undefined;
+    setStatus('Đang tải renderer'); setPlayerCount(0);
     const world = starter ? STARTER_MAP.world : FOUNDATION_WORLD;
     const element = host.current!;
     let cancelled = false;
@@ -20,9 +28,8 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
       class Scene extends Phaser.Scene {
         private room?: import('colyseus.js').Room<WorldRoomState>;
         private sprites = new Map<string, { image: import('phaser').GameObjects.Image; shadow: import('phaser').GameObjects.Ellipse }>();
-        private keys?: Record<string, import('phaser').Input.Keyboard.Key>;
+        private keys = new MovementKeys();
         private sequence = 0;
-        private nextSend = 0;
         private disposed = false;
         private props: { data: typeof STARTER_MAP.props[number]; image: import('phaser').GameObjects.Image }[] = [];
         private occlusion = new OcclusionManager(starter ? STARTER_MAP.props : []);
@@ -50,7 +57,6 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
           for (let y = 0; y <= world.height; y += world.unit) grid.lineBetween(0, y, world.width, y);
           for (const r of world.obstacles) this.add.rectangle(r.x, r.y, r.width, r.height, 0x9b7650).setOrigin(0);
           }
-          this.keys = this.input.keyboard?.addKeys('W,A,S,D', false) as Record<string, import('phaser').Input.Keyboard.Key> | undefined;
           this.overlay=this.add.graphics().setDepth(Number.MAX_SAFE_INTEGER).setVisible(false);
           this.actorOverlay=this.add.graphics().setDepth(Number.MAX_SAFE_INTEGER);
           const debug=()=> { this.overlay!.setVisible(!this.overlay!.visible); element.dataset.debug=String(this.overlay!.visible); };
@@ -63,19 +69,44 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
           }
           const resize = () => this.setZoom(Math.min(this.scale.width / world.width, this.scale.height / world.height));
           resize(); this.scale.on('resize', resize);
-          const stop = () => this.send(0, 0);
+          const stop = () => { this.keys.clear(); this.send(0, 0); };
+          const active = () => acceptsWorldInput(document.hasFocus(), document.activeElement);
+          const publishInput = () => {
+            if (cancelled || this.disposed) return;
+            const input = this.keys.intent(active()); this.send(input.x, input.y);
+          };
+          const keyboard = (event: KeyboardEvent) => {
+            if (event.repeat || !this.keys.key(event.code, event.type === 'keydown', active())) return;
+            if (active()) event.preventDefault();
+            publishInput();
+          };
+          const focus = () => { if (!active()) stop(); };
+          window.addEventListener('keydown', keyboard); window.addEventListener('keyup', keyboard);
+          window.addEventListener('blur', stop); document.addEventListener('focusin', focus);
+          document.addEventListener('visibilitychange', stop);
+          const heartbeat = window.setInterval(publishInput, world.tickMs);
           this.game.events.on(Phaser.Core.Events.BLUR, stop);
-          this.events.once('shutdown', () => {
+          const cleanup = () => {
+            if (this.disposed) return;
             this.disposed = true; this.scale.off('resize', resize);
             this.game.events.off(Phaser.Core.Events.BLUR, stop);
+            window.clearInterval(heartbeat);
+            window.removeEventListener('keydown', keyboard); window.removeEventListener('keyup', keyboard);
+            window.removeEventListener('blur', stop); document.removeEventListener('focusin', focus);
+            document.removeEventListener('visibilitychange', stop); this.keys.clear();
             element.removeEventListener('toggle-debug',debug); this.occlusion.clear();
+            this.input.off('wheel', wheel);
+            this.room?.onStateChange.clear(); this.room?.onLeave.clear(); this.room?.onError.clear();
             if (this.room?.connection.isOpen) void this.room.leave();
-          });
+          };
+          this.events.once(Phaser.Scenes.Events.SHUTDOWN, cleanup);
+          this.events.once(Phaser.Scenes.Events.DESTROY, cleanup);
           close = () => { if (this.room?.connection.isOpen) void this.room.leave(); };
           disconnect.current = close;
-          this.input.on('wheel', (_pointer: unknown, _objects: unknown, _dx: number, dy: number) => {
+          const wheel = (_pointer: unknown, _objects: unknown, _dx: number, dy: number) => {
             this.setZoom(this.cameras.main.zoom - dy * 0.001);
-          });
+          };
+          this.input.on('wheel', wheel);
           void this.connect(Client);
         }
         private setZoom(value: number) {
@@ -94,7 +125,7 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
             if (this.disposed || cancelled) { await room.leave(); return; }
             this.room = room;
             room.onStateChange(state => {
-              if (this.disposed) return;
+              if (this.disposed || cancelled) return;
               const present = new Set<string>();
               const players: { id: string; x: number; y: number }[] = [];
               state.players.forEach((player, id) => {
@@ -108,7 +139,10 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
                 const depth=this.occlusion.actorDepth(player,visual.image.getBounds());
                 visual.image.setPosition(player.x, player.y).setDepth(depth);
                 visual.shadow.setPosition(player.x, player.y).setDepth(depth-0.1);
-                if (id === (auth?.characterId ?? room.sessionId)) this.cameras.main.startFollow(visual.image, true);
+                if (id === (auth?.characterId ?? room.sessionId)) {
+                  this.sequence = Math.max(this.sequence, player.lastSequence + 1);
+                  this.cameras.main.startFollow(visual.image, true);
+                }
               });
               for (const [id, visual] of this.sprites) if (!present.has(id)) { visual.image.destroy(); visual.shadow.destroy(); this.sprites.delete(id); }
               this.occlusion.update(players);
@@ -129,18 +163,20 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
               element.dataset.rendering=JSON.stringify([...this.sprites].map(([id,v])=>({id,depth:v.image.depth,alpha:v.image.alpha})));
               element.dataset.localId = auth?.characterId ?? room.sessionId;
               element.dataset.status = 'connected';
-              const count = document.getElementById('player-count');
-              if (count) count.textContent = String(players.length);
+              // Only coarse HUD values cross into React, never positions/tick state.
+              setPlayerCount(previous => previous === players.length ? previous : players.length);
               setStatus('Đã kết nối');
             });
             room.onLeave(() => {
+              if (cancelled || this.disposed) return;
               this.occlusion.clear(); this.targets.clear();
               for(const prop of this.props) { this.tweens.killTweensOf(prop.image); const publish=()=>{this.propDiagnostics.set(prop.data.id,{id:prop.data.id,depth:prop.image.depth,alpha:prop.image.alpha,target:1});element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);};this.tweens.add({targets:prop.image,alpha:1,duration:prop.data.fadeDurationMs,onUpdate:publish,onComplete:publish}); }
               for(const visual of this.sprites.values()) {visual.image.destroy();visual.shadow.destroy();} this.sprites.clear();
               element.dataset.players='[]';
               element.dataset.status = 'disconnected';
+              setPlayerCount(0);
               if (!cancelled) setStatus('Đã ngắt kết nối');
-              if (auth && !cancelled && !this.disposed) onSessionInvalid?.();
+              if (auth && !cancelled && !this.disposed) invalidSession.current?.();
             });
             room.onMessage(PROTOCOL_ERROR_MESSAGE, (payload: unknown) => {
               const error = protocolErrorSchema.safeParse(payload);
@@ -154,28 +190,22 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
         private send(x: number, y: number) {
           if (this.room?.connection.isOpen) this.room.send(MOVEMENT_MESSAGE, { version: PROTOCOL_VERSION, sequence: this.sequence++, x, y });
         }
-        update(time: number) {
+        update() {
           if(this.overlay?.visible) {
             this.actorOverlay!.clear();
             for(const [id,v] of this.sprites) this.actorOverlay!.lineStyle(2,id===(auth?.characterId ?? this.room?.sessionId)?0x00ff00:0xff00ff).strokeRect(v.image.x-world.footprint.halfWidth,v.image.y-world.footprint.halfHeight,world.footprint.halfWidth*2,world.footprint.halfHeight*2);
             // Render authorized local/remote feet; no new visibility or networking channel.
             element.dataset.debugActors=JSON.stringify([...this.sprites].map(([id,v])=>({id,x:v.image.x,y:v.image.y,local:id===(auth?.characterId ?? this.room?.sessionId)})));
           } else this.actorOverlay?.clear();
-          if (time < this.nextSend || !this.keys) return;
-          this.nextSend = time + world.tickMs;
-          const focused = document.activeElement;
-          const active = document.hasFocus() && !focused?.matches('input,textarea,select,[contenteditable="true"]');
-          this.send(active ? Number(this.keys.D?.isDown) - Number(this.keys.A?.isDown) : 0,
-            active ? Number(this.keys.S?.isDown) - Number(this.keys.W?.isDown) : 0);
         }
       }
       game = new Phaser.Game({ type: Phaser.AUTO, parent: element, backgroundColor: '#162a30', width: world.width, height: world.height, scene: Scene, scale: { mode: Phaser.Scale.RESIZE, autoCenter: Phaser.Scale.CENTER_BOTH } });
     }
     void start().catch(() => { if (!cancelled) setStatus('Không thể tải renderer'); });
     return () => { cancelled = true; close?.(); disconnect.current = null; game?.destroy(true); };
-  }, [starter, auth, onSessionInvalid]);
+  }, [starter, token, characterId, generation]);
   return <section aria-label="Cảnh multiplayer thử nghiệm">
-    <div className="toolbar"><span role="status">{status}</span><span>Người trong phòng: <b id="player-count">0</b></span><button onClick={() => disconnect.current?.()}>Ngắt kết nối</button>{starter && <><button onClick={()=>host.current?.dispatchEvent(new Event('toggle-debug'))}>Collision debug</button><a href="/tools/collision">Chỉnh footprint</a></>}</div>
+    <div className="toolbar"><span role="status">{status}</span><span>Người trong phòng: <b data-testid="player-count">{playerCount}</b></span><button onClick={() => disconnect.current?.()}>Ngắt kết nối</button>{!auth && <button onClick={() => setGeneration(value => value + 1)}>Kết nối lại preview</button>}{starter && <><button onClick={()=>host.current?.dispatchEvent(new Event('toggle-debug'))}>Collision debug</button><a href="/tools/collision">Chỉnh footprint</a></>}</div>
     <div ref={host} data-testid="world" className="world" />
   </section>;
 }

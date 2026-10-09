@@ -1,5 +1,27 @@
 # PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
 
+## Trạng thái hiện hành — T16 DONE, 09/10/2026
+
+Phiên sửa tiếp tục từ HEAD4e63182 và giữ nguyên toàn bộ diff T16 chưa commit. T16 nay DONE: lint/typecheck/build,37 unit/integration+31 mock, DB7 suites và runtime consistency PASS; browser đầy đủ10/10, kiểm ổn định nhóm lỗi cũ5/5 PASS. Có2 lượt sửa, không nới/bỏ test. T16_RCA.md/progress đầu file là bằng chứng hiện tại; các phần DOING/FAIL phía dưới chỉ là lịch sử.
+
+Root cause: input transport/stop gắn với Scene.update khi render stall; continuous trace screencast có cảnh báo GPU ReadPixels và làm timing nặng. Tắt screencast chỉ đủ9/10 trong gate đầy đủ đầu; tách native keyup/heartbeat theo timer world.tickMs khỏi render mới đạt10/10 và5/5 lặp lại. Vẫn giữ trace DOM/network/console/sources/failure screenshots; không kết luận GPU driver cụ thể. Không đổi server-authoritative movement, footprint, sorting/occlusion0.4/180ms hoặc auth/reconnect.
+
+Checkpoint mới chứa apps/web/app/{world.tsx,world-input.ts,game/game.tsx,page.tsx,starter/page.tsx}, apps/web/test/world-input.test.ts, tests/e2e/world-lifecycle.spec.ts, playwright.config.ts và docs/{tasks,progress,HANDOFF,T16_RCA}. Hash checkpoint lấy từ git log sau commit, không dùng hash cũ cố định. Logs/t16-fix2-* và artifacts logs/t16-browser-final giữ local/ignored, cần copy riêng nếu chuyển máy. Không đưa secrets vào Git.
+
+Dừng sau T16, không bắt đầu T17: D05/A03 còn thiếu, A02/A03 còn D12. GAME_SPEC/server/domain/shared/asset không sửa; DB test schema006 đã có từ lượt trước, DB dev vẫn001 và không reset/migrate thêm trong phiên sửa. Khi resume: đọc trạng thái mới nhất, kiểm Git/DB config, không apply patch spec lịch sử hoặc tự mở D blockers. Không push/deploy/auto-dev/codex exec.
+
+## Trạng thái hiện hành — resume09/10/2026, T16 chưa nghiệm thu
+
+HEAD thực tế `4e63182`; Git sạch đầu phiên. T09–T11/T13–T15 đã DONE. T16 DOING: frontend lifecycle/input/HUD đã sửa và có test; **chưa tạo commit mới vì browser regression FAIL**. Không apply patch spec lịch sử hoặc làm lại task DONE.
+
+Thay đổi chưa commit: apps/web/app/world.tsx, world-input.ts, game/game.tsx, page.tsx, starter/page.tsx; apps/web/test/world-input.test.ts; tests/e2e/world-lifecycle.spec.ts; docs/tasks.md, progress.md, HANDOFF.md. Giữ nguyên diff này và logs/test-results khi chuyển máy; chúng chưa nằm trong checkpoint. GAME_SPEC/collision metadata/server không đổi.
+
+Lint/typecheck/build PASS,36 unit/integration+31 mock PASS, Prisma validate/runtime consistency PASS; DB7 suites PASS. E2E lượt1 6/10, lượt riêng2/5; lượt cuối6/10; lỗi chi tiết trong logs/t16-e2e-final.log. T16 lifecycle mới PASS ở lượt1, nhưng auth-room movement/multiplayer occlusion và có lượt starter approach FAIL. Chưa rõ root cause; không coi task DONE hoặc xác nhận regression toàn bộ PASS. Dừng sau3 lượt kiểm browser,0 task hoàn thành.
+
+Docker Desktop/compose PostgreSQL local healthy, DB test được deploy additive006_recovery; DB dev vẫn001, chưa migrate. Không reset/ghi đè .env. Không có cấu hình auth TTL thực được kiểm thấy; E2E dùng env test riêng. Forge image host_image sẵn, video route thiếu; không sinh asset. Không push/deploy/auto-dev/codex exec.
+
+Tiếp tục: xem progress đầu file và log/trace thất bại, bảo toàn diff/log trước mọi so sánh baseline4e63182. Điều tra focus/input/update cadence và movement/occlusion bằng dữ liệu thực, không đoán nguyên nhân hoặc nới tests. Verify đủ gate rồi mới mark T16 DONE/commit local. Task sau T17 còn D05/A03 (A02/A03 còn D12); không tự mở các quyết định này. Các trạng thái “Git sạch/T16 đủ dependency cho phiên sau” bên dưới chỉ là lịch sử trước phiên này.
+
 ## Trạng thái mới nhất sau checkpoint708ae90 — 08/10/2026
 
 Phiên tiếp tục đã xác nhận Git sạch và T09/T10/T11 DONE. Hoàn thành đúng3 task: T13 (57fcb62), T14 (202e999), T15 (checkpoint sau cập nhật này, xem git log). Gate cuối lint/typecheck/build,35 unit/integration+31 mock, DB7 suites và E2E9/9 PASS; không có lượt sửa gate thất bại. T13 xác thực/private state/room lifecycle, T14 shared Map/Area/Respawn validator, T15 strict input sequence + movement tests trên DB/WebSocket thật. Collision/Occlusion/art/CHỐT không sửa. Không push/deploy/reset DB/auto-dev.ps1/codex exec.
