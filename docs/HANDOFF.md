@@ -1,5 +1,15 @@
 # PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
 
+## Trạng thái hiện hành — T17 kỹ thuật DONE,09/10/2026
+
+Từ d3496cb/Git sạch, người dùng cho phép phạm vi Starter Village/area_01 SAFE giữ nguyên geometry/art, chỉ rendering/depth/occlusion/hiệu năng; chủ sản phẩm duyệt mỹ thuật trước production-ready. T17 dependency nay T14/T16/T59/T60, registry/bảng đồng bộ. A03 là task nghiệm thu asset riêng, giữ A01/A02/A03 TODO và D05/D12 BLOCKED cho phần chưa duyệt; không coi frame South đã có là bộ4 hướng hoàn chỉnh hoặc tự mở T18.
+
+T17 dùng delta aggregate targets và lookup objectId, không quét mọi prop để tìm target/restart tween khi snapshot ổn định; gom diagnostics mỗi frame khi cần. Unit1.000 object xa vẫn1 candidate gần; clear/disconnect/rejoin và local/remote giữ đúng fade0.4/tween180ms. Không đổi geometry/Y-sort semantics, server/physics/input/auth/art hoặc channel visibility. Không tạo asset mới cần duyệt; GAME_SPEC không sửa.
+
+Lint/typecheck/build PASS;39 unit/integration+31 mock PASS; DB7 suites và runtime consistency PASS; browser10/10 và lặp map/occlusion/editor4/4 PASS. Logs/t17-* giữ gate và lỗi cũ: docs guard scope chưa khớp (đã sửa docs); front-side staging đi quá thành(64,296) (đã sửa input setup test bằng bounded key presses thật và thêm assertion tọa độ, không đổi outcome/geometry/assertion depth/fade/timeout). Progress đầu file ghi chi tiết. Screenshot final house-front-visible đã xem; artifacts/logs ignored cần copy riêng nếu chuyển máy.
+
+Checkpoint chứa apps/web/app/world.tsx, packages/shared/src/occlusion.ts và test, tests/e2e/occlusion.spec.ts, docs/tasks/progress/HANDOFF. Hash lấy từ git log sau commit, không giả định checkpoint cố định. Không tiếp tục task ngoài yêu cầu hiện tại. T18 còn A02/D05; art catalog/appearance/content chưa duyệt và D14 FPS/tải vẫn còn. Không push/deploy/reset DB hoặc auto-dev/codex exec. Các mục T17 bị chặn toàn gói ở dưới là lịch sử trước quyết định scope mới.
+
 ## Trạng thái hiện hành — T16 DONE, 09/10/2026
 
 Phiên sửa tiếp tục từ HEAD4e63182 và giữ nguyên toàn bộ diff T16 chưa commit. T16 nay DONE: lint/typecheck/build,37 unit/integration+31 mock, DB7 suites và runtime consistency PASS; browser đầy đủ10/10, kiểm ổn định nhóm lỗi cũ5/5 PASS. Có2 lượt sửa, không nới/bỏ test. T16_RCA.md/progress đầu file là bằng chứng hiện tại; các phần DOING/FAIL phía dưới chỉ là lịch sử.

@@ -5,6 +5,10 @@ export class OcclusionManager {
   private cells = new Map<string, MapObject[]>();
   private covered = new Map<string, Set<string>>();
   private active = new Set<string>();
+  private changed = new Set<string>();
+  private candidateChecks = 0;
+  get changedObjectIds(): ReadonlySet<string> { return this.changed; }
+  get lastCandidateChecks() { return this.candidateChecks; }
   readonly objects: Map<string, MapObject>;
   constructor(objects: MapObject[], private cellSize = 128) {
     this.objects = new Map(objects.map(o=>[o.objectId,o]));
@@ -17,10 +21,12 @@ export class OcclusionManager {
     }
   }
   update(actors: VisibleActor[]): ReadonlySet<string> {
+    this.candidateChecks = 0;
     const next=new Map<string,Set<string>>();
     for(const actor of actors) {
       const previous=this.covered.get(actor.id),ids=new Set<string>();
       for(const object of this.cells.get(`${Math.floor(actor.x/this.cellSize)},${Math.floor(actor.y/this.cellSize)}`)??[]) {
+        this.candidateChecks++;
         const region=object.occlusionRegion!;
         // Ground footprint's rear envelope and authored region describe behind-object coverage.
         // Enter inside an inset; retain only within the original region (no outside fade).
@@ -30,10 +36,12 @@ export class OcclusionManager {
       next.set(actor.id,ids);
     }
     this.covered=next;
-    this.active=new Set([...next.values()].flatMap(ids=>[...ids]));
+    const active=new Set([...next.values()].flatMap(ids=>[...ids]));
+    this.changed=new Set([...this.active,...active].filter(id=>this.active.has(id)!==active.has(id)));
+    this.active=active;
     return this.active;
   }
-  clear() { this.covered.clear(); this.active.clear(); }
+  clear() { this.changed=new Set(this.active); this.covered.clear(); this.active.clear(); this.candidateChecks=0; }
   actorDepth(actor: Point, body?: Bounds) {
     let depth=actor.y+0.1;
     for(const object of this.visibleObjects(body??{x:actor.x,y:actor.y,width:1,height:1})) {

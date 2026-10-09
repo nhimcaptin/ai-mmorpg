@@ -1,5 +1,21 @@
 # Tiến độ dự án 2D MMORPG
 
+## T17 rendering kỹ thuật DONE — phạm vi được duyệt09/10/2026
+
+Đầu phiên HEADd3496cb/Git sạch. Người dùng xác nhận giữ Starter Village/area_01 SAFE, geometry đã duyệt và painted/cartoon soft shading; T17 chỉ map rendering/depth/Y-sort/occlusion/hiệu năng, không NPC/Portal/Monster/loot/balance. Chủ sản phẩm duyệt mỹ thuật trước production-ready. Đây là phê duyệt phạm vi và người duyệt, không phải phê duyệt mọi nội dung D05/D12.
+
+Đã tách minh bạch T17 kỹ thuật khỏi nghiệm thu asset A03: dependency registry/bảng cùng T14/T16/T59/T60, không còn gate D05/A03 toàn gói cho rendering trên map hiện hữu. A01/A02/A03 giữ nguyên TODO/acceptance/dependency; D05/D12 vẫn BLOCKED phần chưa duyệt. A03 vẫn nghiệm thu map/player với A02; A02/T18 vẫn chibi4 hướng128×128, IDLE4/RUN8 và approval. Frame South đang dùng chỉ là asset test được ghi rõ, không hoàn thành animation production. Không tạo/sửa ảnh, không dùng fixture Phase1 làm map production hoặc gọi Forge khi không cần asset mới. GAME_SPEC không sửa.
+
+Giữ loader/Tiled/geometry và Y-sort engine T14/T60, cải thiện phần hot path còn thiếu: OcclusionManager xuất delta target theo aggregate actors; snapshot ổn định không restart tween hoặc quét mọi prop tìm target. Phaser lookup props bằng objectId, chỉ animate object đổi target, clear/disconnect/rejoin vẫn restore đúng0.4/1. Cached diagnostics được gom1 lần mỗi frame khi fade thay đổi, không đọc lại mọi image trên mỗi snapshot/tween. Spatial index/authorized actor visibility không đổi; không phát sinh WebSocket opacity/channel.
+
+Bằng chứng hiệu năng là số công việc deterministic, không tự chốt FPS/D14: unit thêm1.000 object kỹ thuật xa mà candidate checks của actor gần vẫn1, cùng kết quả với1 object; snapshot nhiều actor vẫn cùng coverage không tạo delta mới; clear/rejoin/last actor leave sinh đúng transitions. Fixture chỉ ở test, không vào registry/map production. Browser thêm assertion target delta0 khi coverage ổn định, vẫn kiểm intermediate fade, local/remote aggregate và camera/editor/collision.
+
+Gate cuối lint/typecheck/build PASS; pnpm test39 unit/integration+31 mock PASS, DB7 suites PASS (logs/t17-*); runtime consistency --check PASS. E2E cuối **10/10 PASS** (logs/t17-e2e-final.log,2.3 phút), lặp map/occlusion/editor **4/4 PASS** (logs/t17-stability-final.log,1.5 phút). Đã xem screenshot house-front-visible sau gate. Auth/single-session/reconnect, native input, collision/wall-slide, camera/resize, SAFE IDs và no runtime pageerror giữ PASS.
+
+Lỗi được giữ: mock guard lần đầu30/31 do bảng D05/asset column chưa đồng bộ với registry scope mới; sửa tài liệu, không đổi guard. Full E2E đầu10/10 nhưng stability3/4: trace actor(64,296), khác staging front(110,360), depth296.1; runner giữ key trong lúc polling dẫn tới quá waypoint, không phải geometry/depth rule sai. Setup front dùng atomic bounded key presses qua input thật, delay tính từ world config, thêm assertion x>90/x<=110/y>340/y<=360; giữ nguyên depth>400, fade và phần held-input wall-slide. Không teleport/set position/test-only game hooks hoặc nới assertion/timeout. Art/collision/server/core không thay. Logs/t17-stability-failed-artifacts giữ trace/screenshot. Mọi issue trong ngân sách3 lượt sửa.
+
+T17 DONE chỉ cho phạm vi kỹ thuật trên map hiện hữu. Checkpoint local sau docs gate, lấy hash từ git log. Không tự mở T18/A01/A02/A03/D05/D12, không thay luật CHỐT, push/deploy/reset DB/auto-dev/codex exec. Nghiệm thu FPS/tải/thiết bị production và mỹ thuật/animation/catalog đầy đủ vẫn chờ quyết định/approval.
+
 ## T16 DONE — sửa regression và dừng phiên, 09/10/2026
 
 Tiếp tục đúng diff T16 DOING từ HEAD4e63182, không discard hoặc bắt đầu T17. Đã đọc quy tắc/docs, trace/console/server output và xem cả4 screenshot thất bại; so sánh nguồn checkpoint: server/domain/geometry không khác, input gửi qua Scene.update vốn có ở HEAD. Điều tra/thử nghiệm và giới hạn kết luận chi tiết ở T16_RCA.md. Hai yếu tố: render/WebGL capture bị stall và input heartbeat/stop phụ thuộc frame; các waypoint lệch khiến assertion occlusion/collision thất bại. Không quy lỗi driver cụ thể hoặc khẳng định server/collision sai.

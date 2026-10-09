@@ -23,7 +23,7 @@ D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa t
 | D02 | Bảng stats theo class/Realm/Star, EXP từng sao, công thức tổng hợp và làm tròn ngoài damage/healing; chi phí/tỷ lệ đột phá, vật liệu; xử lý ở Đấu Đế 9★100%. Phần numeric T08 đã duyệt, không mở khóa các câu hỏi còn lại. | T22–T23, T34 |
 | D03 | Công thức damage/DEF/crit, nhịp đánh/range, giới hạn stat; target hợp lệ, tấn công khi di chuyển, line-of-sight; cast bị hủy/hoàn chi phí khi nào; effect, threat, taunt và CC ngoài World Boss. | T26–T28, T38, T50 |
 | D04 | Danh mục item/affix, multiplier từng rarity, phân bố roll, binding theo từng source, giá mua/bán; cách/chi phí mở túi; EnhancementConfig và nguồn đá. | T24–T25, T32–T35, T42 |
-| D05 | Danh sách map/area, spawn/NPC/portal/respawn, nội dung Tiled; interaction range; monster stats, respawn, aggro/leash, LootTable/Gold/EXP. | A03–A04, T17–T19, T27, T30, T36–T37 |
+| D05 | Starter Village/area_01 và phạm vi rendering T17 đã được xác nhận riêng09/10. BLOCKED còn danh mục/nội dung map/area mở rộng, spawn/NPC/portal/respawn; interaction range; monster stats, respawn, aggro/leash, LootTable/Gold/EXP. | A03–A04, T18–T19, T27, T30, T36–T37 |
 | D06 | Party tối đa bao nhiêu; xử lý leader rời/kick/offline dài hạn, giải tán và lời mời; “eligible party” gồm ai, thời điểm chốt membership, điều kiện ngoài cùng Map+Area; EXP 5% làm tròn và tương tác penalty. | T29–T31 |
 | D07 | Bộ skill từng class/grade, cách học/nâng cấp, valid cast và EXP, ngưỡng cấp, hotkey; duplicate book xử lý thế nào ngoài việc không đổi EXP; số slot trống được phép trong cấu trúc 5 slot. | A05, T38–T39 |
 | D08 | Amount/giá potion, cách diễn giải threshold; Auto Farm chọn target/phạm vi/lộ trình/skill/loot và điều kiện dừng; offline auto kích hoạt, thời lượng, rate EXP, giới hạn, Gold có được nhận không và áp dụng penalty/cap thế nào. | T40, T47–T48 |
@@ -87,13 +87,15 @@ Gói nội dung lớn A04–A06 được tách theo NPC/monster/Visual Set/map t
 
 ## 3. World và multiplayer nền tảng
 
+Phân tách được người dùng cho phép09/10/2026: T17 chỉ rendering kỹ thuật trên map T59/T60 hiện hữu; dependency D05/A03 toàn gói được thay bằng T59/T60 DONE. A01/A02/A03 vẫn là task asset riêng, không đổi acceptance/status/dependency và không coi hoàn tất vì T17. A03 tiếp tục chờ A01/A02/D05/D12 cho nghiệm thu map/player production, A02/T18 giữ chibi4 hướng128×128/IDLE4/RUN8. Chủ sản phẩm là người duyệt mỹ thuật trước production-ready; đây chỉ là phần người duyệt của D12, không mở catalog/appearance/animation combat chưa CHỐT. D05/D12 vẫn BLOCKED cho phần nội dung còn thiếu. Không phát sinh asset/art mới trong T17.
+
 | ID | Tác vụ nhỏ | Phụ thuộc | Asset | Tiêu chí nghiệm thu |
 |---|---|---|---|---|
 | T13 | Colyseus room và join có xác thực | T04, T09–T10 | Không | DONE: hai account cùng room/Character UUID ổn định, strict join và token giả/wrong-area reject, public state chỉ version/player IDs/position/direction/sequence. Room giữ30s grace rồi dispose khi rỗng, clear state/listener và recreate đúng. Lint/typecheck/build,30 unit+31 mock, DB7 suite và E2E9/9 PASS. |
 | T14 | Loader Map/Area và collision thuần domain — DONE | T05, T13 | Không | Shared registry tách Map/Area/Respawn, validate IDs/references/bounds/polygon/spawn footprint; Starter dùng cùng tọa độ FE/BE. Building/tree/water footprint tests, lint/typecheck/build,33 unit/integration+31 mock, DB7 suites và E2E9/9 PASS; Collision/Occlusion giữ nguyên. |
 | T15 | Movement authoritative và input sequence — DONE | T04, T13–T14 | Không | Room dùng chung strict intent/monotonic sequence guard; tick server tính movement/collision hiện hữu. Spam/duplicate/reordered/teleport/diagonal/timeout/boundary đã verify qua DB+WS thật; lint/typecheck/build,35 unit/integration+31 mock, DB7 suites và E2E9/9 PASS. |
 | T16 | Phaser lifecycle, input và bridge HUD — DONE | T11, T13, T15 | Không | Mount/unmount/reconnect không nhân listener/canvas; React chỉ nhận dữ liệu HUD, không chứa state movement từng tick; input bỏ qua khi focus text/panel theo thiết kế UI. Native keyup/heartbeat không chờ render; lint/typecheck/build,37 unit/integration+31 mock, DB7 suites, E2E10/10 và nhóm regression5/5 PASS; xem T16_RCA.md/progress. |
-| T17 | Render map, depth và tree occlusion | T14, T16 | A03 | Map Tiled tải đúng; Y-sort theo chân; đi dưới tán nhưng không xuyên trunk/building/water; occlusion chung theo GAME_SPEC 2.5/T60: mọi authorized local/remote actor, fade0.4/150–200ms, không đổi collision server. |
+| T17 | Rendering kỹ thuật Starter Village, depth/Y-sort và occlusion — DONE | T14, T16, T59, T60 | Asset hiện hữu; không tạo mới | Phạm vi người dùng duyệt09/10: starter_village/area_01 SAFE, giữ nguyên art/geometry. Map Tiled tải đúng; Y-sort theo chân; đi dưới tán không xuyên trunk/building; water giữ kiểm thử domain hiện có, không thêm water vào làng. Occlusion GAME_SPEC2.5: authorized local/remote, fade0.4/150–200ms, không đổi collision server. Spatial query/transition chỉ xử lý object liên quan và thay đổi, không restart tween ở snapshot ổn định; kiểm số lượng công việc, không tự chốt FPS/D14. Lint/typecheck/build,39 unit/integration+31 mock, DB7 suites, E2E10/10 và lặp4/4 PASS. Không NPC/Portal/Monster/loot/balance hoặc nghiệm thu production animation/art mới. |
 | T18 | Player animation, scale và camera responsive | T15–T17 | A02 | N/E/S/W, IDLE 4/RUN 8×128; mapping hướng chéo nhất quán; origin/baseline/shadow ổn định; scale map/camera cấu hình, preview 70–100 world px; viewport 1920×1080 và resize/zoom clamp qua browser. |
 | T19 | Đặt entities và spawn theo dữ liệu map | T05, T14, T17, D05 | A03–A04 (phần map đầu) | NPC/monster/spawn/respawn ID đúng catalog; vị trí không mắc collision; render cùng vị trí server; spawn sai bị validator từ chối. |
 | T20 | Đồng bộ, reconciliation và reconnect | T09, T13, T15, T18, D01 | A02–A03 | Hai browser thấy nhau di chuyển; mô phỏng latency/mất gói không tạo teleport hay duplicate player; reconnect áp dụng chính sách phiên và snapshot server, không ghi đè bằng vị trí client. |
@@ -602,15 +604,14 @@ Registry dưới đây là nguồn trạng thái máy đọc; bảng phía trên
     {
       "id": "T17",
       "kind": "task",
-      "status": "TODO",
+      "status": "DONE",
       "dependencies": [
         "T14",
         "T16",
-        "D05"
+        "T59",
+        "T60"
       ],
-      "assets": [
-        "A03"
-      ],
+      "assets": [],
       "e2e": true
     },
     {

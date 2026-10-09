@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { STARTER_MAP } from '@mmorpg/shared';
 async function actors(page:Page) {return JSON.parse(await page.getByTestId('world').getAttribute('data-players')??'[]') as {id:string;x:number;y:number}[];}
 async function local(page:Page) {const id=await page.getByTestId('world').getAttribute('data-local-id');return (await actors(page)).find(a=>a.id===id)!;}
 async function props(page:Page) {return JSON.parse(await page.getByTestId('world').getAttribute('data-props')??'[]') as {id:string;alpha:number;target:number;depth:number}[];}
@@ -8,6 +9,19 @@ async function walk(page:Page,key:string,axis:'x'|'y',target:number) {
   try {await expect.poll(async()=>(await local(page))[axis],{intervals:[20],timeout:6000})[target<from?'toBeLessThanOrEqual':'toBeGreaterThanOrEqual'](target);}
   finally {await page.keyboard.up(key);}
   await page.waitForTimeout(200);
+}
+async function approach(page:Page,key:string,axis:'x'|'y',target:number) {
+  await page.bringToFront();
+  const from=(await local(page))[axis],sign=target<from?-1:1;
+  // Atomic key presses release before trace/DOM polling; no teleport or test-only game hook.
+  for(let step=0;step<30;step++) {
+    const position=(await local(page))[axis];
+    if(sign*(target-position)<=0) return;
+    const delay=Math.min(200,Math.max(STARTER_MAP.world.tickMs*1.5,Math.abs(target-position)/STARTER_MAP.world.moveSpeed*1000));
+    await page.keyboard.press(key,{delay});
+    await page.waitForTimeout(STARTER_MAP.world.tickMs*2);
+  }
+  throw new Error(`Real keyboard approach did not reach ${axis}=${target}`);
 }
 async function fade(pages:Page[],id:string,target:number) {for(const p of pages)await expect.poll(async()=> (await props(p)).find(o=>o.id===id)!.alpha).toBeCloseTo(target,3);}
 test('two clients aggregate house occlusion and preserve it until last actor leaves; disconnect/rejoin clears stale coverage',async({browser,baseURL})=>{
@@ -24,6 +38,8 @@ test('two clients aggregate house occlusion and preserve it until last actor lea
   });
   await walk(first,'w','y',280);await walk(first,'a','x',260);
   await fade([first,second],'house-0',0.4); // second sees a remote character trigger fade.
+  // Stable snapshots do not restart tweens or scan every prop for target changes.
+  for(const page of [first,second]) await expect.poll(async()=>JSON.parse(await page.getByTestId('world').getAttribute('data-occlusion-work')??'{}').changed).toBe(0);
   expect(await first.evaluate(()=>(window as unknown as {fadeSamples:number[]}).fadeSamples.some(a=>a>0.4&&a<1))).toBe(true);
   await walk(second,'w','y',280);await walk(second,'a','x',260);
   await fade([first,second],'house-0',0.4);
@@ -57,10 +73,11 @@ test('front-side actor is visible without fading the house; held input slides an
   const first=await a.newPage(),observer=await b.newPage();
   await first.goto('/starter');await observer.goto('/starter');
   for(const p of [first,observer]) await expect(p.getByTestId('world')).toHaveAttribute('data-status','connected');
-  // Keep the stopping target safely in front despite the existing input/patch cadence.
-  await walk(first,'a','x',110);await walk(first,'w','y',360);
+  await approach(first,'a','x',110);await approach(first,'w','y',360);
   await fade([first,observer],'house-0',1);
   const actor=await local(first);
+  expect(actor.x).toBeGreaterThan(90);expect(actor.x).toBeLessThanOrEqual(110);
+  expect(actor.y).toBeGreaterThan(340);expect(actor.y).toBeLessThanOrEqual(360);
   for(const p of [first,observer]) await expect.poll(async()=>{
     const visuals=JSON.parse(await p.getByTestId('world').getAttribute('data-rendering')??'[]') as {id:string;depth:number;alpha:number}[];
     return visuals.find(v=>v.id===actor.id)?.depth??0;

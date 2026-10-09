@@ -2,6 +2,25 @@ import { expect, it } from 'vitest';
 import { OcclusionManager, STARTER_MAP, STARTER_OBJECT_METADATA, mapObjectSchema, polygonSchema, footprintOverlapsRect, rearBoundaryY } from '../src/index.js';
 const house=STARTER_MAP.props.find(p=>p.id==='house-0')!;
 const behind={id:'local',x:260,y:280};
+it('only changed aggregate targets need rendering; disconnect and rejoin publish the right transitions',()=>{
+  const manager=new OcclusionManager([house]);
+  manager.update([behind]);expect([...manager.changedObjectIds]).toEqual([house.objectId]);
+  for (const actors of [[behind],[behind,{...behind,id:'remote'}],[{...behind,id:'remote'}]]) {
+    manager.update(actors);expect(manager.changedObjectIds.size).toBe(0);expect(manager.target(house.objectId)).toBe(0.4);
+  }
+  manager.clear();expect([...manager.changedObjectIds]).toEqual([house.objectId]);expect(manager.target(house.objectId)).toBe(1);
+  manager.update([]);expect(manager.changedObjectIds.size).toBe(0);
+  manager.update([behind]);expect([...manager.changedObjectIds]).toEqual([house.objectId]);
+  manager.update([]);expect([...manager.changedObjectIds]).toEqual([house.objectId]);
+});
+it('distant technical objects do not increase per-actor spatial candidate checks',()=>{
+  const far=Array.from({length:1000},(_,i)=>({...house,objectId:`technical-${i}`,occlusionRegion:{x:10000+i*512,y:10000,width:100,height:100}}));
+  const small=new OcclusionManager([house]),large=new OcclusionManager([house,...far]);
+  small.update([behind]);large.update([behind]);
+  expect(large.lastCandidateChecks).toBe(small.lastCandidateChecks);expect(large.lastCandidateChecks).toBe(1);
+  expect([...large.changedObjectIds]).toEqual([house.objectId]);
+  large.update([behind]);expect(large.changedObjectIds.size).toBe(0);
+});
 it('front of an angled base remains opaque and actor renders in front, even above the global anchor',()=>{
   const manager=new OcclusionManager([house]);
   const front={id:'local',x:150,y:325};

@@ -31,10 +31,10 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
         private keys = new MovementKeys();
         private sequence = 0;
         private disposed = false;
-        private props: { data: typeof STARTER_MAP.props[number]; image: import('phaser').GameObjects.Image }[] = [];
+        private props = new Map<string, { data: typeof STARTER_MAP.props[number]; image: import('phaser').GameObjects.Image }>();
         private occlusion = new OcclusionManager(starter ? STARTER_MAP.props : []);
-        private targets = new Map<string, number>();
         private propDiagnostics = new Map<string, {id:string;depth:number;alpha:number;target:number}>();
+        private propsDirty = false;
         private overlay?: import('phaser').GameObjects.Graphics;
         private actorOverlay?: import('phaser').GameObjects.Graphics;
         preload() {
@@ -46,9 +46,10 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
           if (starter) {
             this.add.image(0, 0, 'terrain').setOrigin(0).setDepth(-1);
             for (const data of STARTER_MAP.props) {
-              this.props.push({ data, image: this.add.image(data.x, data.y, data.id).setOrigin(0).setDisplaySize(data.width, data.height).setDepth(data.depth) });
+              this.props.set(data.objectId, { data, image: this.add.image(data.x, data.y, data.id).setOrigin(0).setDisplaySize(data.width, data.height).setDepth(data.depth) });
               this.propDiagnostics.set(data.id,{id:data.id,depth:data.depth,alpha:1,target:1});
             }
+            element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);
             element.dataset.mapId = world.id; element.dataset.areaId = STARTER_MAP.area.id; element.dataset.respawnId = STARTER_MAP.respawn.id;
             element.dataset.pkAllowed = String(STARTER_MAP.area.pkAllowed);
           } else {
@@ -118,6 +119,21 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
             camera.setViewport((this.scale.width - width) / 2, (this.scale.height - height) / 2, width, height);
           }
         }
+        private applyOcclusionChanges() {
+          for (const id of this.occlusion.changedObjectIds) {
+            const prop=this.props.get(id);
+            if (!prop) continue;
+            const target=this.occlusion.target(id);
+            this.tweens.killTweensOf(prop.image);
+            const publish=()=> {
+              this.propDiagnostics.set(prop.data.id,{id:prop.data.id,depth:prop.image.depth,alpha:prop.image.alpha,target});
+              this.propsDirty=true;
+            };
+            this.tweens.add({targets:prop.image,alpha:target,duration:prop.data.fadeDurationMs,ease:'Linear',onUpdate:publish,onComplete:publish});
+          }
+          // Deterministic diagnostic work counts; no FPS or device target is invented.
+          element.dataset.occlusionWork=JSON.stringify({candidates:this.occlusion.lastCandidateChecks,changed:this.occlusion.changedObjectIds.size});
+        }
         private async connect(ClientClass: typeof Client) {
           try {
             setStatus('Đang kết nối server');
@@ -146,17 +162,7 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
               });
               for (const [id, visual] of this.sprites) if (!present.has(id)) { visual.image.destroy(); visual.shadow.destroy(); this.sprites.delete(id); }
               this.occlusion.update(players);
-              for (const prop of this.props) {
-                const { data } = prop;
-                const target=this.occlusion.target(data.objectId);
-                if(this.targets.get(data.objectId)!==target) {
-                  this.targets.set(data.objectId,target);
-                  this.tweens.killTweensOf(prop.image);
-                  const publish=()=>{this.propDiagnostics.set(data.id,{id:data.id,depth:prop.image.depth,alpha:prop.image.alpha,target});element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);};
-                  this.tweens.add({targets:prop.image,alpha:target,duration:data.fadeDurationMs,ease:'Linear',onUpdate:publish,onComplete:publish});
-                }
-              }
-              element.dataset.props = JSON.stringify(this.props.map(({ data, image }) => ({ id: data.id, depth: image.depth, alpha: image.alpha })));
+              this.applyOcclusionChanges();
               element.dataset.camera = JSON.stringify({ zoom: this.cameras.main.zoom, x: this.cameras.main.scrollX, y: this.cameras.main.scrollY });
               // Network positions stay in Phaser; DOM diagnostic avoids React movement state.
               element.dataset.players = JSON.stringify(players);
@@ -169,8 +175,7 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
             });
             room.onLeave(() => {
               if (cancelled || this.disposed) return;
-              this.occlusion.clear(); this.targets.clear();
-              for(const prop of this.props) { this.tweens.killTweensOf(prop.image); const publish=()=>{this.propDiagnostics.set(prop.data.id,{id:prop.data.id,depth:prop.image.depth,alpha:prop.image.alpha,target:1});element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);};this.tweens.add({targets:prop.image,alpha:1,duration:prop.data.fadeDurationMs,onUpdate:publish,onComplete:publish}); }
+              this.occlusion.clear(); this.applyOcclusionChanges();
               for(const visual of this.sprites.values()) {visual.image.destroy();visual.shadow.destroy();} this.sprites.clear();
               element.dataset.players='[]';
               element.dataset.status = 'disconnected';
@@ -191,6 +196,10 @@ export default function World({ starter = false, auth, onSessionInvalid }: { sta
           if (this.room?.connection.isOpen) this.room.send(MOVEMENT_MESSAGE, { version: PROTOCOL_VERSION, sequence: this.sequence++, x, y });
         }
         update() {
+          if(this.propsDirty) {
+            element.dataset.props=JSON.stringify([...this.propDiagnostics.values()]);
+            this.propsDirty=false;
+          }
           if(this.overlay?.visible) {
             this.actorOverlay!.clear();
             for(const [id,v] of this.sprites) this.actorOverlay!.lineStyle(2,id===(auth?.characterId ?? this.room?.sessionId)?0x00ff00:0xff00ff).strokeRect(v.image.x-world.footprint.halfWidth,v.image.y-world.footprint.halfHeight,world.footprint.halfWidth*2,world.footprint.halfHeight*2);
