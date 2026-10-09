@@ -1,0 +1,16 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>Female clothed Layer-first v3 — chờ duyệt</title>
+<style>body{background:#27313d;color:white;font:16px system-ui;padding:24px}canvas{background:repeating-conic-gradient(#48505b 0% 25%,#353d48 0% 50%) 0/16px 16px}label{display:inline-block;margin:8px}img{max-width:100%}button{padding:8px;margin:4px}</style>
+<h1>Female DOWN / IDLE / frame 0 — Body kín đáo</h1><p>Chờ duyệt mỹ thuật, chưa production. 128×128 RGBA, origin (64,113). Male giữ nguyên chuẩn đã duyệt.</p>
+<div id="controls"></div><button id="body">Body Only</button><button id="full">Full</button><button id="nohair">No Hair</button>
+<p><canvas width="128" height="128"></canvas></p><p id="status">Đang tải…</p>
+<h2>Male / Female cùng tỷ lệ</h2><img src="male-female-pair.png" alt="Male đã duyệt và Female candidate"><img src="body-pair.png" alt="So Body hai nhân vật">
+<h2>Full, Body Only và toggle</h2><img src="toggle-preview.png" alt="Tám trạng thái"><h2>Layer độc lập</h2><img src="layer-preview.png" alt="Bảy layer">
+<script type="module">
+const m=await (await fetch('manifest.json')).json(),imgs={},cbs={};const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
+function draw(){ctx.clearRect(0,0,128,128);for(const n of m.renderOrder)if(cbs[n].checked)ctx.drawImage(imgs[n],0,0);}
+for(const n of m.renderOrder){const im=new Image();im.src=m.layers[n];await im.decode();imgs[n]=im;const label=document.createElement('label'),cb=document.createElement('input');cb.type='checkbox';cb.checked=true;cb.dataset.layer=n;cb.onchange=draw;label.append(cb,n);document.querySelector('#controls').append(label);cbs[n]=cb;}
+document.querySelector('#body').onclick=()=>{for(const n of m.renderOrder)cbs[n].checked=n==='Body';draw();};
+document.querySelector('#full').onclick=()=>{for(const n of m.renderOrder)cbs[n].checked=true;draw();};
+document.querySelector('#nohair').onclick=()=>{cbs.HairBack.checked=cbs.HairFront.checked=false;draw();};
+draw();window.previewReady=true;document.querySelector('#status').textContent='7 PNG đã tải; tỷ lệ thật 1:1. Weapon trống. HairFront render sau trang phục, HairBack trước Body.';
+</script></html>

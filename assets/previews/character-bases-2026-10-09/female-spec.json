@@ -1,0 +1,15 @@
+{
+  "schema": "generate2dsprite.master_spec.v1",
+  "name": "female-base-south-preview",
+  "subject": "original adult female chibi fantasy cultivation base character, full body",
+  "identity": "Adult female, youthful anime face, dark brown hair tied simply with a small plain ribbon, clear hands and feet, moderately large head and small readable body. Neutral cream tunic, muted slate trousers, simple brown shoes; no armor or class symbols. This is a visual master candidate wearing neutral sample clothing, not a separated production body layer.",
+  "pose": "relaxed symmetrical standing idle, empty hands at sides",
+  "facing": "front",
+  "view": "top-down three-quarter game camera, facing South toward the viewer",
+  "class": "hero",
+  "finish": "hd",
+  "pronoun": "she",
+  "genre": "a 2D fantasy cultivation MMORPG with painted cartoon soft shading, original TKL-inspired aesthetics without copying any character",
+  "extra_bans": ["weapons", "baked shadow", "skill effects", "pixel art", "class insignia"],
+  "extra": "Match the provided Starter Village environment's warm soft painted shading and clean readable outlines. Male and Female must share display height, chibi proportions and foot baseline. Neutral modest clothing is a preview layer concept only; gender independent of class. Approval pending. Native transparent alpha is required."
+}

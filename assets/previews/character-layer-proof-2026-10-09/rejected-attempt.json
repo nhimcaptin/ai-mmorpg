@@ -1,0 +1,12 @@
+{
+  "status": "BLOCKED_BY_BACKEND_MODERATION",
+  "attempt": "male-anatomical-body-atlas",
+  "backend": "Codex Client image_gen",
+  "httpStatus": 400,
+  "code": "moderation_blocked",
+  "moderationStage": "output",
+  "category": "sexual",
+  "requestId": "8c881ffa-0115-4ac2-a65e-c0ef21f2f4d0",
+  "artifact": null,
+  "fallbackDisclosure": "Safe all-gray faceless inanimate mannequin used for engineering only. This is not the approved character body and does not pass final acceptance."
+}

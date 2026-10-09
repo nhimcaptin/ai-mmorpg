@@ -1,0 +1,52 @@
+{
+  "artSource": "host_image",
+  "backend": "Codex Client native image_gen",
+  "modelId": null,
+  "rawEdit": {
+    "path": "assets\\previews\\character-layer-first-v3-male-r2\\body-edit-raw.png",
+    "sha256": "eb3d0787d3be195c8623f6a3ab3bf55bd3d43d0998cd70ce1ef47aa0fd18a335"
+  },
+  "prompt": "body-edit-prompt.txt",
+  "originalGeneratedFilename": "exec-c7aabd6b-f6cc-4ff6-a4c0-62dd513cbd71.png",
+  "retainedBodyFaceSource": {
+    "path": "assets\\previews\\character-layer-first-v3-male\\layers\\Body.png",
+    "sha256": "9186c918694ecd12ec608c69b1f352a499c67ba7d720491be5d21bdfc76679c3"
+  },
+  "retainedHair": {
+    "path": "assets\\previews\\character-layer-first-v3-male\\layers\\Hair.png",
+    "sha256": "02d5cb618f4f7e815f7e65e151f7ea4032cea9baa2870d50e484e4d2d7d64e1f"
+  },
+  "garmentSource": {
+    "path": "assets\\previews\\character-layer-first-v3-male\\parts-raw.png",
+    "sha256": "11d8b475ddb47ca1040d60c3aca04007b12ff1f0856d12a3d023b94beee3f652"
+  },
+  "sourceProvenance": "assets\\previews\\character-layer-first-v3-male\\provenance.json",
+  "processing": "Forge edge hygiene/despill; premultiplied registration; preserve original face/lower body; composite only",
+  "outputs": {
+    "Body": {
+      "path": "assets\\previews\\character-layer-first-v3-male-r2\\layers\\Body.png",
+      "sha256": "71728d28a2d6ce973468dcc6a4e7d692ddee1f88a00b2f691dfb8dd7912a0b7c"
+    },
+    "Bottom": {
+      "path": "assets\\previews\\character-layer-first-v3-male-r2\\layers\\Bottom.png",
+      "sha256": "a0d014c72a1f25bf3770d75e1d9ccdb5f4ab70d92f57cfe7a9af4951a2605119"
+    },
+    "Shoes": {
+      "path": "assets\\previews\\character-layer-first-v3-male-r2\\layers\\Shoes.png",
+      "sha256": "a0375a83c4f8dd9f19453b538944c0faba7d0839afbdd69066ed245459a21f77"
+    },
+    "Top": {
+      "path": "assets\\previews\\character-layer-first-v3-male-r2\\layers\\Top.png",
+      "sha256": "01ade8556a630452f7e90adaedcddd3a12c6cb20f225a0f0bf48fd474e51a0a2"
+    },
+    "Hair": {
+      "path": "assets\\previews\\character-layer-first-v3-male-r2\\layers\\Hair.png",
+      "sha256": "02d5cb618f4f7e815f7e65e151f7ea4032cea9baa2870d50e484e4d2d7d64e1f"
+    },
+    "Weapon": {
+      "path": "assets\\previews\\character-layer-first-v3-male-r2\\layers\\Weapon.png",
+      "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee"
+    }
+  },
+  "productionReady": false
+}

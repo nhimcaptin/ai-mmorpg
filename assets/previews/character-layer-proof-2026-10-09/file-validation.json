@@ -1,0 +1,160 @@
+{
+  "technicalFilesStatus": "PASS",
+  "overallAcceptance": "BLOCKED",
+  "files": [
+    {
+      "sex": "male",
+      "layer": "body",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "male",
+      "layer": "hair_back",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "male",
+      "layer": "hair_front",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "male",
+      "layer": "shirt",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "male",
+      "layer": "pants",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "male",
+      "layer": "shoes",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "male",
+      "layer": "weapon",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "body",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "hair_back",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "hair_front",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "shirt",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "pants",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "shoes",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    },
+    {
+      "sex": "female",
+      "layer": "weapon",
+      "rgba128": true,
+      "equalsMaster": false,
+      "origin": [
+        64,
+        113
+      ]
+    }
+  ],
+  "nonWeaponLayersUnique": true,
+  "paintedHiddenBody": [
+    {
+      "sex": "male",
+      "paintedBodyPixelsUnderClothing": 1252,
+      "bodyStyle": "Unapproved gray inanimate mannequin; anatomical content exists but character fidelity fails"
+    },
+    {
+      "sex": "female",
+      "paintedBodyPixelsUnderClothing": 1203,
+      "bodyStyle": "Unapproved gray inanimate mannequin; anatomical content exists but character fidelity fails"
+    }
+  ],
+  "scope": "Unique files/hidden content are not semantic layer approval; do not infer production PASS"
+}

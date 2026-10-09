@@ -1,0 +1,14 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><title>Male layer-first v3 — BLOCKED / chờ duyệt</title>
+<style>body{background:#27313d;color:#fff;font:16px system-ui;padding:24px}canvas{background:repeating-conic-gradient(#48505b 0% 25%,#353d48 0% 50%) 0/16px 16px}label{display:inline-block;margin:8px}img{max-width:100%}a{color:#9de}</style>
+<h1>Male DOWN / IDLE / frame 0 — thử nghiệm v3</h1><p>BLOCKED: chưa duyệt mỹ thuật/registration. Không production, không animation. Khung 128×128, origin (64,113).</p>
+<div id="controls"></div><p><canvas id="view" width="128" height="128"></canvas></p><p id="status">Đang tải…</p>
+<h2>Layer riêng và bật/tắt</h2><img src="layer-preview.png" alt="Sáu layer riêng"><img src="toggle-preview.png" alt="Tắt từng layer">
+<h2>Diff với master v2 đã duyệt phong cách</h2><p>V3 là hình mới theo reference mới; diff này không phải điểm nghiệm thu tự động.</p><img src="visual-diff.png" alt="Master v2, composite v3, absolute RGBA diff">
+<script type="module">
+const manifest=await (await fetch('manifest.json')).json();
+const images={},toggles={};const canvas=document.querySelector('canvas');const ctx=canvas.getContext('2d');
+function draw(){ctx.clearRect(0,0,128,128);for(const name of manifest.renderOrder)if(toggles[name].checked)ctx.drawImage(images[name],0,0);}
+for(const name of manifest.renderOrder){const img=new Image();img.src=manifest.layers[name];await img.decode();images[name]=img;const label=document.createElement('label');const cb=document.createElement('input');cb.type='checkbox';cb.checked=true;cb.dataset.layer=name;cb.onchange=draw;label.append(cb,name);document.querySelector('#controls').append(label);toggles[name]=cb;}
+draw();document.querySelector('#status').textContent='6 PNG đã tải; dùng checkbox kiểm tra ở tỷ lệ 1:1. Weapon trống có chủ ý.';
+window.previewReady=true;
+</script></html>

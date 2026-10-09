@@ -1,0 +1,212 @@
+{
+  "schema": "layer-intake-gate.v2",
+  "overall": "BLOCKED",
+  "productionReady": false,
+  "directionMappingNote": "DOWN is S in existing game contract; no game rule changed",
+  "contract": {
+    "canvas": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      113
+    ],
+    "direction": "DOWN",
+    "animation": "IDLE",
+    "frame": 0
+  },
+  "issues": [],
+  "characters": [
+    {
+      "sex": "male",
+      "issues": [
+        "hair_back: layer is identical to clothed master",
+        "body: layer is identical to clothed master",
+        "body: duplicate nonweapon layer",
+        "pants: layer is identical to clothed master",
+        "pants: duplicate nonweapon layer",
+        "shoes: layer is identical to clothed master",
+        "shoes: duplicate nonweapon layer",
+        "shirt: layer is identical to clothed master",
+        "shirt: duplicate nonweapon layer",
+        "hair_front: layer is identical to clothed master",
+        "hair_front: duplicate nonweapon layer"
+      ],
+      "layers": [
+        {
+          "name": "hair_back",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        },
+        {
+          "name": "body",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        },
+        {
+          "name": "pants",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        },
+        {
+          "name": "shoes",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        },
+        {
+          "name": "shirt",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        },
+        {
+          "name": "hair_front",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        },
+        {
+          "name": "weapon",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "blank_weapon",
+          "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee"
+        }
+      ],
+      "rendered": true,
+      "diff": {
+        "changedPixels": 2674,
+        "silhouetteIoU": 0.9386,
+        "acceptance": "NO_AUTO_PASS: requires user visual diff approval"
+      }
+    },
+    {
+      "sex": "female",
+      "issues": [
+        "hair_back: layer is identical to clothed master",
+        "body: layer is identical to clothed master",
+        "body: duplicate nonweapon layer",
+        "pants: layer is identical to clothed master",
+        "pants: duplicate nonweapon layer",
+        "shoes: layer is identical to clothed master",
+        "shoes: duplicate nonweapon layer",
+        "shirt: layer is identical to clothed master",
+        "shirt: duplicate nonweapon layer",
+        "hair_front: layer is identical to clothed master",
+        "hair_front: duplicate nonweapon layer"
+      ],
+      "layers": [
+        {
+          "name": "hair_back",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        },
+        {
+          "name": "body",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        },
+        {
+          "name": "pants",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        },
+        {
+          "name": "shoes",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        },
+        {
+          "name": "shirt",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        },
+        {
+          "name": "hair_front",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "independently_painted_layer",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        },
+        {
+          "name": "weapon",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "blank_weapon",
+          "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee"
+        }
+      ],
+      "rendered": true,
+      "diff": {
+        "changedPixels": 3108,
+        "silhouetteIoU": 0.9509,
+        "acceptance": "NO_AUTO_PASS: requires user visual diff approval"
+      }
+    }
+  ],
+  "visualDiffReview": "PENDING_USER",
+  "issueCount": 22
+}

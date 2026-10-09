@@ -1,0 +1,11 @@
+Create exactly ONE square image (1024x1024).
+
+Style: premium HD 2D game art for a 2D fantasy cultivation MMORPG with painted cartoon soft shading, original TKL-inspired aesthetics without copying any character: a clean, high-resolution hand-painted sprite illustration with crisp sharp edges, a clean dark outline, rich but controlled colours, cel shading with soft highlights and clear light and shadow shapes, fine readable detail, no blur, no photo-realism, no 3D render look. No text, no letters, no numbers, no logo, no watermark, no signature, no UI, no border, no frame, no grid, no weapons, no baked shadow, no skill effects, no pixel art, no class insignia.
+
+Subject: original adult male chibi fantasy cultivation base character, full body, top-down three-quarter game camera, facing South toward the viewer, clearly FACING THE VIEWER: his face, gaze and chest turn straight toward the viewer; forward is out of the picture and his back is never visible. Adult male, youthful anime face, dark brown hair in a simple short tied topknot, clear hands and feet, moderately large head and small readable body. Neutral cream tunic, muted slate trousers, simple brown shoes; no armor or class symbols. This is a visual master candidate wearing neutral sample clothing, not a separated production body layer. Relaxed symmetrical standing idle, empty hands at sides.
+
+Size and position: one single figure, the top of the figure (including hair, headgear, raised weapons and effects) about 14 percent below the top edge of the canvas and its lowest point about 14 percent above the bottom edge (the figure about 72 percent of the canvas height), centred horizontally, generous empty magenta margin on every side, nothing touching or crossing the edges. The whole figure is drawn with solid, fully opaque pixels: no transparency, no semi-transparent glow, no soft aura, nothing blended with the background.
+
+Match the provided Starter Village environment's warm soft painted shading and clean readable outlines. Male and Female must share display height, chibi proportions and foot baseline. Neutral modest clothing is a preview layer concept only; gender independent of class. Approval pending. Native transparent alpha is required.
+
+Background: solid flat pure magenta #FF00FF everywhere outside the character, no shadow, no ground, no glow on the background.

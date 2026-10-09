@@ -1,0 +1,60 @@
+{
+  "schema": "layer-intake-gate.v2",
+  "overall": "BLOCKED",
+  "productionReady": false,
+  "directionMappingNote": "DOWN is S in existing game contract; no game rule changed",
+  "contract": {
+    "canvas": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      113
+    ],
+    "direction": "DOWN",
+    "animation": "IDLE",
+    "frame": 0
+  },
+  "issues": [],
+  "characters": [
+    {
+      "sex": "male",
+      "issues": [
+        "Missing layer:hair_back",
+        "Missing layer:body",
+        "Missing layer:pants",
+        "Missing layer:shoes",
+        "Missing layer:shirt",
+        "Missing layer:hair_front",
+        "Missing layer:weapon",
+        "Body identity/skin/proportion/pose/completeness not approved; mannequin forbidden",
+        "Hair ownership not approved; female front/back must contain no skin/face",
+        "Exact registration to Body not approved; common origin alone does not prove it",
+        "Visual diff acceptance missing; no invented similarity threshold"
+      ],
+      "layers": [],
+      "rendered": false
+    },
+    {
+      "sex": "female",
+      "issues": [
+        "Missing layer:hair_back",
+        "Missing layer:body",
+        "Missing layer:pants",
+        "Missing layer:shoes",
+        "Missing layer:shirt",
+        "Missing layer:hair_front",
+        "Missing layer:weapon",
+        "Body identity/skin/proportion/pose/completeness not approved; mannequin forbidden",
+        "Hair ownership not approved; female front/back must contain no skin/face",
+        "Exact registration to Body not approved; common origin alone does not prove it",
+        "Visual diff acceptance missing; no invented similarity threshold"
+      ],
+      "layers": [],
+      "rendered": false
+    }
+  ],
+  "visualDiffReview": "PENDING_USER",
+  "issueCount": 22
+}

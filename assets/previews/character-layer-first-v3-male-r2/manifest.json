@@ -1,0 +1,31 @@
+{
+  "canvas": [
+    128,
+    128
+  ],
+  "origin": [
+    64,
+    113
+  ],
+  "direction": "DOWN",
+  "animation": "IDLE",
+  "frame": 0,
+  "renderOrder": [
+    "Body",
+    "Bottom",
+    "Shoes",
+    "Top",
+    "Hair",
+    "Weapon"
+  ],
+  "productionReady": false,
+  "status": "PENDING_USER_APPROVAL",
+  "layers": {
+    "Body": "layers/Body.png",
+    "Bottom": "layers/Bottom.png",
+    "Shoes": "layers/Shoes.png",
+    "Top": "layers/Top.png",
+    "Hair": "layers/Hair.png",
+    "Weapon": "layers/Weapon.png"
+  }
+}

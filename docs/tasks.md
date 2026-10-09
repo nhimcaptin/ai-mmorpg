@@ -1,5 +1,9 @@
 # Lộ trình triển khai 2D MMORPG
 
+Preview09/10 cập nhật: Femalev3 vớiBodykín theo briefmới đãtạothànhcông;7layer128×128RGBA/origin/baseline/toggle/browserPASS, mỹthuậtFemalePENDING_USER_APPROVAL. Malev3r2giữnguyên. Xem bundle`character-layer-first-v3-female-clothed/REVIEW.md`; khôngDONEA02/A03/toànanimation hoặcproduction. DòngBLOCKEDFemale bên dưới là hồ sơbrieftrước.
+
+Cập nhật nghiệm thu art09/10: Male Layer-first v3r2 được chủ sản phẩm CHỐT làm chuẩn mỹ thuật riêngDOWN/IDLE/frame0, không production/toànA02. Femalev3 đangBLOCKED do backend từ chối Body (khôngartifact); chưa cóPASSfile/alpha/fit hoặc previewpair. Xem `progress.md` và bundleFemale/REVIEW.md. Status toànA01/A02/A03 không đổi; không tự mở96frame.
+
 Ngày lập: 08/10/2026. Nguồn quy tắc: `../AGENTS.md` và `../GAME_SPEC.md` (mục 1–25). Tiến độ triển khai hiện tại ở bảng Phase 1 và `progress.md`. Mọi mục CHỐT được giữ nguyên.
 
 ## Cách sử dụng
@@ -30,7 +34,7 @@ D01 xác thực/phiên đã CHỐT (registry DONE); các quyết định chưa t
 | D09 | Nội dung MAIN/SIDE, prerequisite, repeatability/abandon, cách chọn stack COLLECT để consume; reward/binding từng quest; cách mở và lưu RespawnPoint, HP/KI sau revive, giá revive tại chỗ. | T36–T37, T41–T42 |
 | D10 | Thời gian combat lock, hành động PvP kích hoạt lock; Hiếu Chiến mỗi kill, decay/tier/multiplier và loại EXP bị áp dụng; chuyển vùng khi combat, toggle PK và điều kiện sống/chết. | T43–T44 |
 | D11 | World Boss lịch và múi giờ server, timeout, HP/skills/local threat; TankWeight/minContribution/reward từng tier; damage effective/overkill, contribution trùng timestamp và có cho đồng hạng không; đổi instance/reconnect và credit sau death. | A04–A05, T49–T52 |
-| D12 | Danh sách player/NPC/monster/Visual Set/icon/effect/map cần phát hành, appearance chọn khi tạo nhân vật; animation combat/death ngoài IDLE/RUN; phạm vi nội dung từng đợt và người duyệt mỹ thuật. | A01–A06, T12, T53 |
+| D12 | CHỐT một phần09/10: Male Base/Female Base, ngoại hình độc lập class; ba class dùng chung hệ base/animation contract, 96 frame IDLE/RUN, layer độc lập và chủ sản phẩm duyệt master trước animation/production. Weapon giữ Class requirement. BLOCKED còn identity/reference nghiệm thu, catalog NPC/monster/Visual Set/icon/effect/map, appearance bổ sung, animation combat/death và phạm vi phát hành; không tự đặt quy tắc đổi giới tính. | A01–A06, T12, T53 |
 | D13 | Trade invite/timeout, điều kiện hai bên accept; PendingReward thời hạn, thứ tự claim và partial claim; quy tắc lưu ground loot/party/cooldown qua restart. | T31, T33, T45–T46, T55 |
 | D14 | Thiết bị/trình duyệt hỗ trợ, có mobile/touch không; người đồng thời/room/instance, latency và FPS mục tiêu; yêu cầu lưu trữ/backup, môi trường vận hành và người phê duyệt phát hành. | T54–T58 |
 | D15 | Starter stats/Realm/Star/0%/Gold/PK và ba ID CHỐT tại GAME_SPEC 3.2 đã được kiểm định bằng T59. BLOCKED còn chính sách tên nhân vật/đổi tên/xóa chưa duyệt; phần này không chặn auth hoặc khởi tạo Character không có trường tên. Không dùng fixture Phase 1. | T12 (tên) |
@@ -76,8 +80,8 @@ Các gói A là tác vụ có nghiệm thu riêng, trạng thái ban đầu TODO
 
 | ID | Gói asset / công việc | Phụ thuộc | Tiêu chí nghiệm thu |
 |---|---|---|---|
-| A01 | Danh mục asset, style reference và validator | T01, T03, D12 | Manifest có ID/version/path/license hoặc nguồn tạo, reference và người duyệt; phong cách chibi painted soft shading top-down 3/4; không sao chép nhân vật/logo/sprite TKL; validator có mẫu lỗi alpha/kích thước/count/alignment và báo lỗi đúng. |
-| A02 | Base player và bóng chân riêng | A01 | Cùng character reference cho N/E/S/W; IDLE 4, RUN 8 frame/hướng, mỗi frame 128×128; 8 sheet theo animation×direction; alpha thật, không bake weapon/effect/shadow; metadata frame/origin/baseline/preview đầy đủ; không đổi mặt/tóc/tỷ lệ hoặc trượt chân trong preview; ellipse shadow riêng. |
+| A01 | Danh mục asset, style reference và validator | T01, T03, D12 | Hai identity Male/Female theo CHỐT09/10, cùng hệ base cho ba class; master chỉ là preview chờ chủ sản phẩm duyệt. Manifest có ID/version/path/license hoặc nguồn tạo, reference và người duyệt; phong cách chibi painted soft shading top-down 3/4; không sao chép nhân vật/logo/sprite TKL; validator có mẫu lỗi alpha/kích thước/count/alignment và báo lỗi đúng. Chưa DONE vì master/catalog/reference/validator tổng thể chưa nghiệm thu. |
+| A02 | Male/Female base player và bóng chân riêng | A01 | Sau duyệt hai master: mỗi base giữ cùng character reference N/E/S/W; IDLE4/RUN8 frame/hướng128×128, 8 sheet/base, tổng16 sheet/96 frame. Chung animation state machine/metadata, hình riêng theo giới tính; origin/baseline/scale nhất quán. Alpha thật, BODY/trang phục/weapon/effect/shadow độc lập; không bake vào body; metadata/preview đầy đủ, không đổi identity hoặc trượt chân, ellipse shadow riêng. Hai master tĩnh không hoàn thành A02. Thử nghiệm Male Layer-first v3 DOWN/IDLE0 ngày09/10: file/alpha/toggle PASS, art/registration và body không chứa clothing chưa đạt, giữ BLOCKED nghiệm thu; xem bundle REVIEW.md và progress. Không đổi status TODO của toàn A02. |
 | A03 | Map đầu tiên và props bằng Tiled | A01–A02, T05, D05 | Cùng world unit 32px; dữ liệu ground/props/collision/depth/occlusion/spawn/area có ID; building chặn vùng không đi phía sau, tree chỉ chặn trunk/root, water polygon theo bờ; preview scale 70–100 world px với A02; FE/BE đọc cùng tọa độ. |
 | A04 | Bộ NPC, normal/elite/boss và World Boss | A01, D05, D11 | Từng nhóm nội dung được duyệt riêng; đủ manifest và preview; sprite tương thích 4 hướng/128×128, IDLE/RUN theo đặc tả khi có các animation này; animation bổ sung chờ D12; kiểm định alpha/alignment/style trước tích hợp. |
 | A05 | Icon item/skill/potion và hiệu ứng/telegraph | A01, D04, D07, D11, D12 | ID khớp catalog, icon đọc rõ ở HUD; VFX/telegraph tách body, metadata origin/duration đầy đủ; không che thông tin target/phạm vi; preview và duyệt từng bộ, không tự đặt frame count cho animation chưa chốt. |

@@ -1,0 +1,60 @@
+{
+  "sources": [
+    {
+      "file": "body-raw.png",
+      "sha256": "6bba8ce4143a6cfe4cf257f20b2786ab61cabbd9a99dbd3517ea8dcd8c64233d",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "prompt": "body-prompt.txt",
+      "originalGeneratedFilename": "exec-252b8088-220e-42c1-8616-0d729534c160.png",
+      "realGeneration": true,
+      "route": "host_image",
+      "backend": "Codex Client native image_gen",
+      "modelId": null,
+      "estimatedUsd": null
+    },
+    {
+      "file": "body-revised-raw.png",
+      "sha256": "5e4f79347e6ad729a0b0a1c359364fba30ecd04d80f5612b388e029d4e8078c3",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "prompt": "body-edit-prompt.txt",
+      "originalGeneratedFilename": "exec-3c657011-de34-47a6-a650-f271e79b6ade.png",
+      "realGeneration": true,
+      "route": "host_image",
+      "backend": "Codex Client native image_gen",
+      "modelId": null,
+      "estimatedUsd": null
+    },
+    {
+      "file": "parts-raw.png",
+      "sha256": "11d8b475ddb47ca1040d60c3aca04007b12ff1f0856d12a3d023b94beee3f652",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "prompt": "parts-prompt.txt",
+      "originalGeneratedFilename": "exec-5ca5c409-247d-454d-ad00-bf85e0471239.png",
+      "realGeneration": true,
+      "route": "host_image",
+      "backend": "Codex Client native image_gen",
+      "modelId": null,
+      "estimatedUsd": null
+    }
+  ],
+  "reference": {
+    "path": "C:\\Users\\doanh.tran\\Downloads\\Chibi RPG Character Layer Reference Sheet.png",
+    "sha256": "d1d54e8ffa793c2a73da6f7bb064e003b19f82a0766009b5a3380a935903e151",
+    "usage": "style/structure reference only; no pixels extracted into layers"
+  },
+  "processing": "Forge alpha hygiene/despill, premultiplied resize, recorded affine registration",
+  "productionReady": false,
+  "priorAssetsPreserved": true
+}

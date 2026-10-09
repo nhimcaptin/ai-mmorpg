@@ -1,0 +1,124 @@
+{
+  "schema": "character-master-preview.v1",
+  "approval": "PENDING_USER",
+  "assets": [
+    {
+      "id": "male-base-south-preview",
+      "status": "PENDING_ART_APPROVAL",
+      "productionReady": false,
+      "raw": "male-raw.png",
+      "rawSize": [
+        1254,
+        1254
+      ],
+      "rawAlphaRange": [
+        0,
+        255
+      ],
+      "rawSha256": "88974e29f28238fe95b7c032333f16ae14289c7de504b92484421ecc22c7c792",
+      "frame": "frames\\male.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameCount": 1,
+      "direction": "S",
+      "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "originPx": [
+        64,
+        113
+      ],
+      "baselinePx": 113,
+      "measuredFootAnchorPx": [
+        64.04883720930232,
+        113.0
+      ],
+      "visibleHeightPx": 99,
+      "renderScale": 0.9,
+      "displayHeightWorldPx": 89.1,
+      "previewFootWorld": [
+        574,
+        624
+      ],
+      "prompt": "male-edit-prompt.txt",
+      "source": "host_image:Codex Client image_gen",
+      "model": null,
+      "cost": null,
+      "references": [
+        "assets/previews/character-bases-2026-10-09/male-raw.png"
+      ],
+      "layersSeparated": false,
+      "qa": "male-aligned/pipeline-meta.json",
+      "finalizeReport": "finalize-report.json"
+    },
+    {
+      "id": "female-base-south-preview",
+      "status": "PENDING_ART_APPROVAL",
+      "productionReady": false,
+      "raw": "female-raw.png",
+      "rawSize": [
+        1254,
+        1254
+      ],
+      "rawAlphaRange": [
+        0,
+        255
+      ],
+      "rawSha256": "2211920a57f5ea2a1931c8410a4803678d973a9e9557ba705acaa321cf7e50c2",
+      "frame": "frames\\female.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameCount": 1,
+      "direction": "S",
+      "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "originPx": [
+        64,
+        113
+      ],
+      "baselinePx": 113,
+      "measuredFootAnchorPx": [
+        64.24948024948026,
+        113.0
+      ],
+      "visibleHeightPx": 99,
+      "renderScale": 0.9,
+      "displayHeightWorldPx": 89.1,
+      "previewFootWorld": [
+        674,
+        624
+      ],
+      "prompt": "female-edit-prompt.txt",
+      "source": "host_image:Codex Client image_gen",
+      "model": null,
+      "cost": null,
+      "references": [
+        "assets/previews/character-bases-2026-10-09/female-raw.png",
+        "male-raw.png"
+      ],
+      "layersSeparated": false,
+      "qa": "female-aligned/pipeline-meta.json",
+      "finalizeReport": "finalize-report.json"
+    }
+  ],
+  "mapSource": "assets/maps/starter_village/tiled/map.tmj",
+  "mapSha256": "ddbeae520f882241aab86e388329ed2e4a8bbc5e7bdfe8229b360e73ee5e5d5c",
+  "previewOnly": true,
+  "runtimeIntegrated": false,
+  "limitations": [
+    "Static South masters only; no animation/foot-sliding proof",
+    "Sample clothing/hair painted in visual candidate; production layers not separated",
+    "Common canvas origin(64,113); anatomical stance center measured separately in asset metadata",
+    "Short male hair/angular face vs long female hair/soft face; semantic recognition requires user art approval",
+    "Offline composition uses official Tiled geometry; not a new runtime or collision test"
+  ]
+}

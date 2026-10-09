@@ -1,0 +1,175 @@
+{
+  "technicalStatus": "PASS",
+  "artStatus": "PENDING_USER_APPROVAL",
+  "productionReady": false,
+  "files": [
+    {
+      "layer": "HairBack",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 2667,
+      "sha256": "2b2d081d5ef8aa577afc1860215d434c54a65c6067ab5a564662d8fce46e8833"
+    },
+    {
+      "layer": "Body",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 2689,
+      "sha256": "e77a82031e205a8fa6b4235ab9e42b6750a41be2795e12b5a39b18c659aa0e97"
+    },
+    {
+      "layer": "Bottom",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 688,
+      "sha256": "5d2537bd84f63ee85b880d4d6b99fa40d35ddc9a685a64c9a0e664bc934ed2fe"
+    },
+    {
+      "layer": "Shoes",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 217,
+      "sha256": "93590f2bc721433b73c56a67ede01edc47ecdc406d38bfb2895de37a930cfde1"
+    },
+    {
+      "layer": "Top",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 909,
+      "sha256": "1a7b79ba74adcda37e06979e44b3123b6dbc3f123b287eeb15eceb0d8d9c6edb"
+    },
+    {
+      "layer": "HairFront",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 1666,
+      "sha256": "e5a48b8b68c59f35cbdf8d685d63c21e23c829a28b6d522b1b4afd8ed371ab0c"
+    },
+    {
+      "layer": "Weapon",
+      "fileSizeAlphaContract": "PASS",
+      "alphaRange": [
+        0,
+        0
+      ],
+      "origin": [
+        64,
+        113
+      ],
+      "partialAlphaPixels": 0,
+      "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee"
+    }
+  ],
+  "toggleChangedPixels": {
+    "HairBack": 1285,
+    "HairFront": 1850,
+    "Top": 975,
+    "Bottom": 656,
+    "Shoes": 275
+  },
+  "bodyCoverageAfterToggle": {
+    "HairBack": "PASS: Body alpha retained",
+    "HairFront": "PASS: Body alpha retained",
+    "Top": "PASS: Body alpha retained",
+    "Bottom": "PASS: Body alpha retained",
+    "Shoes": "PASS: Body alpha retained"
+  },
+  "bodyOnlyEqualsBody": "PASS",
+  "maleUnchanged": true,
+  "scaleComparison": {
+    "MaleBody": {
+      "bounds": [
+        40,
+        14,
+        89,
+        113
+      ],
+      "height": 99,
+      "width": 49,
+      "baseline": 113
+    },
+    "FemaleBody": {
+      "bounds": [
+        44,
+        14,
+        85,
+        113
+      ],
+      "height": 99,
+      "width": 41,
+      "baseline": 113
+    },
+    "MaleFull": {
+      "bounds": [
+        40,
+        10,
+        89,
+        113
+      ],
+      "height": 103,
+      "width": 49,
+      "baseline": 113
+    },
+    "FemaleFull": {
+      "bounds": [
+        39,
+        10,
+        89,
+        113
+      ],
+      "height": 103,
+      "width": 50,
+      "baseline": 113
+    }
+  },
+  "registration": "recorded manual transforms; common canvas/origin and soles checked; visual fit awaiting user",
+  "manualReview": [
+    "Body fully clothed, no mannequin",
+    "HairFront/Back source art contains hair only",
+    "front bangs cover part of left eye",
+    "base gray high collar remains visible beneath outer top"
+  ],
+  "scope": "Female DOWN IDLE frame0 only; no animation validation"
+}

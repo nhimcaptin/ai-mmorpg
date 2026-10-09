@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "checks": [
+    "HairBack:OFF",
+    "HairBack:RESTORE",
+    "HairFront:OFF",
+    "HairFront:RESTORE",
+    "Top:OFF",
+    "Top:RESTORE",
+    "Bottom:OFF",
+    "Bottom:RESTORE",
+    "Shoes:OFF",
+    "Shoes:RESTORE",
+    "NoHair:OFF",
+    "NoHair:RESTORE",
+    "BodyOnly:exact",
+    "BodyOnly:RESTORE",
+    "canvas128"
+  ],
+  "errors": [],
+  "httpErrors": [],
+  "assetStatus": "PENDING_USER_APPROVAL",
+  "scope": "offline preview only; not gameplay E2E"
+}

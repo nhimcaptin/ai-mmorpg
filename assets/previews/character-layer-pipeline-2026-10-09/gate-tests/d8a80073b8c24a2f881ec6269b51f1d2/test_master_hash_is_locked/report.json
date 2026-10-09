@@ -1,0 +1,225 @@
+{
+  "schema": "layer-intake-gate.v2",
+  "overall": "BLOCKED",
+  "productionReady": false,
+  "directionMappingNote": "DOWN is S in existing game contract; no game rule changed",
+  "contract": {
+    "canvas": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      113
+    ],
+    "direction": "DOWN",
+    "animation": "IDLE",
+    "frame": 0
+  },
+  "issues": [
+    "DIAGNOSTIC_ONLY: rejected legacy source must never become accepted candidate"
+  ],
+  "characters": [
+    {
+      "sex": "male",
+      "issues": [
+        "Approved master v2 hash mismatch",
+        "hair_back: source is not independently painted valid layer (no mannequin/composite crop)",
+        "hair_back: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "body: source is not independently painted valid layer (no mannequin/composite crop)",
+        "body: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "pants: source is not independently painted valid layer (no mannequin/composite crop)",
+        "pants: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "shoes: source is not independently painted valid layer (no mannequin/composite crop)",
+        "shoes: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "shirt: source is not independently painted valid layer (no mannequin/composite crop)",
+        "shirt: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "hair_front: source is not independently painted valid layer (no mannequin/composite crop)",
+        "hair_front: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "Body identity/skin/proportion/pose/completeness not approved; mannequin forbidden",
+        "Hair ownership not approved; female front/back must contain no skin/face",
+        "Exact registration to Body not approved; common origin alone does not prove it",
+        "Visual diff acceptance missing; no invented similarity threshold"
+      ],
+      "layers": [
+        {
+          "name": "hair_back",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "3e5ecb7782dde01acca5b90f5945eec2db13b18d0edb2a6fee496721cc966e95"
+        },
+        {
+          "name": "body",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_MANNEQUIN",
+          "sha256": "e4af985c9c3f30efbc452e11575ce9a2ceee1403dcda6707f926044c94d0656e"
+        },
+        {
+          "name": "pants",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "29b5734de1e177628d84364bf3ea214ff45366df7449d1f36a908123b7538a04"
+        },
+        {
+          "name": "shoes",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "d6ff1f8d32f94e5f3a5bf8a890bdf4f1ca0bb26c86065f2d34357ff9ed98f8c1"
+        },
+        {
+          "name": "shirt",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "7f8cd3ebad7e92085c5ac10930db93cd1a121fb113acf96ce932a5a5473cd2d0"
+        },
+        {
+          "name": "hair_front",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "1647cac4b1f58e2d17200c91298e7e079642b66ecfb61e0d126f09bc92ddc59f"
+        },
+        {
+          "name": "weapon",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "blank_weapon",
+          "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee"
+        }
+      ],
+      "rendered": true,
+      "diff": {
+        "changedPixels": 3335,
+        "silhouetteIoU": 0.8339,
+        "acceptance": "NO_AUTO_PASS: requires user visual diff approval"
+      }
+    },
+    {
+      "sex": "female",
+      "issues": [
+        "hair_back: source is not independently painted valid layer (no mannequin/composite crop)",
+        "hair_back: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "body: source is not independently painted valid layer (no mannequin/composite crop)",
+        "body: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "pants: source is not independently painted valid layer (no mannequin/composite crop)",
+        "pants: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "shoes: source is not independently painted valid layer (no mannequin/composite crop)",
+        "shoes: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "shirt: source is not independently painted valid layer (no mannequin/composite crop)",
+        "shirt: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "hair_front: source is not independently painted valid layer (no mannequin/composite crop)",
+        "hair_front: semantic content review missing/rejected; hash uniqueness cannot prove independence",
+        "Body identity/skin/proportion/pose/completeness not approved; mannequin forbidden",
+        "Hair ownership not approved; female front/back must contain no skin/face",
+        "Exact registration to Body not approved; common origin alone does not prove it",
+        "Visual diff acceptance missing; no invented similarity threshold"
+      ],
+      "layers": [
+        {
+          "name": "hair_back",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "0164be21ada784392db8c01c15aa34f15fa4d721a9f9e5e6282ef531c48ebe0a"
+        },
+        {
+          "name": "body",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_MANNEQUIN",
+          "sha256": "22f1b08ffc1f68187438973748607f832fa32f094be3f626a00469c562b95342"
+        },
+        {
+          "name": "pants",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "474b55a15f3bdfb62ba70b7ab2e696e05239646128535cd1577b5d0c791ca9e3"
+        },
+        {
+          "name": "shoes",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "567a009a1af5f08cc0ef38851ab34c6c30e2f539bb3098e9656396fe9b8071da"
+        },
+        {
+          "name": "shirt",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "d294da95f8dc1ebf36467e653cf8a21a8dfcf606958ac59241630dd98fc2d827"
+        },
+        {
+          "name": "hair_front",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "sha256": "6f061e6e75f3505e015f7357f94952560cb8e763b9b20ce6e2c809855abc451f"
+        },
+        {
+          "name": "weapon",
+          "actualSize": [
+            128,
+            128
+          ],
+          "mode": "RGBA",
+          "sourceKind": "blank_weapon",
+          "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee"
+        }
+      ],
+      "rendered": true,
+      "diff": {
+        "changedPixels": 3675,
+        "silhouetteIoU": 0.8812,
+        "acceptance": "NO_AUTO_PASS: requires user visual diff approval"
+      }
+    }
+  ],
+  "visualDiffReview": "PENDING_USER",
+  "issueCount": 34
+}

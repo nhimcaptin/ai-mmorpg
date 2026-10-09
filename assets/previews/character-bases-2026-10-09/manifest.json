@@ -1,0 +1,122 @@
+{
+  "schema": "character-master-preview.v1",
+  "approval": "PENDING_USER",
+  "assets": [
+    {
+      "id": "male-base-south-preview",
+      "status": "PENDING_ART_APPROVAL",
+      "productionReady": false,
+      "raw": "male-raw.png",
+      "rawSize": [
+        1254,
+        1254
+      ],
+      "rawAlphaRange": [
+        0,
+        255
+      ],
+      "rawSha256": "37ef739a57aa6664911d554019a8745a65bbe1b277372ff7db00359e86857a7d",
+      "frame": "male-aligned\\clean.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameCount": 1,
+      "direction": "S",
+      "sha256": "0a95402eb212de28f289f91c87285e583cf46ec7ddb8c83d45838052fd1ff4b3",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "originPx": [
+        64,
+        113
+      ],
+      "baselinePx": 113,
+      "measuredFootAnchorPx": [
+        64.09620253164557,
+        113.0
+      ],
+      "visibleHeightPx": 99,
+      "renderScale": 0.9,
+      "displayHeightWorldPx": 89.1,
+      "previewFootWorld": [
+        574,
+        624
+      ],
+      "prompt": "male-prompt/exact-host-prompt.txt",
+      "source": "host_image:Codex Client image_gen",
+      "model": null,
+      "cost": null,
+      "references": [
+        "assets/maps/starter_village/runtime-qa/starter-scene.png"
+      ],
+      "layersSeparated": false,
+      "qa": "male-aligned\\pipeline-meta.json"
+    },
+    {
+      "id": "female-base-south-preview",
+      "status": "PENDING_ART_APPROVAL",
+      "productionReady": false,
+      "raw": "female-raw.png",
+      "rawSize": [
+        1254,
+        1254
+      ],
+      "rawAlphaRange": [
+        0,
+        255
+      ],
+      "rawSha256": "1e93de78821230b15f36c446860a0350783197f1dd95adc0ebf706950611e5b1",
+      "frame": "female-aligned\\clean.png",
+      "frameSize": [
+        128,
+        128
+      ],
+      "frameCount": 1,
+      "direction": "S",
+      "sha256": "b9a8d6f29acf6fcb0bf78fee3c5157bcc0e4abf7e681e4bd0a3c78c43e885226",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "originPx": [
+        64,
+        113
+      ],
+      "baselinePx": 113,
+      "measuredFootAnchorPx": [
+        64.78961038961039,
+        113.0
+      ],
+      "visibleHeightPx": 99,
+      "renderScale": 0.9,
+      "displayHeightWorldPx": 89.1,
+      "previewFootWorld": [
+        674,
+        624
+      ],
+      "prompt": "female-prompt/exact-host-prompt.txt",
+      "source": "host_image:Codex Client image_gen",
+      "model": null,
+      "cost": null,
+      "references": [
+        "assets/maps/starter_village/runtime-qa/starter-scene.png",
+        "male-raw.png"
+      ],
+      "layersSeparated": false,
+      "qa": "female-aligned\\pipeline-meta.json"
+    }
+  ],
+  "mapSource": "assets/maps/starter_village/tiled/map.tmj",
+  "mapSha256": "ddbeae520f882241aab86e388329ed2e4a8bbc5e7bdfe8229b360e73ee5e5d5c",
+  "previewOnly": true,
+  "runtimeIntegrated": false,
+  "limitations": [
+    "Static South masters only; no animation/foot-sliding proof",
+    "Sample clothing/hair painted in visual candidate; production layers not separated",
+    "Measured horizontal stance anchors differ by about 0.69px despite common canvas origin",
+    "Identity, chibi proportions and top-down perspective require user art approval",
+    "Offline composition uses official Tiled geometry; not a new runtime or collision test"
+  ]
+}

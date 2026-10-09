@@ -1,0 +1,245 @@
+{
+  "purpose": "diagnostic_only",
+  "characters": {
+    "male": {
+      "layers": {
+        "body": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/body.png",
+          "sourceKind": "REJECTED_MANNEQUIN",
+          "review": "REJECTED"
+        },
+        "hair_back": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/hair_back.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "hair_front": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/hair_front.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "shirt": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/shirt.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "pants": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/pants.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "shoes": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/shoes.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "weapon": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/male/weapon.png",
+          "sourceKind": "blank_weapon",
+          "review": "REJECTED"
+        }
+      },
+      "bodyMatchesApprovedMaster": "REJECTED",
+      "hairHasNoSkinOrFace": "REJECTED",
+      "registrationMatchesBody": "REJECTED",
+      "visualDiffApproval": "REJECTED"
+    },
+    "female": {
+      "layers": {
+        "body": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/body.png",
+          "sourceKind": "REJECTED_MANNEQUIN",
+          "review": "REJECTED"
+        },
+        "hair_back": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/hair_back.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "hair_front": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/hair_front.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "shirt": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/shirt.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "pants": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/pants.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "shoes": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/shoes.png",
+          "sourceKind": "REJECTED_APPROXIMATE_ATLAS",
+          "review": "REJECTED"
+        },
+        "weapon": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "assets/previews/character-layer-proof-2026-10-09/female/weapon.png",
+          "sourceKind": "blank_weapon",
+          "review": "REJECTED"
+        }
+      },
+      "bodyMatchesApprovedMaster": "REJECTED",
+      "hairHasNoSkinOrFace": "REJECTED",
+      "registrationMatchesBody": "REJECTED",
+      "visualDiffApproval": "REJECTED"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "technicalStatus": "PASS",
+  "assetStatus": "BLOCKED",
+  "productionReady": false,
+  "files": [
+    {
+      "name": "Body",
+      "sizeAlphaOrigin": "PASS",
+      "partialAlphaPixels": 2650,
+      "opaquePixels": 310
+    },
+    {
+      "name": "Bottom",
+      "sizeAlphaOrigin": "PASS",
+      "partialAlphaPixels": 724,
+      "opaquePixels": 85
+    },
+    {
+      "name": "Shoes",
+      "sizeAlphaOrigin": "PASS",
+      "partialAlphaPixels": 378,
+      "opaquePixels": 68
+    },
+    {
+      "name": "Top",
+      "sizeAlphaOrigin": "PASS",
+      "partialAlphaPixels": 1155,
+      "opaquePixels": 136
+    },
+    {
+      "name": "Hair",
+      "sizeAlphaOrigin": "PASS",
+      "partialAlphaPixels": 978,
+      "opaquePixels": 93
+    },
+    {
+      "name": "Weapon",
+      "sizeAlphaOrigin": "PASS",
+      "partialAlphaPixels": 0,
+      "opaquePixels": 0
+    }
+  ],
+  "uniqueNonemptyLayers": "PASS",
+  "bodyBaseline": 113,
+  "toggleRestore": {
+    "Hair": "PASS",
+    "Top": "PASS",
+    "Bottom": "PASS",
+    "Shoes": "PASS"
+  },
+  "bodyPixelsPresentUnderOverlays": {
+    "Hair": 654,
+    "Top": 1153,
+    "Bottom": 670,
+    "Shoes": 360
+  },
+  "semanticValidation": "PENDING_USER_REVIEW; overlaps do not prove correct anatomy/alignment",
+  "weapon": "EMPTY_BY_DESIGN",
+  "scope": "Male DOWN IDLE frame0 only"
+}

@@ -55,6 +55,8 @@ Nguyên tắc:
 - Với asset mới (player, NPC, monster tương thích, trang phục), giữ cùng hệ thẩm mỹ, ánh sáng, tỉ lệ và độ chi tiết. Có thể dùng screenshot TKL do user cung cấp làm *style reference*.
 
 ### 2.3 Hướng và animation — CHỐT
+- Bổ sung CHỐT 09/10/2026: có Male Base và Female Base; mỗi giới tính có hình animation riêng nhưng dùng chung animation state machine và format metadata. IDLE/RUN cho mỗi base tuân thủ contract dưới đây: 48 frame/base, tổng 96 frame cho hai base. Master phải được chủ sản phẩm duyệt trước khi sản xuất animation; preview không phải production-ready.
+- Base body, tóc, trang phục, vũ khí, hiệu ứng và bóng chân là các layer độc lập; không bake trang phục trang bị, vũ khí, hiệu ứng hoặc bóng vào base body. Master preview được thể hiện với trang phục cơ bản trung tính để duyệt hình ảnh, chưa chứng minh đã tách layer production.
 - Chỉ có **4 hướng animation: N, E, S, W**. Không yêu cầu tạo NE/SE/SW/NW.
 - **IDLE: 4 frames / hướng**; thở, tóc/quần áo lay nhẹ, chân không trượt.
 - **RUN: 8 frames / hướng**; bước chân/tay rõ ràng, loop mượt, không foot sliding.
@@ -86,6 +88,9 @@ Nguyên tắc:
 
 - 1 Account = 1 Character.
 - Class chọn khi tạo character và không thể đổi.
+- CHỐT 09/10/2026: giới tính ngoại hình có hai lựa chọn Male/Female, độc lập với class. Physical DPS, Magic DPS và Tank dùng chung hệ thống Male Base/Female Base và animation, không tạo body hoặc animation riêng theo class.
+- Trang phục và vũ khí hiển thị bằng layer riêng theo class hoặc trang bị đang mặc. Trang bị thông thường không yêu cầu class; Weapon vẫn có Class requirement theo mục 6. Kiến trúc visual không thay đổi điều kiện sử dụng trang bị.
+- Chưa CHỐT quy tắc đổi giới tính ngoại hình sau khi tạo nhân vật; không tự cho phép hoặc cấm vĩnh viễn. Contract/persistence và luồng đăng ký cần bổ sung lựa chọn Male/Female ở tác vụ triển khai sau; bước master preview không migration hoặc sửa dữ liệu account hiện hữu.
 - Class MVP:
   - Physical DPS.
   - Magic DPS.

@@ -1,0 +1,20 @@
+{
+  "schema": "character-layer-plan.preview.v1",
+  "status": "DESIGN_ONLY_PENDING_MASTER_APPROVAL",
+  "frameSize": [128, 128],
+  "originPx": [64, 113],
+  "baselinePx": 113,
+  "direction": "S",
+  "animationContract": {"directions": ["N", "E", "S", "W"], "idleFramesPerDirection": 4, "runFramesPerDirection": 8},
+  "layers": [
+    {"id": "BODY", "variants": ["Male", "Female"], "plan": "Same canvas/root; body behind neutral clothing, face/hands visible; occluded anatomy must be drawn separately later."},
+    {"id": "HAIR", "plan": "Male short silhouette; Female long hair requires back/front hair sublayers sharing same frame/root."},
+    {"id": "CLOTHING", "plan": "Neutral tunic/trousers/shoes with clean neck/wrist/waist/ankle seams; future equipment visual layers share contract."},
+    {"id": "WEAPON", "plan": "No weapon asset generated. Future hand attachment follows approved poses; Weapon Class requirement unchanged."},
+    {"id": "EFFECT", "plan": "No effect generated; future effects separate from body."},
+    {"id": "SHADOW", "plan": "No baked shadow; runtime ellipse remains separate, no new gameplay configuration."}
+  ],
+  "layersAlreadySeparated": false,
+  "productionReady": false,
+  "warning": "Master remains clothed composite illustration. This design plan is not a delivered production layer bundle."
+}

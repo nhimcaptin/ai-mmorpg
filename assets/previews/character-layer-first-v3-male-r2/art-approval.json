@@ -1,0 +1,11 @@
+{
+  "status": "ART_APPROVED_SINGLE_FRAME",
+  "approvedBy": "user",
+  "date": "2026-10-09",
+  "scope": {"character": "Male", "direction": "DOWN", "animation": "IDLE", "frame": 0, "canvas": [128,128], "origin": [64,113]},
+  "statement": "Chốt Male Layer-first v3 r2 làm chuẩn mỹ thuật cho DOWN / IDLE / frame 0.",
+  "productionReady": false,
+  "animationApproved": false,
+  "femaleApproved": false,
+  "note": "Approval này cập nhật trạng thái mỹ thuật; manifest/report chờ duyệt cũ được giữ như kết quả lịch sử. Không tự mở production hoặc 96 frame."
+}

@@ -1,0 +1,138 @@
+{
+  "schema": "master-preview-validation.v2",
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "male",
+      "checks": {
+        "readableRGBA128": true,
+        "realAlpha": true,
+        "cleanHiddenRGB": true,
+        "noVisibleCanvasBorder": true,
+        "warmRimPixelsZero": true,
+        "noDisconnectedVisibleIsland": true,
+        "commonBaseline113": true,
+        "commonVisibleHeight99": true,
+        "ForgeStrictQC": true
+      },
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaLevels": 215,
+      "bbox": [
+        43,
+        14,
+        85,
+        113
+      ],
+      "warmRimPixels": 0,
+      "hiddenRGBPixels": 0,
+      "visibleComponents": 1,
+      "canvasOriginPx": [
+        64,
+        113
+      ],
+      "measuredStancePx": [
+        64.04883720930232,
+        113.0
+      ],
+      "visibleHeightPx": 99,
+      "targetDisplayHeightWorldPx": 89.1,
+      "darkSideHairBandPixels": 259,
+      "nonPassForgeChecks": [
+        {
+          "id": "body_scale_cv",
+          "status": "skipped",
+          "value": 0.0,
+          "threshold": null
+        },
+        {
+          "id": "anchor_y_std",
+          "status": "skipped",
+          "value": 0.0,
+          "threshold": null
+        }
+      ]
+    },
+    {
+      "id": "female",
+      "checks": {
+        "readableRGBA128": true,
+        "realAlpha": true,
+        "cleanHiddenRGB": true,
+        "noVisibleCanvasBorder": true,
+        "warmRimPixelsZero": true,
+        "noDisconnectedVisibleIsland": true,
+        "commonBaseline113": true,
+        "commonVisibleHeight99": true,
+        "ForgeStrictQC": true
+      },
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaLevels": 217,
+      "bbox": [
+        40,
+        14,
+        88,
+        113
+      ],
+      "warmRimPixels": 0,
+      "hiddenRGBPixels": 0,
+      "visibleComponents": 1,
+      "canvasOriginPx": [
+        64,
+        113
+      ],
+      "measuredStancePx": [
+        64.24948024948026,
+        113.0
+      ],
+      "visibleHeightPx": 99,
+      "targetDisplayHeightWorldPx": 89.1,
+      "darkSideHairBandPixels": 607,
+      "nonPassForgeChecks": [
+        {
+          "id": "body_scale_cv",
+          "status": "skipped",
+          "value": 0.0,
+          "threshold": null
+        },
+        {
+          "id": "anchor_y_std",
+          "status": "skipped",
+          "value": 0.0,
+          "threshold": null
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "visualDifference": {
+    "differentSilhouettePixels": 471,
+    "silhouetteIoU": 0.8441,
+    "femaleMinusMaleDarkHairBandPixels": 348,
+    "interpretation": "Difference proxies only; these do not prove human recognition or gender."
+  },
+  "manualReview": {
+    "status": "PENDING_USER_APPROVAL",
+    "observed": [
+      "Male short spiky hair/angular eyebrows/face and square shoulders",
+      "Female long hair to waist, softer face/larger eyes and narrower clothing shoulder silhouette",
+      "Both inspected side-by-side at gameplay scale and on original Starter Village"
+    ],
+    "notProven": [
+      "Recognition by players without labels",
+      "Layer separation/hidden anatomy",
+      "Animation stability, foot sliding or other directions"
+    ]
+  },
+  "qcThresholds": {
+    "warmRim": "outer 1px ring, RGB max>90, saturation>0.5, R>=G-8 and G>B",
+    "geometryAlphaThreshold": 16,
+    "darkHairBand": "rows40..74, maxRGB<110, alpha>=128"
+  },
+  "thresholdScope": "Image QC measurements only, not new game or balance rules"
+}

@@ -1,0 +1,245 @@
+{
+  "purpose": "candidate",
+  "characters": {
+    "male": {
+      "layers": {
+        "body": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/body.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "hair_back": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/hair_back.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "hair_front": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/hair_front.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "shirt": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/shirt.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "pants": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/pants.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "shoes": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/shoes.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "weapon": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/male/weapon.png",
+          "sourceKind": "blank_weapon",
+          "review": "PENDING_USER"
+        }
+      },
+      "bodyMatchesApprovedMaster": "PENDING_USER",
+      "hairHasNoSkinOrFace": "PENDING_USER",
+      "registrationMatchesBody": "PENDING_USER",
+      "visualDiffApproval": "PENDING_USER"
+    },
+    "female": {
+      "layers": {
+        "body": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/body.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "hair_back": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/hair_back.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "hair_front": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/hair_front.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "shirt": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/shirt.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "pants": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/pants.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "shoes": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/shoes.png",
+          "sourceKind": "independently_painted_layer",
+          "review": "PENDING_USER"
+        },
+        "weapon": {
+          "canvas": [
+            128,
+            128
+          ],
+          "origin": [
+            64,
+            113
+          ],
+          "direction": "DOWN",
+          "animation": "IDLE",
+          "frame": 0,
+          "path": "REPLACE_WITH_ARTIST_SOURCE/female/weapon.png",
+          "sourceKind": "blank_weapon",
+          "review": "PENDING_USER"
+        }
+      },
+      "bodyMatchesApprovedMaster": "PENDING_USER",
+      "hairHasNoSkinOrFace": "PENDING_USER",
+      "registrationMatchesBody": "PENDING_USER",
+      "visualDiffApproval": "PENDING_USER"
+    }
+  }
+}

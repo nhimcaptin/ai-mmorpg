@@ -1,2 +1,4 @@
 # Machine-readable roadmap parser requires LF even on Windows checkouts.
 docs/tasks.md text eol=lf
+# Preserve asset provenance/checksum bytes across machines (including JSON/scripts).
+assets/previews/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

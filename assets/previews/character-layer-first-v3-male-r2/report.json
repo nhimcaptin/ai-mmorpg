@@ -1,0 +1,92 @@
+{
+  "status": "PENDING_USER_APPROVAL",
+  "productionReady": false,
+  "userProductionApproval": false,
+  "v3DesignDirectionApproved": true,
+  "facePixelsPreserved": true,
+  "hairFilePreserved": true,
+  "bodyEditRegionRows": [
+    49,
+    88
+  ],
+  "bodyRegistration": {
+    "rawBounds": [
+      358,
+      106,
+      893,
+      1184
+    ],
+    "scale": 0.09183673469387756,
+    "targetSize": [
+      49,
+      99
+    ],
+    "top": 14
+  },
+  "garmentRegistration": {
+    "Top": {
+      "sourceRect": [
+        610,
+        140,
+        1254,
+        725
+      ],
+      "targetRect": [
+        40,
+        48,
+        48,
+        42
+      ],
+      "landmarks": "neck/shoulders y48, waist y71, ankle y95, soles y113",
+      "method": "recorded manual registration; visual approval pending"
+    },
+    "Bottom": {
+      "sourceRect": [
+        75,
+        720,
+        600,
+        1145
+      ],
+      "targetRect": [
+        47,
+        71,
+        34,
+        32
+      ],
+      "landmarks": "neck/shoulders y48, waist y71, ankle y95, soles y113",
+      "method": "recorded manual registration; visual approval pending"
+    },
+    "Shoes": {
+      "sourceRect": [
+        650,
+        880,
+        1230,
+        1220
+      ],
+      "targetRect": [
+        45,
+        95,
+        39,
+        18
+      ],
+      "landmarks": "neck/shoulders y48, waist y71, ankle y95, soles y113",
+      "method": "recorded manual registration; visual approval pending"
+    }
+  },
+  "diffVsV3": {
+    "full": {
+      "changedPixels": 2036,
+      "noArtThreshold": true
+    },
+    "body": {
+      "changedPixels": 1495,
+      "noArtThreshold": true
+    }
+  },
+  "masterV2PixelMatchingRequired": false,
+  "limitations": [
+    "single static frame only; animation fit not tested",
+    "body keeps original neutral under-shorts",
+    "manual garment registration still requires final visual approval"
+  ]
+}

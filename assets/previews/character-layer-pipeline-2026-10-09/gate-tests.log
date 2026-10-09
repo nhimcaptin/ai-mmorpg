@@ -1,0 +1,13 @@
+test_composite_duplicates_rejected_even_with_claimed_review (__main__.PipelineGateTests.test_composite_duplicates_rejected_even_with_claimed_review) ... ok
+test_down_idle0_origin_is_enforced (__main__.PipelineGateTests.test_down_idle0_origin_is_enforced) ... ok
+test_existing_evidence_not_overwritten (__main__.PipelineGateTests.test_existing_evidence_not_overwritten) ... ok
+test_individual_shirt_pants_shoes_off_and_diff_exported (__main__.PipelineGateTests.test_individual_shirt_pants_shoes_off_and_diff_exported) ... ok
+test_mannequin_not_accepted_by_review_flag (__main__.PipelineGateTests.test_mannequin_not_accepted_by_review_flag) ... ok
+test_master_hash_is_locked (__main__.PipelineGateTests.test_master_hash_is_locked) ... ok
+test_missing_layers_block (__main__.PipelineGateTests.test_missing_layers_block) ... ok
+test_rejected_legacy_cannot_pass (__main__.PipelineGateTests.test_rejected_legacy_cannot_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.747s
+
+OK

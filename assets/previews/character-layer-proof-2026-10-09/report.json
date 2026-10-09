@@ -1,0 +1,708 @@
+{
+  "schema": "character-layer-proof.v1",
+  "overall": "BLOCKED",
+  "productionReady": false,
+  "frameSize": [
+    128,
+    128
+  ],
+  "originPx": [
+    64,
+    113
+  ],
+  "baselinePx": 113,
+  "contract": {
+    "directions": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "idleFrames": 4,
+    "runFrames": 8
+  },
+  "classes": [
+    "Physical DPS",
+    "Magic DPS",
+    "Tank"
+  ],
+  "layers": [
+    {
+      "sex": "male",
+      "name": "body",
+      "path": "male\\body.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "male-atlas-raw.png",
+      "sourceBox": [
+        128,
+        48,
+        392,
+        550
+      ],
+      "ownedAssetBBox": [
+        26,
+        29,
+        241,
+        464
+      ],
+      "approximateTargetBox": [
+        43,
+        14,
+        85,
+        113
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 6700,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "e4af985c9c3f30efbc452e11575ce9a2ceee1403dcda6707f926044c94d0656e",
+      "bodyIsApprovedCharacter": false
+    },
+    {
+      "sex": "male",
+      "name": "hair_back",
+      "path": "male\\hair_back.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "male-atlas-raw.png",
+      "sourceBox": [
+        600,
+        75,
+        920,
+        380
+      ],
+      "ownedAssetBBox": [
+        56,
+        40,
+        280,
+        279
+      ],
+      "approximateTargetBox": [
+        49,
+        14,
+        80,
+        44
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 3862,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "3e5ecb7782dde01acca5b90f5945eec2db13b18d0edb2a6fee496721cc966e95",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "male",
+      "name": "hair_front",
+      "path": "male\\hair_front.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "male-atlas-raw.png",
+      "sourceBox": [
+        1120,
+        100,
+        1420,
+        380
+      ],
+      "ownedAssetBBox": [
+        21,
+        44,
+        256,
+        233
+      ],
+      "approximateTargetBox": [
+        49,
+        14,
+        80,
+        44
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 5153,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "1647cac4b1f58e2d17200c91298e7e079642b66ecfb61e0d126f09bc92ddc59f",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "male",
+      "name": "shirt",
+      "path": "male\\shirt.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "male-atlas-raw.png",
+      "sourceBox": [
+        90,
+        570,
+        430,
+        900
+      ],
+      "ownedAssetBBox": [
+        20,
+        25,
+        324,
+        312
+      ],
+      "approximateTargetBox": [
+        43,
+        42,
+        85,
+        87
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 4833,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "7f8cd3ebad7e92085c5ac10930db93cd1a121fb113acf96ce932a5a5473cd2d0",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "male",
+      "name": "pants",
+      "path": "male\\pants.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "male-atlas-raw.png",
+      "sourceBox": [
+        600,
+        640,
+        920,
+        930
+      ],
+      "ownedAssetBBox": [
+        34,
+        32,
+        296,
+        264
+      ],
+      "approximateTargetBox": [
+        47,
+        72,
+        82,
+        99
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 3832,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "29b5734de1e177628d84364bf3ea214ff45366df7449d1f36a908123b7538a04",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "male",
+      "name": "shoes",
+      "path": "male\\shoes.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "male-atlas-raw.png",
+      "sourceBox": [
+        1110,
+        760,
+        1410,
+        970
+      ],
+      "ownedAssetBBox": [
+        25,
+        16,
+        277,
+        179
+      ],
+      "approximateTargetBox": [
+        47,
+        89,
+        82,
+        113
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 2974,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "d6ff1f8d32f94e5f3a5bf8a890bdf4f1ca0bb26c86065f2d34357ff9ed98f8c1",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "female",
+      "name": "body",
+      "path": "female\\body.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "female-atlas-raw.png",
+      "sourceBox": [
+        120,
+        40,
+        390,
+        580
+      ],
+      "ownedAssetBBox": [
+        33,
+        32,
+        243,
+        504
+      ],
+      "approximateTargetBox": [
+        44,
+        14,
+        84,
+        113
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 8867,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "22f1b08ffc1f68187438973748607f832fa32f094be3f626a00469c562b95342",
+      "bodyIsApprovedCharacter": false
+    },
+    {
+      "sex": "female",
+      "name": "hair_back",
+      "path": "female\\hair_back.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "female-atlas-raw.png",
+      "sourceBox": [
+        600,
+        20,
+        940,
+        460
+      ],
+      "ownedAssetBBox": [
+        22,
+        24,
+        322,
+        404
+      ],
+      "approximateTargetBox": [
+        40,
+        14,
+        88,
+        76
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 9225,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "0164be21ada784392db8c01c15aa34f15fa4d721a9f9e5e6282ef531c48ebe0a",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "female",
+      "name": "hair_front",
+      "path": "female\\hair_front.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "female-atlas-raw.png",
+      "sourceBox": [
+        1120,
+        30,
+        1430,
+        450
+      ],
+      "ownedAssetBBox": [
+        54,
+        29,
+        297,
+        380
+      ],
+      "approximateTargetBox": [
+        47,
+        14,
+        83,
+        65
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 7591,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "6f061e6e75f3505e015f7357f94952560cb8e763b9b20ce6e2c809855abc451f",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "female",
+      "name": "shirt",
+      "path": "female\\shirt.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "female-atlas-raw.png",
+      "sourceBox": [
+        80,
+        580,
+        430,
+        960
+      ],
+      "ownedAssetBBox": [
+        38,
+        42,
+        314,
+        324
+      ],
+      "approximateTargetBox": [
+        45,
+        42,
+        83,
+        87
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 7240,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "d294da95f8dc1ebf36467e653cf8a21a8dfcf606958ac59241630dd98fc2d827",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "female",
+      "name": "pants",
+      "path": "female\\pants.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "female-atlas-raw.png",
+      "sourceBox": [
+        610,
+        630,
+        910,
+        990
+      ],
+      "ownedAssetBBox": [
+        36,
+        42,
+        283,
+        315
+      ],
+      "approximateTargetBox": [
+        47,
+        72,
+        83,
+        99
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 4442,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "474b55a15f3bdfb62ba70b7ab2e696e05239646128535cd1577b5d0c791ca9e3",
+      "bodyIsApprovedCharacter": null
+    },
+    {
+      "sex": "female",
+      "name": "shoes",
+      "path": "female\\shoes.png",
+      "originPx": [
+        64,
+        113
+      ],
+      "source": "female-atlas-raw.png",
+      "sourceBox": [
+        1130,
+        770,
+        1410,
+        1010
+      ],
+      "ownedAssetBBox": [
+        51,
+        35,
+        277,
+        187
+      ],
+      "approximateTargetBox": [
+        47,
+        89,
+        83,
+        113
+      ],
+      "sourceKind": "newly_generated_standalone_atlas_part",
+      "copiedFromMaster": false,
+      "hygiene": {
+        "mode": "both",
+        "floor": 16,
+        "solid_min": 32,
+        "attach_radius": 2,
+        "connectivity": 8,
+        "floor_px": 3450,
+        "detached_px": 0,
+        "detached_components": 0,
+        "max_removed_alpha": 16
+      },
+      "sha256": "567a009a1af5f08cc0ef38851ab34c6c30e2f539bb3098e9656396fe9b8071da",
+      "bodyIsApprovedCharacter": null
+    }
+  ],
+  "comparison": [
+    {
+      "sex": "male",
+      "identicalRGBA": false,
+      "changedPixels": 3335,
+      "silhouetteIoU": 0.8339,
+      "acceptance": "FAIL_MASTER_FIDELITY",
+      "reason": "Substitute body and approximate registration; no invented numerical approval threshold"
+    },
+    {
+      "sex": "female",
+      "identicalRGBA": false,
+      "changedPixels": 3675,
+      "silhouetteIoU": 0.8812,
+      "acceptance": "FAIL_MASTER_FIDELITY",
+      "reason": "Substitute body and approximate registration; no invented numerical approval threshold"
+    }
+  ],
+  "blockers": [
+    "Requested human character body generation rejected by backend output moderation",
+    "Gray featureless mannequin is explicitly an engineering substitute, not the approved body",
+    "Source atlas parts not registered to original pose; manual target rectangles are approximations",
+    "Female hair front contains ear/skin pixels; pants and shoes overlap shin wraps",
+    "Face, body proportions and seamless garment fit do not reproduce approved master"
+  ],
+  "notProven": [
+    "Production layer independence",
+    "Three-class animation playback",
+    "96 frames/other directions"
+  ],
+  "technicalTests": [
+    {
+      "sex": "male",
+      "test": "toggle:hair_back",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:body",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:pants",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:shoes",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:shirt",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:hair_front",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:weapon",
+      "renderChanged": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "swap_clothing",
+      "passed": true,
+      "scope": "Renderer/data independence only; garment fit not accepted"
+    },
+    {
+      "sex": "male",
+      "test": "same_layer_set_for_3_classes",
+      "passed": true,
+      "scope": "Static render reuse; no animation playback proven"
+    },
+    {
+      "sex": "female",
+      "test": "toggle:hair_back",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:body",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:pants",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:shoes",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:shirt",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:hair_front",
+      "renderChanged": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:weapon",
+      "renderChanged": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "swap_clothing",
+      "passed": true,
+      "scope": "Renderer/data independence only; garment fit not accepted"
+    },
+    {
+      "sex": "female",
+      "test": "same_layer_set_for_3_classes",
+      "passed": true,
+      "scope": "Static render reuse; no animation playback proven"
+    }
+  ],
+  "technicalTestsPassed": 18,
+  "technicalTestsTotal": 18,
+  "backend": "Codex Client image_gen / host_image",
+  "rawHashes": {
+    "male": "722268bf42aacf36af30a582d3354dd1c10a565a636da269ac079b2e701c5263",
+    "female": "3b4db80c377af90e0c66238a4a61b19dfff396c7b185a0d2b945893a0ed50db3"
+  }
+}

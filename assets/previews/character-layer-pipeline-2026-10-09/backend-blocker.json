@@ -1,0 +1,13 @@
+{
+  "status": "BLOCKED",
+  "attempt": "male-approved-v2-body-only",
+  "backend": "Codex Client image_gen / host_image",
+  "httpStatus": 400,
+  "code": "moderation_blocked",
+  "stage": "output",
+  "category": "sexual",
+  "requestId": "a35b1adf-7af7-4b87-bfe3-948e7acafa17",
+  "artifact": null,
+  "femaleBody": "NOT_ATTEMPTED: stop after shared generation blocker",
+  "fallback": "NONE: gray mannequin and fabricated crop layers forbidden"
+}

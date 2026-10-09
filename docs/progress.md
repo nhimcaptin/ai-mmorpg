@@ -1,5 +1,79 @@
 # Tiến độ dự án 2D MMORPG
 
+## PAUSE & HANDOFF — 09/10/2026
+
+Thêm .gitattributes phạmviassets/previews/** -text để giữ byte/provenance/hash khiGitcheckoutkhácmáy đổiLF/CRLF. Kiểmtra indexbytes so vớiworkingtree trướccommit, khôngrepaint/đổihashart. Đây là bảo toànhandoff, khôngtaskmới.
+
+Gatebàn giao bổsung: pnpmtest:auto-dev mock31/31PASS0FAIL/skip, khôngloopgame thật; stagedwhitespacePASS và392assetfile indexbyte đối chiếu working0mismatch. Quy tắcLFroadmap sẵn giữnguyên; CR-at-EOL hợp lệ chỉbundle, vẫn giữ blank-at-eol/blank-at-eof/space-before-tab.
+
+Người dùng yêu cầu dừng chuyển máy. HEAD trước pause `a7de0cf`, T17DONE; không task mới. Currentwork A02 preview/layer proof PAUSED/PENDING_USER_APPROVAL Female, registry toànA02 vẫnTODO; khôngDONE phần chưa nghiệmthu. Malev3r2 chỉDOWN/IDLE0đãduyệtmỹthuật (art-approval.json), Femaleclothed7layer đãkiểm kỹthuật và chờduyệt; chưa96frame/production/registrationgender/migration. D12/D05/catalog/content và accountcũ còn nghiệpvụ mở; backendrejectionFemale briefcũ là lịch sử, briefkínmới đãgen được.
+
+Pauseverify chạy lạiFemalevalidatorPASS7PNG/alpha/origin/baseline/toggle/bodycoverage/MaleSHA, browser15/15PASS0error; MalevalidatorPASS6PNG/headHairbaseline; runtimeconsistencyPASS; diffwhitespacePASS. Fullgame lint/typecheck/unit/build/DB/E2E không chạy lại trongpause (không sửa runtime); fullgates T17 ởcheckpointtrước là bằngchứng lịch sử. Không claimFemaleArtPASS; tóc chemộtphần mắttrái/cổáonền vàgarmentfit chờvisualreview.
+
+docs/HANDOFF.md đầu file ghi source/task/status/pathinventory/lệnhverify/remainingblockers/nextaction. Bảo toàn mọi asset/prompt/raw/rejectedproof/log vàdiff cósẵn GAME_SPEC/next-env/docs; không discard hoặc overwrite. Checkpoint localsubject `chore: checkpoint WIP character layers`, hash thực lấy `git log -1 --format="%H %s"` saucommit; không hash tựthamchiếu. Logs/.env/buildcache bịignore không commit, cầncopyriêng khi chuyểnmáy. Không push/deploy/reset/CLI/auto-dev. Dừngpháttriển saucheckpoint, bướcnext là người dùngreviewFemale, không tựtaskmới.
+
+## Female v3 Body kín đáo — PASS kỹ thuật, chờ duyệt 09/10/2026
+
+Người dùng yêu cầu thiết kếBodyFemale mặc sẵn áo dài tay/quần dài kín màu trung tính, không khỏa thân/underwear. Thực hiện previewriêng `assets/previews/character-layer-first-v3-female-clothed/`. Nativeimage_gen tạo thậtBody, edit1lượt để compactchibi vàHairBack/Front độc lập; không bịrejection. Tái sử dụng nguồnGarment đãgen củaMalev3 đầu, cănFemale vàprovenancelưuđầyđủ; khôngfakegeneration/cropcomposite/mannequin. Malev3r2 không sửa, hashmọifile kiểmđịnh giữnguyên. Bodykín là phạm vipreviewtheobriefmới, không thayGAME_SPEC/luậttrangbị chung.
+
+7PNG128×128RGBA/alpha/metadataorigin(64,113)DOWN/IDLE0PASS, Weapontrống. Body/Shoesbaseline113; Male/FemaleBodyheight99 vàFullheight103. FemaleBodywidth41vsMale49, Full50vs49; head/hand/foot/visualfit vẫn chờngười dùng xétpair. Toggle5lớp vàNoHairgroup/BodyOnly/restorePASS, Bodyalpha không mất khi tháogear. Browser15/15PASS,0pageerror/HTTPerror; runtimeconsistency vàdiffcheckPASS. Đây là kiểmpreview, khônggameE2E/animationcheck; không chạy lạilint/typecheck/gameunit/build/DB vì không sửa runtime.
+
+Raw/prompt/hash/doctor/provenance/manifest/validation/browserreport, Full/BodyOnly/toggle/pair giữ trongbundle. Tóc mái che mộtphần mắttrái, cổáonềnxám còn hiện dướiTop; ghi rõ trongREVIEW. PENDING_USER_APPROVAL/FemaleArtApprovedfalse/productionReadyfalse; khôngDONEA02/A03, không96frame/integration/migration/CLI/auto-dev/push/deploy/reset. Dừngchờduyệt; hồsơBLOCKEDFemale trước giữlàlịchsử.
+
+## Male v3 r2 được duyệt mỹ thuật; Female v3 BLOCKED 09/10/2026
+
+Người dùng CHỐT Male Layer-first v3r2 làm chuẩn mỹ thuật riêng DOWN/IDLE/frame0. Ghi `art-approval.json` trong bundleMale; giữ frame/manifest/report lịch sử, không đánh dấu production/96frame hoặc tự DONE toànA02.
+
+Thử FemaleBody độc lập theoMale và sheetreference bằng Codex Client native image_gen; brief chibi/softshading/đầutrọc/undergarments trung tính kín, khôngmannequin. BackendHTTP400moderation_blocked tạioutput/categorysexual,request880f0865-8a7f-4f1f-8846-e8dcc1ab4fe4; khôngartifact. Bundle `assets/previews/character-layer-first-v3-female/` giữprompt/doctor/backend-blocker/REVIEW. Dừng trước HairFront/Back,garmentregistration/toggle/pair; khôngretry/đổiAPI để né hoặc giảBody bằngcomposite/mannequin. Không cóPASSkỹthuậtFemale: alpha/baseline/fit/browser chưa chạy vì thiếuasset. Femalechưaduyệtmỹthuật,productionReady=false. Có thể artist vẽBody/layers đúngcontract hoặc báovendorrequestID để xử lý moderation; không giảm yêu cầu độc lập layer.
+
+Không sửaGAME_SPEC/runtime/DB/assetMale, không96frame/integration/CLI/push/deploy/reset. Các diff có sẵn giữ nguyên. Chưa chạy lint/typecheck/build/E2Egame trong phiên vì không sửacode; không claim cácgate nàyPASS.
+
+## Male Layer-first v3 r2 — chờ duyệt cuối 09/10/2026
+
+Người dùng duyệt hướng thiết kế v3, chưa production, bỏ yêu cầu khớp pixel masterv2. Chỉ chỉnh MaleDOWN/IDLE/frame0. Native image_gen edit thật giảm nhẹ cơ vai/ngực/tay; Forge xử lý matte và dùng transformBody cũ. Giữ nguyên pixel đầu/mặt cũ và fileHair; cănTop/Shoes theo Body, Bottom giữ transform đã khớp eo/chân. Lưu bundle mới `assets/previews/character-layer-first-v3-male-r2`, không overwrite v3 cũ. Under-shorts trung tính giữ nhưv3; registration thủ công chờ visualapproval, không claim nghiệm thu tự động.
+
+FilevalidatorPASS6PNG128×128RGBA/alpha/origin(64,113)/DOWN/IDLE0, Body/Shoesbaseline113, headpixel/Hairbyte giữ nguyên; togglerestore4lớpPASS. Browserpreview9/9PASS,0pageerror/HTTPerror; runtimeconsistency và gitdiffcheckPASS. Diff trước/sauComposite2036pixels, Body1495pixels; khôngthresholdmỹthuật. Full/BodyOnly/NoHair/NoTop/NoBottom/NoShoes, raw/prompt/hash/provenance/manifest/report giữ. Không sửa codegame/spec/DB, không chạy lại lint/typecheck/fullbuild/gameE2E và không claim các gate này đã chạy. PENDING_USER_APPROVAL/productionReady=false, chưaDONEA01/A02/A03, chưa96frame hoặc integration. Dừng chờ duyệt cuối, khôngcommit/push/deploy/reset/CLI. Chi tiết bundle REVIEW.md.
+
+## Male Layer-first v3 — thử nghiệm, giữ BLOCKED 09/10/2026
+
+Theo yêu cầu mới dùng sheet reference do người dùng cung cấp, chỉ Male DOWN/IDLE/frame0. Không sửa luật CHỐT; master v2 và các bundle bị từ chối giữ nguyên. Codex Client native image_gen đã tạo thật Body có da/mặt/chi, chỉnh tỷ lệ một lượt và atlas Hair/Top/Bottom/Shoes độc lập. Không crop reference/composite để làm layer, không mannequin xám. Body vẫn có quần lót trung tính như reference; chưa chứng minh body hoàn toàn không có trang phục. Generator không giữ layout; part đăng ký bằng transform thủ công được lưu, chưa nghiệm thu chính xác.
+
+Bundle `assets/previews/character-layer-first-v3-male/`: 6 PNG RGBA128×128/origin chung(64,113), Weapon trống; raw/prompt/provenance/SHA/doctor/manifest; composite/toggle/visual diff/preview HTML. Validator PASS file/alpha/contract, baseline Body113/height99; bật/tắt và restore 4 lớp PASS. Browser Chromium preview9/9PASS,0pageerror; đây không phải E2E gameplay. Diff so master v2:3864pixel khác, không đặt threshold tự duyệt. Build preview lần đầu lỗi numpy.bool JSON serialization, đã sửa cast và chạy lại PASS.
+
+Trạng thái tổng BLOCKED/productionReady=false: tỷ lệ và identity Body khác v2, Hair che một phần trán/mắt, affine fit garment gần đúng và vùng chậu còn under-shorts. Chờ chủ sản phẩm review candidate mới; nếu cần layer body hoàn toàn không chứa trang phục và fit chính xác, cần artist repaint trên rig chung. Không tự DONE A01/A02/A03 hoặc gọi approve/96frame; không tích hợp runtime/registration/migration. Không chạy lại lint/typecheck/build/DB/E2E game vì không sửa code game; không claim các gate đó PASS trong phiên này. Bảo toàn các diff sẵn có GAME_SPEC/next-env/docs và log/asset cũ; không CLI/auto-dev/push/deploy/reset. Chi tiết và lệnh kiểm trong bundle REVIEW.md.
+
+## Sửa pipeline layer DOWN/IDLE0 — tiếp tục BLOCKED09/10/2026
+
+Người dùng từ chối layer hiện tại, chốt master v2 là nguồn hình duy nhất; không mannequin Body production. Đã thử BodyMale độc lập bằng image_gen với chính master v2; backendHTTP400 moderation_blocked(output/sexual),requesta35b1adf-7af7-4b87-bfe3-948e7acafa17,không có artifact. Không tiếp tục Female/atlas/fallbackmannequin/96frame hoặc gọi route khác để lách; không claim có Body mới đúng tỷ lệ/skin/pose.
+
+Bundle mới assets/previews/character-layer-pipeline-2026-10-09 khóa2masterSHA,manifest perlayer128×128RGBA/origin(64,113)/DOWN/IDLE/frame0, không sửaGAME_SPEC. Gate từ chối mannequin/crop/copy/duplicate/metadata sai/thiếu reviewBodyHairRegistrationVisualDiff. Không auto-fit hoặc đặt similarity threshold; semantic và diff approval phải từ người dùng thật. Body đầy đủ đúngmaster là blocker, technicalhash/filechecks không thay nghiệm thu.
+
+Đã xuất visual RGBA diff và tắt shirt/pants/shoes riêng cho2bộ bị từ chối để chẩn đoán; đánh nhãnREJECTED,không fakecandidate. Male3335pixels khác/IoU0.8339,Female3675/0.8812; gateexit1/BLOCKED33issues. Regressiongate8/8PASS gồmchặn legacy/mannequin/compositecopy/contract/masterhash sai,missing,bảo toànoutputs và diff/toggle thực. Runtimeconsistency/diffwhitespacePASS; không gameplay/fullE2E/DB vì runtime không sửa. README/report/prompt/backendblocker giữ bằng chứng. Đề xuất artist repaintBody/layers PSD/KRA/Aseprite theo masterv2, không auto-segment/crop giả; xuất contract này rồi reviewdiff. A01/A02/A03 chưaDONE,D12 không mở thêm. Giữmọidiffuser/assetcũ,khôngCHỐT/production/push/deploy/reset/auto-dev/codexexec. DỪNG BLOCKED.
+
+## Layer proof Male/Female — BLOCKED09/10/2026
+
+Người dùng duyệt phong cách master v2, yêu cầu kiểm kiến trúc layer trước animation. Đã tạo bundle riêng assets/previews/character-layer-proof-2026-10-09, giữ master/diff hiện hữu. Forge guide + Codex Client image_gen tạo part atlas độc lập; không crop từ master. Lượt Body nhân vật bị HTTP400 moderation_blocked(output/sexual), request8c881ffa-0115-4ac2-a65e-c0ef21f2f4d0. Phương án búp bê gỗ xám faceless được vẽ đầy đủ thân/chân để kiểm kỹ thuật; công khai là substitute chưa được duyệt, không claim Body theo master.
+
+Xuất mỗi base7PNG RGBA128×128: Body/HairBack/HairFront/Shirt/Pants/Shoes/Weapon(trống), template origin(64,113). Body có pixel vẽ dưới clothing, layer nonweapon khác nhau, nguồn/transforms/hash/prompt/QA giữ. Registration approximation vì generator đặt part lệch guide; Body mất mặt/sai proportions, HairFrontFemale dính tai/da, shin wrap trùng. Composite Male3335pixels khác/IoU0.8339, Female3675/0.8812; kiểm mỹ thuật FAIL, tổng BLOCKED. Không tự dùng threshold để nghiệm thu.
+
+Offline compositor18/18 data tests, Browser Chromium36/36 toggle/restore/swap/3-class static-render tests/0pageerror;14file128×128/RGBA PASS; runtime consistency/diff whitespace PASS. Đây chỉ là gate kỹ thuật preview, KHÔNG PASS toàn bộ yêu cầu layer hoặc animation. Không gameplay/fullE2E/DB check hoặc code runtime thay đổi. Preview/report/ảnh lớp/toggle/swap/comparison ở bundle/REVIEW.md,report.json,browser-report.json,file-validation.json. Cần Body đúng master và garment/hair registration sạch trước khi duyệt hoặc tạo96frame. Không production/registration/migration/CHỐT/push/deploy/reset/CLI. DỪNG báo blocker, chưa DONE A01/A02/A03.
+
+## Male/Female master v2 — PAUSE chờ duyệt09/10/2026
+
+Chủ sản phẩm chưa duyệt master cũ, yêu cầu nhận diện nam/nữ rõ và sạch viền. Đã giữ nguyên bundle cũ và mọi diff hiện hữu (gồm next-env.d.ts có sẵn trước phiên); không sửa spec/roadmap/runtime/đăng ký. Bundle mới assets/previews/character-bases-2026-10-09-v2. Dùng generate2dsprite workflow host edit: Codex Client image_gen sửa Male tóc ngắn/mặt góc cạnh/vai vuông, Female tóc dài/mặt mềm/contour khác, giữ neutral outfit/chibi/painted/South/empty hands.
+
+Raw/prompt/provenance giữ nguyên; Forge alpha_hygiene/despill edge-only và native_alpha strict-QC. Lượt thu nhỏ còn warm rim Male30/Female12, sửa ngay tại frame cuối với Forge despill radius1, không thay alpha/geometry hoặc overwrite published/raw. Validator PASS:2frame128×128 RGBA,alpha0–255,hiddenRGB0,warmrim0,mỗi hình1component,height99/baseline113,origin template(64,113); measured stance x lệch0.2006px. Shadow/effect/weapon không bake; layer-plan chỉ thiết kế, chưa giao layer production.
+
+Đã xem pair, map crop, gameplay scale nền sáng/tối và silhouette: tóc/mặt/contour khác dễ thấy hơn, nhưng nghiệm thu nhận diện vẫn chờ người dùng. Proxy471 silhouette pixels khác/IoU0.8441/dark hair band+348 không phải classifier nam/nữ. Preview offline dùng Tiled hiện hữu,scale0.9/cao khoảng89world px, không đổi world/spawn/collision. Doctor0FAIL/2WARN/7MISSING giữ report; không cài dependencies/CLI/API trả phí. Runtime consistency --check và git diff --check PASS; không chạy lint/build/E2E vì không sửa gameplay/runtime, không claim các gate này chạy trong phiên. A01/A02/A03 chưa DONE,D12 chưa mở toàn bộ. Không animation96frame/migration/DB/push/deploy; DỪNG chờ duyệt master v2. Chi tiết QA/non-pass và source ở bundle/REVIEW.md,validation-report.json,matte-report.json,finalize-report.json.
+
+## Male/Female master preview — PAUSE chờ duyệt09/10/2026
+
+Từ HEADa7de0cf/Git sạch. Chủ sản phẩm xác nhận phương án1: giữ Weapon Class requirement; CHỐT hai base Male/Female độc lập class, chung animation contract/state machine/metadata và layer riêng,96 frame IDLE/RUN tổng. Đã cập nhật GAME_SPEC và A01/A02/D12 đúng phần này, không DONE toàn gói hoặc mở catalog/animation combat/đổi giới tính. Tài liệu quyết định: CHARACTER_ART_DECISION.md.
+
+Forge doctor có host_image/numpy/Pillow/scipy. Sửa encoding chỉ bằng PYTHONUTF8 process; còn2WARN/7MISSING được lưu, không install/API/CLI. Dùng master_still prompt và Codex Client image_gen thật tạo2 raw1254×1254 với alpha; process native_alpha strict-QC PASS,2 candidate128×128/figure99px/baseline113, origin preview(64,113). Measured stance x lệch0.6934px, cần duyệt; không claim animation alignment/foot-sliding. Prompt nguyên văn,raw/hash/reference/provenance/QA/manifest giữ assets/previews/character-bases-2026-10-09. Chưa gọi approve, chưa tạo96 frame.
+
+Đã xem hai raw, master pair và village detail. Preview offline dùng terrain/props Tiled hiện hữu,scale0.9/figure89.1world px, hai actor cạnh nhau giữa quảng trường; không đổi respawn/geometry/SAFE/runtime. Mẫu neutral outfit/hair vẫn là hình minh họa chưa tách layer production; Male/Female chủ yếu khác tóc/mặt, chờ duyệt nhận diện và tỷ lệ. Package validation PASS(file/RGBA/dimensions/alpha/height/baseline/QA); pnpm test:auto-dev31/31PASS(logs/character-preview-docs-mock.log), build-starter-runtime --check PASS, git diff --check PASS. Không chạy lại lint/build/E2E gameplay vì không sửa runtime; không claim các gate này đã chạy trong phiên preview. Runtime/balance/auth/DB không sửa; đăng ký chọn Male/Female/persistence/account cũ là dependency triển khai sau, không tự default/backfill/migration. A01/A02/A03 TODO,D12 BLOCKED phần còn lại. DỪNG chờ duyệt master; không push/deploy/reset hoặc auto-dev/codex exec.
+
 ## T17 rendering kỹ thuật DONE — phạm vi được duyệt09/10/2026
 
 Đầu phiên HEADd3496cb/Git sạch. Người dùng xác nhận giữ Starter Village/area_01 SAFE, geometry đã duyệt và painted/cartoon soft shading; T17 chỉ map rendering/depth/Y-sort/occlusion/hiệu năng, không NPC/Portal/Monster/loot/balance. Chủ sản phẩm duyệt mỹ thuật trước production-ready. Đây là phê duyệt phạm vi và người duyệt, không phải phê duyệt mọi nội dung D05/D12.

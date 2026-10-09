@@ -1,0 +1,188 @@
+{
+  "browserTechnicalStatus": "PASS",
+  "artAcceptance": "BLOCKED",
+  "checks": [
+    {
+      "sex": "male",
+      "test": "toggle:hair_back",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:hair_back",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:body",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:body",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:pants",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:pants",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:shoes",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:shoes",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:shirt",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:shirt",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:hair_front",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:hair_front",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "toggle:weapon",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "restore:weapon",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "swap clothing",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "static reuse:Physical DPS",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "static reuse:Magic DPS",
+      "passed": true
+    },
+    {
+      "sex": "male",
+      "test": "static reuse:Tank",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:hair_back",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:hair_back",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:body",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:body",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:pants",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:pants",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:shoes",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:shoes",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:shirt",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:shirt",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:hair_front",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:hair_front",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "toggle:weapon",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "restore:weapon",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "swap clothing",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "static reuse:Physical DPS",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "static reuse:Magic DPS",
+      "passed": true
+    },
+    {
+      "sex": "female",
+      "test": "static reuse:Tank",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "limitation": "Validates only offline static compositor controls, not production layers or animation."
+}

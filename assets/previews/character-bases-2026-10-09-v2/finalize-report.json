@@ -1,0 +1,70 @@
+[
+  {
+    "sex": "male",
+    "source": "male-aligned\\clean.png",
+    "sourceSha256": "94475c831ec745dd1b4c6a2fce0b31f0c8ae9d3d4710c3456e0f66e0caec34d9",
+    "output": "frames\\male.png",
+    "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84",
+    "alphaUnchanged": true,
+    "edgeSteps": [
+      {
+        "key": "#FF0000",
+        "mode": "edge",
+        "applied": "edge",
+        "radius": 1,
+        "margin": 8,
+        "changed_px": 233
+      },
+      {
+        "key": "#FFFF00",
+        "mode": "edge",
+        "applied": "edge",
+        "radius": 1,
+        "margin": 8,
+        "changed_px": 167
+      },
+      {
+        "key": "#FF00FF",
+        "mode": "edge",
+        "applied": "edge",
+        "radius": 1,
+        "margin": 8,
+        "changed_px": 0
+      }
+    ]
+  },
+  {
+    "sex": "female",
+    "source": "female-aligned\\clean.png",
+    "sourceSha256": "10e2d765b8d6b2f60f0ef9999f84c66e7c012deb1cbe5f44c1f9073a08265b98",
+    "output": "frames\\female.png",
+    "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e",
+    "alphaUnchanged": true,
+    "edgeSteps": [
+      {
+        "key": "#FF0000",
+        "mode": "edge",
+        "applied": "edge",
+        "radius": 1,
+        "margin": 8,
+        "changed_px": 175
+      },
+      {
+        "key": "#FFFF00",
+        "mode": "edge",
+        "applied": "edge",
+        "radius": 1,
+        "margin": 8,
+        "changed_px": 75
+      },
+      {
+        "key": "#FF00FF",
+        "mode": "edge",
+        "applied": "edge",
+        "radius": 1,
+        "margin": 8,
+        "changed_px": 7
+      }
+    ]
+  }
+]

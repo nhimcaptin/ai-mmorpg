@@ -1,0 +1,45 @@
+{
+  "route": "host_image",
+  "backend": "Codex Client image_gen",
+  "model": null,
+  "cost": null,
+  "overall": "BLOCKED",
+  "approvedMasterStyleOnly": true,
+  "layerApproval": false,
+  "assets": [
+    {
+      "sex": "male",
+      "raw": "male-atlas-raw.png",
+      "rawSha256": "722268bf42aacf36af30a582d3354dd1c10a565a636da269ac079b2e701c5263",
+      "prompt": "male-prompt.txt",
+      "promptSha256": "3ab0c7912e92d5a704912f3a334d2efc5e7d1fcb8ec99e4fb6a91b0a046b9dbe",
+      "references": [
+        {
+          "path": "assets\\previews\\character-layer-proof-2026-10-09\\male-guide.png",
+          "sha256": "dc66fd1f762f73b0b9419c734d4881c44eb2192daff5c0c653acf426c0b41304"
+        },
+        {
+          "path": "assets\\previews\\character-bases-2026-10-09-v2\\frames\\male.png",
+          "sha256": "1f48274e05c3709481f1c8052fc5d90d81a8633f528e729cdb0c85f5308b3e84"
+        }
+      ]
+    },
+    {
+      "sex": "female",
+      "raw": "female-atlas-raw.png",
+      "rawSha256": "3b4db80c377af90e0c66238a4a61b19dfff396c7b185a0d2b945893a0ed50db3",
+      "prompt": "female-prompt.txt",
+      "promptSha256": "430b26ffb08eee1f272f432a21c10d1fd0a94bcb79f0d3d45a11584ba21870fc",
+      "references": [
+        {
+          "path": "assets\\previews\\character-layer-proof-2026-10-09\\female-guide.png",
+          "sha256": "bbeedd8f15cad33c05cc8ffc8700c5cc4e6cbba5b058696a4ed84ab4b9231761"
+        },
+        {
+          "path": "assets\\previews\\character-bases-2026-10-09-v2\\frames\\female.png",
+          "sha256": "5eeb1f3fcb3c49d848c1b7dd3163eb34ac14dcf241d4a5a153319ed2267d757e"
+        }
+      ]
+    }
+  ]
+}

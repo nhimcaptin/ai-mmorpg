@@ -1,0 +1,161 @@
+{
+  "artSource": "host_image+existing_generated_art",
+  "backend": "Codex Client native image_gen",
+  "modelId": null,
+  "calls": [
+    {
+      "raw": {
+        "path": "assets\\previews\\character-layer-first-v3-female-clothed\\body-raw.png",
+        "sha256": "ad96f344c6f7960e7b7cf0dd0ec5062245d220421a646ef4cdf860abe35ad8c2"
+      },
+      "prompt": "body-prompt.txt",
+      "generatedFilename": "exec-6c1be7f4-0e30-4e13-af9e-e0f34026d1c3.png"
+    },
+    {
+      "raw": {
+        "path": "assets\\previews\\character-layer-first-v3-female-clothed\\body-revised-raw.png",
+        "sha256": "cdc7e18d019084209342b3a1bdf2eb41e0befbcffb3544431b87cb6e18585dd1"
+      },
+      "prompt": "body-edit-prompt.txt",
+      "generatedFilename": "exec-a5b61124-279f-4fbb-aa60-08ca75730338.png"
+    },
+    {
+      "raw": {
+        "path": "assets\\previews\\character-layer-first-v3-female-clothed\\hair-parts-raw.png",
+        "sha256": "59a57dfee88d0c2e3581b981b440ab5b890c4282f398f691e4b9936437eca045"
+      },
+      "prompt": "hair-prompt.txt",
+      "generatedFilename": "exec-33d93882-c360-4b78-bf32-53d0d278f9f2.png"
+    }
+  ],
+  "equipmentSource": {
+    "path": "assets\\previews\\character-layer-first-v3-male\\parts-raw.png",
+    "sha256": "11d8b475ddb47ca1040d60c3aca04007b12ff1f0856d12a3d023b94beee3f652"
+  },
+  "maleComparisonSource": {
+    "path": "assets\\previews\\character-layer-first-v3-male-r2\\composite.png",
+    "sha256": "176ed3abbf19d8fb4cefd31e13a24d2bdb24c0bf712c60264f2780f305b865c8"
+  },
+  "maleUnchanged": true,
+  "registration": {
+    "HairBack": {
+      "rawRect": [
+        0,
+        0,
+        637,
+        1254
+      ],
+      "alphaBounds": [
+        50,
+        270,
+        624,
+        951
+      ],
+      "targetRect": [
+        39,
+        10,
+        50,
+        74
+      ]
+    },
+    "HairFront": {
+      "rawRect": [
+        637,
+        0,
+        1254,
+        1254
+      ],
+      "alphaBounds": [
+        26,
+        270,
+        564,
+        940
+      ],
+      "targetRect": [
+        40,
+        10,
+        48,
+        68
+      ]
+    },
+    "Top": {
+      "rawRect": [
+        610,
+        140,
+        1254,
+        725
+      ],
+      "alphaBounds": [
+        17,
+        21,
+        616,
+        576
+      ],
+      "targetRect": [
+        43,
+        53,
+        43,
+        40
+      ],
+      "source": "existing generated male outer-equipment art; re-registered only"
+    },
+    "Bottom": {
+      "rawRect": [
+        75,
+        720,
+        600,
+        1145
+      ],
+      "alphaBounds": [
+        25,
+        3,
+        501,
+        402
+      ],
+      "targetRect": [
+        47,
+        77,
+        34,
+        30
+      ],
+      "source": "existing generated male outer-equipment art; re-registered only"
+    },
+    "Shoes": {
+      "rawRect": [
+        650,
+        880,
+        1230,
+        1220
+      ],
+      "alphaBounds": [
+        31,
+        25,
+        532,
+        303
+      ],
+      "targetRect": [
+        45,
+        101,
+        39,
+        12
+      ],
+      "source": "existing generated male outer-equipment art; re-registered only"
+    }
+  },
+  "bodyTransform": {
+    "rawBounds": [
+      447,
+      283,
+      808,
+      1147
+    ],
+    "scale": 0.11458333333333333,
+    "targetSize": [
+      41,
+      99
+    ],
+    "top": 14
+  },
+  "productionReady": false,
+  "femaleArtApproved": false
+}

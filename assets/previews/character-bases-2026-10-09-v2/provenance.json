@@ -1,0 +1,40 @@
+{
+  "route": "host_image",
+  "backend": "Codex Client image_gen",
+  "mode": "edit",
+  "model": null,
+  "cost": null,
+  "approval": "PENDING_USER",
+  "assets": [
+    {
+      "id": "male",
+      "raw": "male-raw.png",
+      "sha256": "88974e29f28238fe95b7c032333f16ae14289c7de504b92484421ecc22c7c792",
+      "prompt": "male-edit-prompt.txt",
+      "promptSha256": "3310c85b5a203a925aaea662f3c59b0c047224dbc1f1e7f6c4398a6bad4a5564",
+      "references": [
+        {
+          "path": "../character-bases-2026-10-09/male-raw.png",
+          "sha256": "37ef739a57aa6664911d554019a8745a65bbe1b277372ff7db00359e86857a7d"
+        }
+      ]
+    },
+    {
+      "id": "female",
+      "raw": "female-raw.png",
+      "sha256": "2211920a57f5ea2a1931c8410a4803678d973a9e9557ba705acaa321cf7e50c2",
+      "prompt": "female-edit-prompt.txt",
+      "promptSha256": "e30d6b21e489fa6b18082061d8e218c6486d12666878461f51d963d01e48065c",
+      "references": [
+        {
+          "path": "../character-bases-2026-10-09/female-raw.png",
+          "sha256": "1e93de78821230b15f36c446860a0350783197f1dd95adc0ebf706950611e5b1"
+        },
+        {
+          "path": "male-raw.png",
+          "sha256": "88974e29f28238fe95b7c032333f16ae14289c7de504b92484421ecc22c7c792"
+        }
+      ]
+    }
+  ]
+}

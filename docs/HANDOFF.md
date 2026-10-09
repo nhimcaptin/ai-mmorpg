@@ -1,5 +1,80 @@
 # PAUSE & HANDOFF — 08/10/2026 (Asia/Bangkok)
 
+## Bàn giao mới nhất — PAUSE 09/10/2026
+
+**Task hiện tại: A02, phần preview/layer proof — PAUSED / PENDING_USER_APPROVAL Female.** Registry toàn A02 vẫn TODO, chưa tạo animation hoặc nghiệm thu production. A01/D12 mới duyệt một phần kiến trúc/mỹ thuật; không đổi toàn gói thành DONE. Không bắt đầu task mới trong phiên pause.
+
+### Git và checkpoint
+
+HEAD trước pause: `a7de0cf` (T17 rendering kỹ thuật DONE). T16 đã DONE tại `d3496cb`. Checkpoint bàn giao là commit local có subject `chore: checkpoint WIP character layers`; dùng `git log -1 --format="%H %s"` trên máy mới để lấy hash thực tế. Không ghi hash tự tham chiếu vào chính commit. Các section phía dưới là lịch sử, không phải trạng thái mới nhất.
+
+Đầu pause có diff GAME_SPEC.md, apps/web/next-env.d.ts, docs/tasks.md, docs/progress.md và các bundle assets/previews cùng CHARACTER_ART_DECISION.md chưa commit. Được bảo toàn trong checkpoint, gồm cả thử nghiệm thất bại/bị từ chối. Không reset/clean/amend/push/deploy. GAME_SPEC chứa quyết định Male/Female/chung animation contract đã được người dùng chốt ở phiên trước; pause không sửa spec. next-env.d.ts là diff có sẵn của Next (đường import `.next/dev/types`), giữ nguyên theo yêu cầu bảo toàn, không coi là feature mới đã verify build.
+
+Danh sách path chính xác: `docs/handoff/files-at-pause-2026-10-09.txt`; danh sách commit có thể xem bằng `git show --name-status HEAD`. Logs/test artifacts bị Gitignore vẫn giữ local, cần copy riêng khi chuyển máy; không đưa .env/secrets/node_modules/.next vào checkpoint.
+
+### Đã hoàn thành và phần hiện tại
+
+- Roadmap T08–T11, T13–T17, T59/T60 đã DONE theo docs/tasks.md và các checkpoint trước; không làm lại. T17 geometry/editor/multiplayer occlusion/runtime không sửa ở loạt preview này. Kết quả full gameplay gate gần nhất thuộc checkpoint T17: lint/typecheck/build,39 unit/integration+31 mock, DB7 suites, browser10/10 và nhóm map/occlusion/editor4/4 PASS (lịch sử, không phải chạy lại hôm nay).
+- Male Layer-first v3 r2: chủ sản phẩm CHỐT mỹ thuật riêng DOWN/IDLE/frame0; `assets/previews/character-layer-first-v3-male-r2/art-approval.json` là phê duyệt mới nhất. Manifest/validator/report cũ ghi PENDING được giữ làm lịch sử kỹ thuật; không diễn giải chúng để phủ nhận user approval. Không production/toàn animation.
+- Female kín đáo: `assets/previews/character-layer-first-v3-female-clothed/`. Body mặc áo dài tay/quần dài/giày nền; HairBack/HairFront độc lập; outer Top/Bottom/Shoes dùng nguồn garment đãgen và căn Female; Weapon trống. 7PNG128×128RGBA/origin(64,113), DOWN/IDLE0. Full/BodyOnly/toggle/pair/raw/prompt/doctor/provenance/metadata và offline compositor đã tạo. **Chưa duyệt mỹ thuật Female hoặc production.**
+- Female brief undergarments trước bị backendHTTP400outputmoderation_blocked; bundle `character-layer-first-v3-female/` lưu lỗi/prompt, khôngartifact. Brief kín đáo mới tạo thành công; blocker backend cũ không còn chặn candidate mới. Các bộ mannequin/layer cũ bị từ chối không được dùng production.
+
+### Files thay đổi và lý do
+
+- `assets/previews/**`: mọi master v1/v2, layer proof bị từ chối, pipeline gates/diff, Malev3/r2 và Femaleclothed; giữ toàn bộ nguồn/QA/historical failures để truy vết. Các frame đều preview, không copied vào apps/web/public để production.
+- `docs/CHARACTER_ART_DECISION.md`: quyết định đã duyệt/phần chưa duyệt, provenance và dependency.
+- `docs/tasks.md`, `docs/progress.md`, `docs/HANDOFF.md`: roadmap/trạng thái/bằng chứng/pause. Không tự DONE A01/A02/A03.
+- `GAME_SPEC.md`: diff quyết định đã duyệt từ trước pause; `apps/web/next-env.d.ts`: diff generated có sẵn được giữ nguyên, không overwrite user work.
+- `.gitattributes`: `assets/previews/** -text` giữ nguyên byte source/JSON/script và checksum qua Windows/Linux, tránh autocrlf làm verifierMaleSHA báo sai sau checkout. Không sửa asset để đổi hash; index được đối chiếu byte với working files.
+- Quy tắc `docs/tasks.md text eol=lf` có sẵn được giữ. Staged diff đầu sau bảo toàn rawCRLF báo trailing-whitespace vì carriage return; khai báo cr-at-eol hợp lệ riêng bundle, vẫn kiểm blank-at-eol/blank-at-eof/space-before-tab. Không sửa/normalize raw để làm test/hash pass.
+
+### Chưa xong / blockers / bước còn lại
+
+1. **Hành động khuyến nghị tiếp theo:** người dùng xem Female Full/BodyOnly/toggle và male-female-pair.png, duyệt hoặc yêu cầu sửa. Tóc mái đang che một phần mắt trái; cổáonềnxám hiện dướiTop; affine registration và tỷ lệ head/hand/foot cần visual review, technical PASS không thay nghiệm thu.
+2. Chưa có IDLE4/RUN8 ×4hướng ×2base (96frame); không tự tạo trước khi được phép. Chưa xử lý animation/foot-sliding, clothing/hair motion, combat/death hoặc production integration.
+3. Luồng đăng ký/persistence chưa có giới tính ngoại hình; chính sách account cũ/backfill/đổi ngoại hình chưa duyệt. Không migration hoặc default ngầm.
+4. D12 còn catalog/reference/VisualSets/animation combat và phạm vi phát hành; D05 còn content/NPC/portal/monster/loot. T18 cần A02 nghiệm thu; T19 cần D05/A03/A04. Không tự mở nghiệp vụ BLOCKED.
+5. Forge hostimage hoạt động trên máy hiện tại; video route thiếu. Máy mới phải kiểm lại Python/Pillow/numpy/Phaser dependencies và image tool nếu sau này được yêu cầu generation; không cài script không tin cậy hoặc đổi paid API để né lỗi.
+
+### Kiểm tra đã chạy khi pause
+
+- Female `validate.py`: PASS7PNG/alpha/contract, BodyOnly/toggle/restore, Body alpha không mất khi tháogear; Body/Shoesbaseline113; Male/FemaleBody99px, Full103px; Male files unchanged quaSHA.
+- Female `verify-browser.mjs`: **15/15PASS**,0pageerror/HTTPerror; preview images decode. Đây là offline preview, không gameplayE2E.
+- Male r2 `validate.py`: PASS6PNG/alpha/contract, mặt/tóc giữ nguyên,baseline113,toggle/restore. Approval art riêng trongsidecar.
+- `node scripts/build-starter-runtime.mjs --check`: PASS Tiled/registry/generatedTS/publicimage consistency.
+- `git diff --check`: PASS trước checkpoint. Không chạy lại full lint/typecheck/unit/build/DB/gameE2E vì không sửa gameplay; không claim cácgate đó đã chạy ở phiên pause.
+- `pnpm test:auto-dev`: mock orchestrator31/31PASS,0FAIL/skip; không real Codex/autonomous game loop. StagedwhitespacecheckPASS sau khai báoCR-at-EOL và byteaudit392assetfiles0mismatch.
+
+### Resume và lệnh verify chính xác (PowerShell, repo root)
+
+```powershell
+git status --short
+git log -4 --oneline
+Get-Content AGENTS.md
+Get-Content GAME_SPEC.md
+Get-Content docs/tasks.md
+Get-Content docs/progress.md
+Get-Content docs/HANDOFF.md
+node --version
+pnpm --version
+python --version
+# Nếu máy mới chưa có node_modules: pnpm install --frozen-lockfile
+$env:PYTHONUTF8='1'
+python -c "import numpy, PIL; print(numpy.__version__, PIL.__version__)"
+python assets/previews/character-layer-first-v3-female-clothed/validate.py
+node assets/previews/character-layer-first-v3-female-clothed/verify-browser.mjs
+python assets/previews/character-layer-first-v3-male-r2/validate.py
+node scripts/build-starter-runtime.mjs --check
+pnpm test:auto-dev
+git diff --check
+```
+
+Nếu thiếu Chromium, báo dependency trước; `pnpm exec playwright install chromium` tải browser khi người dùng cho phép thiết lập máy mới. Python verifier không cần DB/API. Không chạy `build_preview.py` của các bundle lịch sử để verify: nó ghi lại artifact và một số script trỏ absolute Downloads của máy cũ. Raw/output đã checkpoint đủ để validate/render. Có thể thiếu ảnh reference ngoài repo trên máy mới; source pointer/provenance ghi rõ, không ảnh hưởng lệnhverify trên.
+
+Nếu cần kiểm toàn gameplay ở phiên được cho phép: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`; DB/E2E chỉ sau khi kiểm local .env/DB hiện hữu theo tài liệu AUTH_LOCAL/MULTIPLAYER và không reset. Không tiết lộ secret; không gọi auto-dev.ps1/codex exec. Logs bịignore phải copy riêng từ máy cũ nếu cần RCA.
+
+**Dừng phát triển sau checkpoint.** Không tiếp tục A02 hoặc task khác cho đến khi người dùng resume/duyệt.
+
 ## Trạng thái hiện hành — T17 kỹ thuật DONE,09/10/2026
 
 Từ d3496cb/Git sạch, người dùng cho phép phạm vi Starter Village/area_01 SAFE giữ nguyên geometry/art, chỉ rendering/depth/occlusion/hiệu năng; chủ sản phẩm duyệt mỹ thuật trước production-ready. T17 dependency nay T14/T16/T59/T60, registry/bảng đồng bộ. A03 là task nghiệm thu asset riêng, giữ A01/A02/A03 TODO và D05/D12 BLOCKED cho phần chưa duyệt; không coi frame South đã có là bộ4 hướng hoàn chỉnh hoặc tự mở T18.

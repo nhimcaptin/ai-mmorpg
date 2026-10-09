@@ -1,0 +1,249 @@
+{
+  "status": "BLOCKED",
+  "productionReady": false,
+  "userApproval": false,
+  "technicalChecks": [
+    {
+      "layer": "Body",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "visiblePixels": 2894,
+      "hiddenRGBZero": true,
+      "origin": [
+        64,
+        113
+      ],
+      "originSource": "common metadata contract; not an embedded PNG property",
+      "sha256": "9186c918694ecd12ec608c69b1f352a499c67ba7d720491be5d21bdfc76679c3",
+      "technicalPass": true
+    },
+    {
+      "layer": "Bottom",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "visiblePixels": 791,
+      "hiddenRGBZero": true,
+      "origin": [
+        64,
+        113
+      ],
+      "originSource": "common metadata contract; not an embedded PNG property",
+      "sha256": "a0d014c72a1f25bf3770d75e1d9ccdb5f4ab70d92f57cfe7a9af4951a2605119",
+      "technicalPass": true
+    },
+    {
+      "layer": "Shoes",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "visiblePixels": 428,
+      "hiddenRGBZero": true,
+      "origin": [
+        64,
+        113
+      ],
+      "originSource": "common metadata contract; not an embedded PNG property",
+      "sha256": "ae2d53757b250973aa35c430f4972b3301af8f55f9ed967d72c595cfdea9cf0b",
+      "technicalPass": true
+    },
+    {
+      "layer": "Top",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "visiblePixels": 1255,
+      "hiddenRGBZero": true,
+      "origin": [
+        64,
+        113
+      ],
+      "originSource": "common metadata contract; not an embedded PNG property",
+      "sha256": "a4ac05dc3ea362aeeb0edc78ab38eb15ce9f85ead36b5de89f8db3679d98b04a",
+      "technicalPass": true
+    },
+    {
+      "layer": "Hair",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alphaMin": 0,
+      "alphaMax": 255,
+      "visiblePixels": 1039,
+      "hiddenRGBZero": true,
+      "origin": [
+        64,
+        113
+      ],
+      "originSource": "common metadata contract; not an embedded PNG property",
+      "sha256": "02d5cb618f4f7e815f7e65e151f7ea4032cea9baa2870d50e484e4d2d7d64e1f",
+      "technicalPass": true
+    },
+    {
+      "layer": "Weapon",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "alphaMin": 0,
+      "alphaMax": 0,
+      "visiblePixels": 0,
+      "hiddenRGBZero": true,
+      "origin": [
+        64,
+        113
+      ],
+      "originSource": "common metadata contract; not an embedded PNG property",
+      "sha256": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee",
+      "technicalPass": true
+    }
+  ],
+  "toggleChangesComposite": {
+    "Hair": true,
+    "Top": true,
+    "Bottom": true,
+    "Shoes": true
+  },
+  "direction": "DOWN",
+  "animation": "IDLE",
+  "frame": 0,
+  "origin": [
+    64,
+    113
+  ],
+  "bodyBaseline": 113,
+  "bodyVisibleHeight": 99,
+  "registration": {
+    "Hair": {
+      "sourceRect": [
+        60,
+        70,
+        600,
+        530
+      ],
+      "localAlphaBounds": [
+        20,
+        25,
+        518,
+        439
+      ],
+      "targetRect": [
+        41,
+        10,
+        46,
+        39
+      ],
+      "method": "explicit manual affine approximation; not approved"
+    },
+    "Top": {
+      "sourceRect": [
+        610,
+        140,
+        1254,
+        725
+      ],
+      "localAlphaBounds": [
+        17,
+        21,
+        616,
+        576
+      ],
+      "targetRect": [
+        39,
+        47,
+        50,
+        43
+      ],
+      "method": "explicit manual affine approximation; not approved"
+    },
+    "Bottom": {
+      "sourceRect": [
+        75,
+        720,
+        600,
+        1145
+      ],
+      "localAlphaBounds": [
+        25,
+        3,
+        501,
+        402
+      ],
+      "targetRect": [
+        47,
+        71,
+        34,
+        32
+      ],
+      "method": "explicit manual affine approximation; not approved"
+    },
+    "Shoes": {
+      "sourceRect": [
+        650,
+        880,
+        1230,
+        1220
+      ],
+      "localAlphaBounds": [
+        31,
+        25,
+        532,
+        303
+      ],
+      "targetRect": [
+        44,
+        94,
+        41,
+        19
+      ],
+      "method": "explicit manual affine approximation; not approved"
+    }
+  },
+  "bodyTransform": {
+    "rawBounds": [
+      358,
+      106,
+      893,
+      1184
+    ],
+    "scale": 0.09183673469387756,
+    "targetSize": [
+      49,
+      99
+    ],
+    "top": 14
+  },
+  "diffVsApprovedV2": {
+    "changedPixels": 3864,
+    "acceptanceThreshold": null,
+    "note": "different original candidate; no numerical art approval"
+  },
+  "limitations": [
+    "manual garment registration not approved",
+    "body proportions and identity differ from approved v2",
+    "body pelvis remains covered by neutral under-shorts; complete unclothed pelvis not proven"
+  ],
+  "artSource": "host_image",
+  "backend": "Codex Client native image_gen",
+  "weapon": "intentionally empty transparent layer, no weapon artwork generated"
+}
